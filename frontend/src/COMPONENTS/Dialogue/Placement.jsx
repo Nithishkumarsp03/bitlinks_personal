@@ -175,7 +175,7 @@ const PlacementDialog = ({
             </div>
           )}
         </div>
-        <p style={{ color: 'red' }}>{error}</p>
+        <p style={{ color: 'green' }}>{error}</p>
         <div id="buttonContainer-flowchart-person">
           <button
             onClick={onClose}

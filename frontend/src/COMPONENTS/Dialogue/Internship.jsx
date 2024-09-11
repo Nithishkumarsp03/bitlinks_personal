@@ -133,7 +133,7 @@ const InternshipDialog = ({
             </Box>
           </Box>
         )}
-        <p style={{ color: 'red' }}>{error}</p>
+        <p style={{ color: 'green' }}>{error}</p>
         <Box id="buttonContainer-flowchart-person" sx={{ display: "flex", justifyContent: "space-between" }}>
           <button
             onClick={onClose}

@@ -135,7 +135,7 @@ const PersonDialog = ({ open, onClose, personInfo, handleDetailsChange1, handleP
                 onChange={handleDetailsChange1}
             />
           </div>
-        <p style={{color: 'red'}}>{error}</p>
+        <p style={{color: 'green'}}>{error}</p>
         <div id="buttonContainer-flowchart-person">
           <button
             onClick={onClose}

@@ -141,7 +141,7 @@ const CompanyDialog = ({ open, onClose, CompanyInfo, handleDetailsChange3, error
                         </Box>
                     </div>
                 </div>
-                <p style={{ color: 'red' }}>{error}</p>
+                <p style={{ color: 'green' }}>{error}</p>
                 <div id="buttonContainer-flowchart-person">
                     <button onClick={onClose} color="primary" id="discard-flowchart-person">Discard</button>
                     <button
