@@ -406,7 +406,7 @@ export default function History() {
       scheduled_date: scheduled_date ? scheduled_date.tz("America/New_York").format() : "",
       imagePath1,
       imagePath2,
-      status: type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : "",
+      status: type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : 0,
     };
   
     console.log("Data being sent:", JSON.stringify(data));
