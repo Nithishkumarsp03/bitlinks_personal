@@ -3,7 +3,7 @@ const path = require("path");
 const mysql = require('mysql2');
 
 // Environment variables
-const PORT = process.env.DB_PORT;
+const PORT = process.env.PORT;
 const host = process.env.DB_HOST;
 const password = process.env.DB_PASSWORD;
 const database = process.env.DB_DATABASE;
