@@ -36,8 +36,18 @@ import "react-datepicker/dist/react-datepicker.css";
 import BeatLoader from "../../COMPONENTS/BeatLoader";
 import Details from "../Details/Details";
 import Table from "../Table/Table";
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 export default function Default(subPersonId) {
+  const decrypt = (ciphertext) => {
+    if (ciphertext) {
+      const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+      return bytes.toString(CryptoJS.enc.Utf8);
+    }
+    return '';
+  };
   const FilterIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -58,11 +68,11 @@ export default function Default(subPersonId) {
   );
 
   const api = process.env.REACT_APP_API;
-  const userProfile = Cookies.get("userProfile");
-  const parsedProfile = userProfile ? JSON.parse(userProfile) : null;
-  const email = Cookies.get("email");
-  const username = Cookies.get("NAME");
-  const picture = parsedProfile?.picture;
+  // const userProfile = Cookies.get("userProfile");
+  // const parsedProfile = userProfile ? JSON.parse(userProfile) : null;
+  const email = decrypt(Cookies.get("email"));
+  const username = decrypt(Cookies.get("NAME"));
+  const picture = decrypt(Cookies.get("picture"));
   // const id = parsedProfile?.id;
   const { setSelectedPersonId } = usePerson();
   // const { selectedPersonId, setSelectedPersonId } = usePerson();
@@ -314,10 +324,11 @@ export default function Default(subPersonId) {
       }
     };
 
-    if (email) {
-      const intervalId = setInterval(fetchPersonalInfo, 1000);
-      return () => clearInterval(intervalId);
-    }
+    // if (email) {
+    //   const intervalId = setInterval(fetchPersonalInfo, 1000);
+    //   return () => clearInterval(intervalId);
+    // }
+    fetchPersonalInfo();
   }, [email]);
 
   const handleDiscard = () => {
@@ -345,7 +356,7 @@ export default function Default(subPersonId) {
 
   const handleContinue = () => {
     const SubConnectionsvalue = SubConnections; // Set your desired value
-    navigate("../dashboard", {
+    navigate("../bitcontacts/dashboard/admin", {
       state: { subConnections: SubConnectionsvalue },
     });
     console.log("DEFAULT = ", SubConnectionsvalue);

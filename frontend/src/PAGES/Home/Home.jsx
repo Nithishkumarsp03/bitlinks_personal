@@ -9,9 +9,19 @@ import Cancel from "../../Assets/cancel.png";
 import axios from 'axios';
 import './Home.css'
 import Settings from '../Settings/Settings';
-export default function Home() {
+// import { decrypt } from '../../COMPONENTS/cookieUtils';
+import CryptoJS from 'crypto-js';
 
-    const picture = Cookies.get('picture')
+const SECRET_KEY = 'your-secret-key';
+export default function Home() {
+  const decrypt = (ciphertext) => {
+    if (ciphertext) {
+      const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+      return bytes.toString(CryptoJS.enc.Utf8);
+    }
+    return '';
+  };
+    const picture = decrypt(Cookies.get('picture'));
     const [activehome, setActivehome] = useState(true);
     const [activeCollege, setactiveCollege] = useState(false);
     const [activeSchool, setActiveSchool] = useState(false);
@@ -40,11 +50,11 @@ export default function Home() {
       </svg>
     );
 
-      const username = Cookies.get('name');
+      const username = decrypt(Cookies.get('name'));
       const navigate = useNavigate();
 
       useEffect(() => {
-        const email = Cookies.get('email');
+        const email = decrypt(Cookies.get('email'));
         if (!email) {
           navigate('/bitcontacts');
         }
@@ -158,6 +168,12 @@ export default function Home() {
     const handleLogout = () => {
       // Clear the user cookie
       Cookies.remove('email');
+      Cookies.remove('name');
+      Cookies.remove('picture');
+      Cookies.remove('role');
+      Cookies.remove('token');
+      Cookies.remove('id');
+      Cookies.remove('userProfile');
   
       // Redirect to login page
       navigate('/bitcontacts');

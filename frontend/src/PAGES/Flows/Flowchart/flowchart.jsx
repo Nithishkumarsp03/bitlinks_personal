@@ -25,15 +25,24 @@ import PlacementDialog from "../../../COMPONENTS/Dialogue/Placement";
 import ConsultancyDialog from "../../../COMPONENTS/Dialogue/Consultancy";
 import InternshipDialog from "../../../COMPONENTS/Dialogue/Internship";
 import ExpertiseDialog from "../../../COMPONENTS/Dialogue/Expertise";
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 const ChangingProgressProvider = ({ value, children }) => {
   return children(value);
 };
 
+
 const Flowchart = () => {
-  // const userProfile = Cookies.get("userProfile");
-  // const parsedProfile = userProfile ? JSON.parse(userProfile) : null;
-  const email = Cookies.get("email");
+  const decrypt = (ciphertext) => {
+    if (ciphertext) {
+      const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+      return bytes.toString(CryptoJS.enc.Utf8);
+    }
+    return '';
+  };
+  const email = decrypt(Cookies.get("email"));
   const { selectedPersonId } = usePerson();
   const [person, setPerson] = useState(false);
   const [company, setCompany] = useState(false);

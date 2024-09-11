@@ -25,7 +25,7 @@ router.get("/google/callback", passport.authenticate("google", { failureRedirect
     };
 
     // Redirect the user to a specific page with the JSON data as query parameters
-    res.redirect(`${process.env.CLIENT_URL}/bitcontacts/welcome?data=${encodeURIComponent(JSON.stringify(responseJson))}`);
+    res.redirect(`${process.env.CLIENT_URL}/welcome?data=${encodeURIComponent(JSON.stringify(responseJson))}`);
 });
 
 const generateToken = (user, expiresIn, NAME, ROLE, ID, EMAIL, PROFILE_PICTURE) => {

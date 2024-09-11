@@ -47,6 +47,9 @@ import Button from "@mui/material/Button";
 import { position } from "@chakra-ui/react";
 import BeatLoader from "../../../COMPONENTS/BeatLoader";
 import Select from "react-select";
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 // Modal.setAppElement('#root');
 
@@ -144,12 +147,17 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export default function History() {
+  const decrypt = (ciphertext) => {
+    if (ciphertext) {
+      const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+      return bytes.toString(CryptoJS.enc.Utf8);
+    }
+    return '';
+  };
   const api = process.env.REACT_APP_API
   const timezoneString = 'America/New_York'; 
-  const userProfile = Cookies.get("userProfile");
-  const parsedProfile = userProfile ? JSON.parse(userProfile) : null;
 
-  const username = Cookies.get("name");
+  const username = decrypt(Cookies.get("name"));
   const { selectedPersonId } = usePerson();
   const [activeStep, setActiveStep] = useState(null);
   const [AddHistory, setAddHistory] = useState(false);
@@ -336,6 +344,7 @@ export default function History() {
         console.log("Status updated successfully:", data);
   
         // Update the state of the specific item in the frontend
+        fetchHistory();
         setHistoryRecords((prevRecords) =>
           prevRecords.map((record) =>
             record.history_id === item.history_id
@@ -362,30 +371,31 @@ export default function History() {
         }));
       });
   };  
-
+  
   const handleAdd = (e) => {
-    if(type === ""){
-      setError("Please select the type of Conversation")
-      return;
-    }
-    if(note === ""){
-      setError('Fill the notes');
-      return;
-    }
-    if(imagePath1 === "" && imagePath2 === ""){
-      setError('Insert both the images')
-      return;
-    }
     e.preventDefault();
-
+    
+    if (type === "") {
+      setError("Please select the type of Conversation");
+      return;
+    }
+    if (note === "") {
+      setError("Fill the notes");
+      return;
+    }
+    if (imagePath1 === "" && imagePath2 === "") {
+      setError("Insert both the images");
+      return;
+    }
+  
+    // Clear form fields after validation
     setNote("");
     setCreatedDate(null);
     setScheduledDate(null);
     setType("");
     setImagePath1(null);
     setImagePath2(null);
-
-
+  
     const data = {
       selectedPersonId,
       username,
@@ -396,40 +406,39 @@ export default function History() {
       scheduled_date: scheduled_date ? scheduled_date.tz("America/New_York").format() : null,
       imagePath1,
       imagePath2,
-      status:
-        type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : "",
+      status: type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : "",
     };
-
+  
     console.log("Data being sent:", JSON.stringify(data));
-
+  
+    // Make the API call to add the history record
     fetch(api + "/addhistory", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     })
-    .then((response) => {
+      .then((response) => {
         if (!response.ok) {
-            return response.json().then((err) => {
-                // throw new Error(`Server error: ${response.status}, ${err.message}`);
-            });
+          return response.json().then((err) => {
+            throw new Error(`Server error: ${response.status}, ${err.message}`);
+          });
         }
         return response.json();
-    })
-    .then((newRecord) => {
-        // console.log("Record added:", newRecord);
-        setHistoryRecords([...historyRecords, newRecord]);
-        setDataChanged((prev) => !prev); // Toggle the state
-    })
-    .catch((error) => {
-        // console.error("Error:", error);
-    });
-};
+      })
+      .then((newRecord) => {
+        console.log("Record added:", newRecord);
+        // Update the local state with the new record
+        setHistoryRecords((prevRecords) => [...prevRecords, newRecord]);
+        fetchHistory(); // Fetch the updated history immediately after adding new record
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
   
-useEffect(() => {
-  if (!selectedPersonId) return;
-
+  // Fetch History Function
   const fetchHistory = async () => {
     setLoading(true);
     try {
@@ -440,31 +449,33 @@ useEffect(() => {
         },
         body: JSON.stringify({ selectedPersonId }),
       });
-
+  
       if (!response.ok) {
-        // throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+  
       const data = await response.json();
-
-      // Check if the received data is an object with 'data' and 'totalCount' properties
+  
       if (data && data.data && Array.isArray(data.data)) {
         setHistory(data.data); // Set history data
         setTotalCount(data.totalCount); // Set total count
       } else {
         console.error("Unexpected response structure:", data);
-        // setError("Invalid response format");
       }
     } catch (error) {
       console.error("Error fetching history:", error);
-      // setError(error.message);
     } finally {
       setLoading(false);
     }
   };
-  fetchHistory();
-
-}, [selectedPersonId, dataChanged]);
+  
+  // UseEffect to fetch data on component mount or when selectedPersonId changes
+  useEffect(() => {
+    if (selectedPersonId) {
+      fetchHistory(); // Fetch data initially when the component mounts or selectedPersonId changes
+    }
+  }, [selectedPersonId]);
+  
 
 
   const openModal = (item) => {
@@ -576,153 +587,123 @@ useEffect(() => {
         Add<i className="fa-solid fa-square-plus"></i>
       </button>
       <div className="history-container">
-        <div orientation="vertical">
-          {/* <Step>
-            <StepLabel
-              StepIconComponent={() => (
-                <CustomStepIconWithLine
-                  src={Start}
-                  className="step-icon-start"
-                  showLine={true}
-                />
-              )}
-              onClick={() => handleStepClick(steps.length)}>
-              <div className="call-start">
-                <div className="call-title">Account-Created :</div>
-                <div className="date">04/21 - 07:27 PM</div>
-              </div>
-            </StepLabel>
-          </Step> */}
-          {loading?(
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '35vh' }}>
-              <BeatLoader loading={loading} color="#2867B2" size={15} />
-            </div>
-          ):(
-            <div>
-              {history.length === 0 ? (
-                <div className="empty-error">
-                  <div>
-                    <i class="fa-solid fa-circle-info"></i>
-                    <p>No data found. Please log to Display Data! </p>
-                  </div>
+      <Stepper activeStep={activeStep} orientation="vertical">
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '35vh' }}>
+            <BeatLoader loading={loading} color="#2867B2" size={15} />
+          </div>
+        ) : (
+          <>
+            {history.length === 0 ? (
+              <div className="empty-error">
+                <div>
+                  <i className="fa-solid fa-circle-info"></i>
+                  <p>No data found. Please log to Display Data!</p>
                 </div>
-              ) : (
-                history.map((item, index) => (
-                  <Step key={index}>
-                    <StepLabel
-                      StepIconComponent={() => (
-                        <CustomStepIconWithLine
-                          src={typeImageMapping[item.type]}
-                          className="step-icon"
-                          showLine={false}
-                        />
-                      )}>
-                      <div className="calll">
-                        <div className="call-title">{item.type}</div>
-                        <div
-                          className="date"
-                          style={{ display: "flex", width: "100%" }}>
-                          {new Date(item.datetime).toLocaleString()}
-                          {(item.type === "Reschedule Call" ||
-                            item.type === "Rescheduled Visit") && (
-                            <div className="schedule-progress-container">
-                              {item.status === 1 && (
-                                <div
-                                  className="schedule-progress"
-                                  onClick={() => handlemarkcompleted(item)} // Use an arrow function here
-                                  style={{ backgroundColor: "#FEECEC" }}>
-                                  <i
-                                    className="fa-regular fa-circle-check"
-                                    style={{
-                                      marginLeft: "4%",
-                                      fontSize: "140%",
-                                      color: "#AD1111",
-                                    }}></i>
-                                  <p style={{ marginLeft: "5%", color: "#AD1111" }}>
-                                    Mark Complete
-                                  </p>
-                                </div>
-                              )}
-                                {item.status === 0 && (
-                                  <div>
-                                    {loadingStates[item.history_id] ? ( // Check the loading state for the specific item
-                                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                                        <BeatLoader loading={loadingStates[item.history_id]} color="#2867B2" size={10} />
-                                      </div>
-                                    ) : (
-                                      <div className="schedule-progress" style={{ backgroundColor: "#c1f0b6" }}>
-                                        <i
-                                          className="fa-solid fa-circle-check"
-                                          style={{
-                                            fontSize: "140%",
-                                            color: "green",
-                                          }}></i>
-                                        <p style={{ marginLeft: "5%", color: "green" }}>Completed</p>
-                                      </div>
-                                    )}
+              </div>
+            ) : (
+              history.map((item, index) => (
+                <Step key={index}>
+                  <StepLabel
+                    StepIconComponent={() => (
+                      <CustomStepIconWithLine
+                        src={typeImageMapping[item.type]}
+                        className="step-icon"
+                        showLine={false}
+                      />
+                    )}
+                  >
+                    <div className="calll">
+                      <div className="call-title">{item.type}</div>
+                      <div className="date" style={{ display: 'flex', width: '100%' }}>
+                        {new Date(item.datetime).toLocaleString()}
+                        {(item.type === 'Reschedule Call' || item.type === 'Rescheduled Visit') && (
+                          <div className="schedule-progress-container">
+                            {item.status === 1 && (
+                              <div
+                                className="schedule-progress"
+                                onClick={() => handlemarkcompleted(item)}
+                                style={{ backgroundColor: '#FEECEC' }}
+                              >
+                                <i
+                                  className="fa-regular fa-circle-check"
+                                  style={{ marginLeft: '4%', fontSize: '140%', color: '#AD1111' }}
+                                ></i>
+                                <p style={{ marginLeft: '5%', color: '#AD1111' }}>Mark Complete</p>
+                              </div>
+                            )}
+                            {item.status === 0 && (
+                              <div>
+                                {loadingStates[item.history_id] ? (
+                                  <div
+                                    style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}
+                                  >
+                                    <BeatLoader loading={loadingStates[item.history_id]} color="#2867B2" size={10} />
+                                  </div>
+                                ) : (
+                                  <div className="schedule-progress" style={{ backgroundColor: '#c1f0b6' }}>
+                                    <i className="fa-solid fa-circle-check" style={{ fontSize: '140%', color: 'green' }}></i>
+                                    <p style={{ marginLeft: '5%', color: 'green' }}>Completed</p>
                                   </div>
                                 )}
-                            </div>
-                          )}
-                          
-                        </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        
                       </div>
-                    </StepLabel>
-                    <StepContent>
-                      <Typography>
-                        <div className="file-container">
-                          <img src={File} alt="file" className="fileimg" />
-                          <p className="file-content">
+                    </div>
+                    <div className="file-container">
+                        <img src={File} alt="file" className="fileimg" />
+                        <p className="file-content">
                             <div style={{ width: "35vw" }}>{item.note}</div>
                             <i
                               style={{ cursor: "pointer" }}
                               onClick={() => openModal(item)}
                               className="fa-solid fa-chevron-right"></i>
                           </p>
-                        </div>
-                        {item.type === "Visited" && (
-                            <div style={{ marginLeft: "0%", color: "grey" }} className="agent-container">
-                              <img src={VisitedImg} alt="visitedimg" className="agentimg" />
-                              <button className="visited-img" onClick={()=>setImage1open(true)}>Image 1</button>
-                              <button className="visited-img" onClick={()=>setImage2open(true)} style={{marginLeft: "2%"}}>Image 2</button>
-                              <Dialog open={image1open} onClose={() => setImage1open(false)}>
-                                <img src={`${api}${item.visited1}`} alt="" />
-                              </Dialog>
-                              <Dialog open={image2open} onClose={() => setImage2open(false)}>
-                                <img src={`${api}${item.visited2}`} alt="" />
-                              </Dialog>
+                      </div>
+                      <div className="agent-container">
+                        <img src={Agent} alt="agent" className="agentimg" />
+                        <p className="agent-content">{item.agent}</p>
+                      </div>
+                      {item.type === 'Visited' && (
+                        <div style={{ marginLeft: '0%', color: 'grey' }} className="agent-container">
+                          <img src={VisitedImg} alt="visitedimg" className="agentimg" />
+                          <button className="visited-img" onClick={() => setImage1open(true)}>Image 1</button>
+                          <button className="visited-img" onClick={() => setImage2open(true)} style={{ marginLeft: '2%' }}>
+                            Image 2
+                          </button>
+                          <Dialog open={image1open} onClose={() => setImage1open(false)}>
+                            <div style={{width: "20vw"}} >
+                            <img style={{width: "100%",height: "100%"}}  src={`${api}${item.visited1}`} alt="" />
                             </div>
-                          )}
-                        <div className="agent-container">
-                          <img src={Agent} alt="agent" className="agentimg" />
-                          <p className="agent-content">{item.agent}</p>
+                          </Dialog>
+                          <Dialog open={image2open} onClose={() => setImage2open(false)}>
+                          <div style={{width: "20vw"}} >
+                            <img style={{width: "100%",height: "100%"}}  src={`${api}${item.visited2}`} alt="" />
+                            </div>
+                          </Dialog>
                         </div>
-                      </Typography>
-                    </StepContent>
-                  </Step>
-                ))
-              )}
-            </div>
-          )}
-
-          {/* <Step>
-            <StepLabel
-              StepIconComponent={() => (
-                <CustomStepIconWithLine
-                  src={Start}
-                  className="step-icon-start"
-                  showLine={false}
-                />
-              )}
-              onClick={() => handleStepClick(steps.length)}>
-              <div className="call-end">
-                <div className="call-title">Prospect Auto-Generated :</div>
-                <div className="date">06/21 - 12:07 PM</div>
-              </div>
-            </StepLabel>
-          </Step> */}
-        </div>
-      </div>
+                      )}
+                  </StepLabel>
+                  <StepContent>
+                    <Typography>
+                      
+                      
+                      <div className="agent-container">
+                        <img src={Agent} alt="agent" className="agentimg" />
+                        <p className="agent-content">{item.agent}</p>
+                      </div>
+                    </Typography>
+                  </StepContent>
+                </Step>
+              ))
+            )}
+          </>
+        )}
+      </Stepper>
+    </div>
 
       <Dialog
         className="popaddhistory"

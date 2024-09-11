@@ -15,13 +15,23 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import Cookies from "js-cookie";
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 const ChangingProgressProvider = ({ value, children }) => {
   return children(value);
 };
+const decrypt = (ciphertext) => {
+  if (ciphertext) {
+    const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
+  return '';
+};
 
 const ShowAddAccount = () =>  {
-  const email = Cookies.get("email");
+  const email = decrypt(Cookies.get("email"));
   // const parsedProfile = userProfile ? JSON.parse(userProfile) : null;
   // const email = parsedProfile?.email;
   const navigate = useNavigate();
@@ -227,7 +237,7 @@ const ShowAddAccount = () =>  {
 
         // Navigate to /dashboard after 3 seconds using window.location
         setTimeout(() => {
-            window.location.href = '/dashboard';
+            window.location.href = '/bitcontacts/dashboard/admin';
         }, 2000);
 
     } catch (error) {
@@ -322,7 +332,7 @@ const handleSubconnections = async (e) => {
 
       // Navigate to /dashboard after 3 seconds using window.location
       setTimeout(() => {
-          window.location.href = '/dashboard';
+        window.location.href = '/bitcontacts/dashboard/admin';
       }, 2000);
 
   } catch (error) {
