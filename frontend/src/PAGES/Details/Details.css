@@ -1,0 +1,74 @@
+.viewdetails {
+  height: 98%;
+  width: 100%;
+  background-color: white;
+  overflow: auto;
+}
+
+.viewdetails::-webkit-scrollbar{
+  display: none;
+}
+
+.viewbuttons {
+  font-size: 14px;
+  height: 5vh;
+  width: 28%;
+  /* padding: 0% 2% 2% 2%; */
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  /* background-color: blue; */
+  color: black;
+  font-weight: 500;
+  font-family: "Open Sans", sans-serif;
+}
+.viewbuttons.edit {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  height: 5vh;
+  width: 28%;
+  /* padding: 0% 2% 2% 2%; */
+  border: none;
+  border-radius: 20px;
+  text-align: center;
+  font-weight: 500;
+  background-color: #3f74d6;
+  color: white;
+}
+.viewconnection-bottom {
+  /* background-color: aqua; */
+  height: 60vh;
+  width: 100%;
+}
+
+.span-details{
+    font-weight: 500;
+    color: #1a68f8;
+}
+
+
+.details-table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: Arial, sans-serif;
+}
+
+.details-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.details-table .detail-key {
+  font-weight: bold;
+  width: 30%;
+}
+
+.details-table .detail-value {
+  width: 70%;
+}
+
+.details-table .even-row {
+  background-color: #f9f9f9; /* Light shade for even rows */
+}

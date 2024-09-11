@@ -1,0 +1,132 @@
+.gsignin {
+  height: 100vh;
+  width: 100vw;
+  background-color: #fefeff;
+  display: flex;
+}
+.Login-left {
+  width: 55%;
+  height: 100%;
+}
+.Login_right {
+  margin-left: 5%;
+  width: 40%;
+  height: 100%;
+}
+.login-bg {
+  width: 100%;
+  height: 99.3vh;
+}
+.Right-container {
+  margin-top: 12%;
+  align-items: center;
+  justify-content: center;
+}
+.below-password {
+  display: flex;
+  width: 100%;
+  font-size: 80%;
+}
+.checkbox {
+  margin-left: -1%;
+}
+
+.login_button {
+  margin-top: 3%;
+  height: 5vh;
+  width: 100%;
+  border: none;
+  background-color: #245c9f;
+  border-radius: 5px;
+  color: white;
+}
+.account_bottom {
+  display: flex;
+  margin-top: 3%;
+}
+
+.error-popup {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: red;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000; /* Ensure the popup appears above other elements */
+  animation: fadein 0.5s, fadeout 0.5s 9.5s; /* Optional: Fade in and out animation */
+}
+
+.error-popup span {
+  flex-grow: 1;
+}
+
+.close-popup {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.g-signin {
+  background-color: #245c9f;
+  color: white; 
+  border: none; 
+  padding: 12px 24px; 
+  font-size: 16px; 
+    font-family: 'Open Sans', sans-serif; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  background: linear-gradient(
+      to left,
+      #4272ae 50%,
+      #1052a1 50%
+    )
+    right;
+  background-size: 200%;
+  transition: 0.5s steps(25);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.g-signin:hover {
+  background-position: left;
+  animation: changeToRed 0.5s steps(25), showRed 0.5s steps(1) 0.5s forwards,
+    revertColor 0.5s steps(1) 1s forwards;
+
+  transition: all 1 s ease-in-out;
+}
+
+
+/* { */
+  /* background-color: #1e4f8b; Darker shade on hover */
+  /* transform: translateY(-2px); Slight lift on hover */
+  /* box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); Enhance shadow on hover */
+/* } */
+
+.g-signin:active {
+  transform: translateY(10); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}

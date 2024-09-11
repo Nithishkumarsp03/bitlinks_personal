@@ -1,0 +1,120 @@
+.ranking-tree{
+  /* padding-top: -10px; */
+  margin-left: 4%;
+  width: 53vw;
+  background-color: #FEFEFF;
+  height: 75vh;
+  overflow-y: auto;
+  /* display: flex; */
+}
+
+.ranking-tree::-webkit-scrollbar{
+  display: none;
+}
+
+.expertise {
+    padding: 5px;
+    /* border-image: url('Star_1.png'); */
+    /* display: inline-block; */
+    border-radius: 5px;
+    text-align: center;
+    /* background-color: #f9b694; */
+    font-family: "Open Sans", sans-serif;
+    border-radius: 50%;
+    color: black;
+    border: 1px red;
+    /* background-color: aqua; */
+ 
+  }
+
+  .node-title{
+    width: 15%;
+    padding: 10px;
+    display: inline-block;
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+    border-radius: 15px;
+    color: white;
+    background-color: #F9B494;
+    font-weight: 500;
+  }
+  .expertise-network{
+    display: flex;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+    margin: 1.4% 0% 0% 5%;
+    color: black;
+  }
+  .contact-tree{
+    width: 500px;
+    /* color: #f9b694; */
+  }
+  
+  
+  .expertise-profile {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: lightgray;
+   margin-top: 0px;
+    /* padding: -10px; */
+    margin-left: 0px;
+    background-position: center;
+    background-size: contain;
+    background-position: center;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* object-fit: cover; */
+    /* position: relative; */
+    border: 13px solid; /* Adjust the width of the border */
+  border-image: url('/src/Assets/Profile Border.png') 55 stretch; /* Path to your border image and stretch */
+  border-image-outset: 7px;
+  overflow: hidden; /* Ensures the image doesn't overflow the container */
+  box-sizing: border-box;
+  }
+  
+  .node.child {
+    position: relative;
+  }
+  
+  .profile {
+    position: relative;
+  }
+  
+  
+  .corner-img {
+    border: 5px solid rgb(255, 255, 255);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 28px; 
+    height: 28px; 
+    margin-bottom: -8px;
+    /* padding: 10px;
+     */
+     /* margin: 10px; */
+  }
+  
+  .border-image-container {
+    position: relative; /* Make sure it contains the border image and profile */
+    display: inline-block;
+  }
+  
+  .border-image {
+    position: absolute;
+    top: -5px; /* Adjust as needed */
+    left: -40px; /* Adjust as needed */
+    width: 80px; /* Adjust to fit the image size */
+    height: 80px; /* Adjust to fit the image size */
+    z-index: -1; /* Ensures it stays behind the profile */
+  }
+  .dot{
+    height:7px;
+    width:7px;
+    margin-left: 28px;
+    border-radius: 50%;
+   background-color: orange;
+  }

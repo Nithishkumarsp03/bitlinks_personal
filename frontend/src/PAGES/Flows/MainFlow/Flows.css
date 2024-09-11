@@ -1,0 +1,232 @@
+.main-flow {
+  background-color: #edf3f7;
+  /* background-color: #1b4a73; */
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  margin-left: 1%;
+}
+
+.flow-graph,
+.flow-history,
+.flow-chart {
+  transition: height 0.3s ease; /* Smooth transition */
+}
+  
+.flow-graph {
+  background-color: #fefeff;
+  height: 4vh; 
+  border-radius: 10px;
+
+}
+
+.flow-history {
+  margin: 1% 0;
+  background-color: #fefeff;
+  height: 4vh; /* Default height */
+  border-radius: 10px;
+}
+
+.flow-chart {
+  background-color: #fefeff;
+  height: 4vh; /* Default height */
+  border-radius: 10px;
+}
+
+.flow-graph.expanded {
+  height: 66vh;
+  /* height: 390; */
+  border-radius: 10px;
+  /* display: flex; */
+}
+
+.flow-history.expanded {
+  height: 66vh;
+  border-radius: 10px;
+}
+
+.flow-chart.expanded {
+  height: 66vh;
+  border-radius: 10px;
+  /* background-color: aquamarine; */
+}
+
+.flow-titles {
+  display: flex;
+  width: 100%;
+  /* background-color: #014eac; */
+  padding: 0.5% 0% 0% 4%;
+  /* padding-top: 0.5%; */
+  /* margin-left: 3%; */
+  /* margin-top: 0.2%; */
+  font-weight: 600;
+  font-family: "Open Sans", sans-serif;
+}
+
+.flow-titles1{
+  display: flex;
+  padding: 0.5% 0% 0% 4%;
+  /* padding-top: 0.5%; */
+  /* margin-left: 3%; */
+  /* margin-top: 0.2%; */
+  font-weight: 600;
+  font-family: "Open Sans", sans-serif;
+}
+.flow-titles.expanded{
+  margin-top: 1%;
+}
+
+.flow-titles1.expanded{
+  margin-top: 0%;
+  padding: 2% 0% 2% 4%;
+}
+
+.flow-chart-head {
+  display: flex;
+}
+
+.buttonContainer-flowchart-head {
+  /* padding: 20px; */
+  margin-top: 2%;
+  margin-left: 56%;
+  display: flex;
+}
+
+.saved-flowchart-head {
+  width: 95px;
+  height: 31px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: white;
+  background-color: #2867b2;
+  border: #2867b2 1px solid;
+  font-weight: 600;
+  margin-left: 20px;
+}
+
+.discard-flowchart-head {
+  width: 55px;
+  height: 31px;
+  border-radius: 4px;
+  border: #8891aa 1px solid;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.saved-flowchart-head:hover {
+  background-color: #014eac;
+}
+
+.discard-flowchart-head:hover {
+  background-color: rgb(231, 231, 231);
+}
+.diamond-points {
+  display: flex;
+  width: 30%;
+  margin-top: -3%;
+  margin-left: 10%;
+  padding-bottom: 2%;
+}
+
+.total-points-box {
+  display: flex;
+  /* justify-content: start; */
+  margin-left: 8%;
+}
+.diamond-points p {
+  /* width: 100px; */
+  font-weight: 600;
+  font-family: "Open Sans", sans-serif;
+  /* padding-right: 20%; */
+}
+.diamond-img {
+  position: absolute;
+  width: 37px;
+  height: 35px;
+  /* justify-items: start; */
+  margin: -0.4% 0% 0% -1.1%;
+}
+.graph-head-buttons {
+  display: flex;
+  margin-left: 50%;
+  width: 100%;
+  transition: 0.5s;
+}
+.total-points {
+  margin-top: -8%;
+  justify-content: start;
+  border-radius: 8px;
+  border: 1px solid #6e6f72;
+  display: flex;
+  background-color: #e0eaf1;
+  height: 33.5px;
+  width: 80px;
+  /* border-radius: 4px; */
+  color: #2867b2;
+}
+.total-points p {
+  padding: 6% 0% 0% 40%;
+  font-size: 15px;
+}
+
+.dailygraph-button,
+.weeklygraph-button,
+.monthlygraph-button,
+.yearlygraph-button {
+  opacity: 0px;
+}
+
+.graph-buttons {
+  /* gap: 1%; */
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1%;
+  border: none;
+  border-radius: 15px;
+  /* background-color: #f5f8ff; */
+  height: 35px;
+  width: 25%;
+  margin-left: 15%;
+  transition: 0.5s;
+  padding: 0.5%;
+  background-color: #f5f8ff;
+}
+
+.graph-button {
+  background-color: #f5f8ff;
+  border: none;
+  color: black;
+  margin: 0% 0% 0% 0%;
+  width: 32%;
+  /* padding: 10px; */
+  gap: 2%;
+  border-radius: 15px;
+  opacity: 0px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.graph-button.active {
+  background-color: #1b4a73;
+  color: #f5f8ff;
+}
+
+.graph-button:not(.active):hover {
+  background-color: #e3eafb;
+}
+
+.history-add{
+  display: flex;
+}
+.history-add.expanded{
+  padding-top: 10px;
+  /* margin-left: 10%; */
+}
+
+.history-add-main{
+  margin-left: 70%;
+  margin-top: 0.5%;
+}
+.history-add-main.expanded{
+  margin-top: 2%;
+}
