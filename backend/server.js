@@ -523,7 +523,7 @@ app.post(api + "/subconnections", (req, res) => {
 app.get(api + "/personalinfo/main/:personId", (req, res) => {
   const { personId } = req.params;
 
-  const query = "SELECT * FROM personalInfo WHERE person_id = ?";
+  const query = "SELECT * FROM personalinfo WHERE person_id = ?";
 
   pool.query(query, [personId], (error, results) => {
     if (error) {
@@ -1661,7 +1661,7 @@ app.post(api + '/schedule', (req, res) => {
   const query = `
     SELECT h.*, p.fullname, p.profile
     FROM history h
-    JOIN personalInfo p ON h.person_id = p.person_id
+    JOIN personalinfo p ON h.person_id = p.person_id
     WHERE h.status = 1
     AND p.useremail = ?
   `;
