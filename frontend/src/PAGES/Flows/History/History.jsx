@@ -403,7 +403,7 @@ export default function History() {
       note,
       purpose,
       points,
-      scheduled_date: scheduled_date ? scheduled_date.tz("America/New_York").format() : null,
+      scheduled_date: scheduled_date ? scheduled_date.tz("America/New_York").format() : "",
       imagePath1,
       imagePath2,
       status: type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : "",

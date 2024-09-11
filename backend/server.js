@@ -10,6 +10,7 @@ const pool = require("./config.js")
 require('dotenv').config(); // Load environment variables
 const auth = require('./auth.js')
 const passport = require("passport");
+const moment = require('moment');
 const session = require("express-session");
 const passportConfig = require("./passport.js")
 const PORT = process.env.PORT;
@@ -1619,17 +1620,26 @@ app.put(api + "/expertiseupload", (req, res) => {
 });
 
 app.post(api + '/addhistory', (req, res) => {
-  const { selectedPersonId, username, type, note, purpose, points, scheduled_date,imagePath1, imagePath2, status } = req.body;
-  // console.log(req.body);
+  const { selectedPersonId, username, type, note, purpose, points, scheduled_date, imagePath1, imagePath2, status } = req.body;
+  console.log('Original data received:', req.body);
 
-  const query = `INSERT INTO history (person_id, agent, type, note,purpose, scheduleddate, visited1, visited2, points, status) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  // Parse and format the scheduled_date
+  const formattedDate = scheduled_date ? moment(scheduled_date).format('YYYY-MM-DD HH:mm:ss') : null; // Format to MySQL datetime format
+  console.log("Formated date: ", formattedDate);
 
-  pool.query(query, [selectedPersonId, username, type, note, purpose, scheduled_date, imagePath1, imagePath2, points, status], (err, result) => {
+  // Prepare the SQL query
+  const query = `
+    INSERT INTO history (person_id, agent, type, note, purpose, scheduleddate, visited1, visited2, points, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  // Execute the SQL query
+  pool.query(query, [selectedPersonId, username, type, note, purpose, formattedDate, imagePath1, imagePath2, points, status], (err, result) => {
     if (err) {
       console.error('Database insert error:', err);
       return res.status(500).json({ message: 'Failed to insert record.' });
     }
+
     res.status(200).json({ message: 'Record inserted successfully', newRecord: result.insertId });
   });
 });
