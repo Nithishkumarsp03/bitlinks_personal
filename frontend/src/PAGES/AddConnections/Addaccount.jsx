@@ -544,7 +544,7 @@ const handleSubconnections = async (e) => {
                 onChange={handleDetailsChange_1}
             />
           </div>
-          <p style={{color: 'red'}}>{error}</p>
+          <p style={{color: 'green'}}>{error}</p>
           <div id="buttonContainer-flowchart-person">
             <button
               onClick={() => setPerson_1(false)}

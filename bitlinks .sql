@@ -228,7 +228,7 @@ CREATE TABLE `history` (
   `note` varchar(255) NOT NULL,
   `purpose` varchar(255) DEFAULT NULL,
   `datetime` datetime NOT NULL DEFAULT current_timestamp(),
-  `scheduleddate` datetime DEFAULT NULL,
+  `scheduleddate` varchar(255) DEFAULT NULL,
   `visited1` varchar(255) DEFAULT NULL,
   `visited2` varchar(255) DEFAULT NULL,
   `points` int(11) NOT NULL,

@@ -745,11 +745,11 @@ ORDER BY p1.person_id DESC;
         return res.status(500).json({ message: "Database error" });
       }
 
-      if (results.length === 0) {
-        return res
-          .status(404)
-          .json({ message: "No data found for the given email" });
-      }
+      // if (results.length === 0) {
+      //   return res
+      //     .status(404)
+      //     .json({ message: "No data found for the given email" });
+      // }
 
       res.json(results); // Return all results as an array
     });

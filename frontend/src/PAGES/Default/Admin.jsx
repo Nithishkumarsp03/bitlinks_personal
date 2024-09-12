@@ -311,9 +311,10 @@ export default function Default(subPersonId) {
       }
     };
     
+    fetchUserNetworks()
 
-    const intervalId = setInterval(fetchUserNetworks, 1000);
-    return () => clearInterval(intervalId);
+    // const intervalId = setInterval(fetchUserNetworks, 1000);
+    // return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
@@ -346,8 +347,9 @@ export default function Default(subPersonId) {
     //   const intervalId = setInterval(fetchPersonalInfo, 1000);
     //   return () => clearInterval(intervalId);
     // }
-    const intervalId = setInterval(fetchPersonalInfo, 1000);
-    return () => clearInterval(intervalId);
+    fetchPersonalInfo()
+    // const intervalId = setInterval(fetchPersonalInfo, 1000);
+    // return () => clearInterval(intervalId);
   }, [email]);
 
   const handleDiscard = () => {
@@ -705,8 +707,10 @@ export default function Default(subPersonId) {
       }
     };
 
-    const intervalId = setInterval(fetchRescheduleData, 1000);
-    return () => clearInterval(intervalId);
+    fetchRescheduleData()
+
+    // const intervalId = setInterval(fetchRescheduleData, 1000);
+    // return () => clearInterval(intervalId);
   }, [notifiedReschedules]);
 
   const colorPriority = {
@@ -813,22 +817,27 @@ export default function Default(subPersonId) {
           },
           body: JSON.stringify({ email }),
         });
-
+  
         const data = await response.json();
-        // console.log(data);
+  
+        // If the data is empty, display "No data found"
+        if (data.length === 0) {
+          setScheduleloading(false);
+          return;
+        }
+  
         setLengthconnection(data.length);
-
+  
         const currentTime = new Date();
-
+  
         const upcomingReschedules = data.filter((item) => {
           const rescheduleTime = new Date(item.scheduleddate);
           const timeDifference = rescheduleTime - currentTime;
-
+  
           // 12 hours in milliseconds: 12 * 60 * 60 * 1000
           return timeDifference <= 12 * 60 * 60 * 1000;
-          // return timeDifference > 0 && timeDifference <= 12 * 60 * 60 * 1000;
         });
-
+  
         setReschedulemyData(upcomingReschedules);
         setScheduleloading(false);
       } catch (error) {
@@ -893,8 +902,9 @@ export default function Default(subPersonId) {
     };
 
     setRankloading(false);
-    const intervalId = setInterval(fetchnetworkRankData, 1000);
-    return () => clearInterval(intervalId);
+    fetchnetworkRankData()
+    // const intervalId = setInterval(fetchnetworkRankData, 1000);
+    // return () => clearInterval(intervalId);
   }, [email]);
 
   return (
