@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
 // Function to send email
 const sendEmailNotification = (toEmail, subject, message) => {
   const mailOptions = {
-    from: `"Personalized skill" <ps.bitsathy.ac.in>`, // Sets "No-Reply" as the sender name
+    from: `"BITLINKS" <nithishkumar.cs23@bitsathy.ac.in>`, // Sets "No-Reply" as the sender name
     to: toEmail, // Receiver's email address
     subject: subject, // Email subject
     text: message, // Email message in plain text
@@ -33,10 +33,8 @@ const sendEmailNotification = (toEmail, subject, message) => {
 };
 
 // Example Usage: Sending an email
-const receiverEmail = 'dharnish.cs23@bitsathy.ac.in'; // Replace with the receiver's email address
-const emailSubject = 'Mischievious Behaviour - reg';
-const emailMessage = `Dear Dharnish P,
-  Due to your malpractice we are blocking your ps portal for 10 days. If you have any queries regarding this action contact Mr Thayanithi S.
-Venue : 4th Floor`;
+const receiverEmail = 'mohitbalaji.ec23@bitsathy.ac.in'; // Replace with the receiver's email address
+const emailSubject = 'Upcoming schedule';
+const emailMessage = `You have an reschedule`;
 
 sendEmailNotification(receiverEmail, emailSubject, emailMessage);

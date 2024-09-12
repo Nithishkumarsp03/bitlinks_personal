@@ -6,6 +6,7 @@
 /.pnp
 .pnp.js
 .env
+/nodemailer.js
 
 # testing
 /coverage
