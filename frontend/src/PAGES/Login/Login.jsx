@@ -21,7 +21,7 @@ export default function Login({ onLogin }) {
   }
 
   useEffect(() => {
-    console.log("showErrorPopup changed:", showErrorPopup);
+    // console.log("showErrorPopup changed:", showErrorPopup);
     if (showErrorPopup) {
       const timer = setTimeout(() => {
         setShowErrorPopup(false);

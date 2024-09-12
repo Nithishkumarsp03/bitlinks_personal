@@ -12,7 +12,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 router.get("/google/callback", passport.authenticate("google", { failureRedirect: `${process.env.CLIENT_URL}/` }), function (req, res) {
     // Includ e the profile picture directly from the Google response
     req.user.token = generateToken(req.user, 600, req.user.NAME, req.user.ROLE, req.user.ID, req.user.EMAIL, req.user.PROFILE_PICTURE);
-    console.log("token:", req.user.token);
+    // console.log("token:", req.user.token);
  
     // Prepare the JSON response with profile picture
     const responseJson = {

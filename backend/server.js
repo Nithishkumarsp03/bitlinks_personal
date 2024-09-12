@@ -5,16 +5,30 @@ const multer = require("multer");
 const fs = require("fs"); // Make sure this line is included
 const path = require("path");
 const app = express();
+const cron = require('node-cron');
 const cors = require("cors");
 const pool = require("./config.js")
 require('dotenv').config(); // Load environment variables
 const auth = require('./auth.js')
 const passport = require("passport");
-const moment = require('moment');
+// const moment = require('moment');
 const session = require("express-session");
 const passportConfig = require("./passport.js")
+const nodemailer = require('nodemailer');
 const PORT = process.env.PORT;
 const api = process.env.API;
+const SECRET_KEY = process.env.JWT_SECRET;
+const jwt = require('jsonwebtoken');
+const authenticate = require('./Authenticate.js')
+
+// Middleware function example
+const myMiddleware = (req, res, next) => {
+  next(); // Pass control to the next middleware function
+};
+
+// Use middleware globally for all routes
+app.use(myMiddleware);
+// app.use(authenticate);
 
 app.use(cors());
 app.use(express.json());
@@ -44,6 +58,14 @@ const storage = multer.diskStorage({
   },
 });
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.APP_PASSWORD,
+  },
+});
+
 const upload = multer({ storage });
 
 // Create the uploads directory if it doesn't exist
@@ -54,6 +76,48 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Serve static files from the uploads directory
 app.use(api + "/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Email sending endpoint
+app.post('/send-email', authenticate, (req, res) => {
+  const { toEmail, subject, message } = req.body;
+
+  // Get the token from the Authorization header
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
+
+  // Log for debugging
+  console.log("Authorization Header:", authHeader);
+  console.log("Token:", token);
+
+  if (!token) {
+    return res.status(401).json({ message: "Authorization token is required" });
+  }
+
+  // Verify the token
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      console.error("Token verification error:", err.message);
+      return res.status(403).json({ message: "Invalid token" });
+    }
+
+    // Proceed with email sending if token is valid
+    const mailOptions = {
+      from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
+      to: toEmail,
+      subject: subject,
+      text: message,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).send('Error sending email');
+      }
+      console.log('Email sent:', info.response);
+      res.status(200).send('Email sent successfully');
+    });
+  });
+});
 
 app.post(api + "/google", (req, res) => {
   const { email } = req.body;
@@ -86,7 +150,8 @@ app.post(api + "/google", (req, res) => {
 });
 
 
-app.post(api + "/check-connection", (req, res) => {
+app.post(api + "/check-connection", authenticate, (req, res) => {
+  console.log("check connection");
   const { name } = req.body;
   const normalizedName = name.trim().toLowerCase(); // Normalize the input name
 
@@ -133,10 +198,9 @@ app.post(api + '/upload/history', upload.array('files', 2), (req, res) => {
   res.json({ paths });
 });
 
-app.post(api + "/person", (req, res) => {
-  const { personInfo, imagePath, email, Completion , TotalProgress} = req.body;
-  // console.log("Completion = ",Completion);
-  // console.log("Total Completion = ",TotalProgress);
+app.post(api + "/person", authenticate, (req, res) => {
+  const { personInfo, imagePath, email, Completion, TotalProgress } = req.body;
+
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -215,6 +279,7 @@ app.post(api + "/person", (req, res) => {
         })
       );
 
+      // Other table insertions follow the same pattern
       const consultancySql = `
         INSERT INTO consultancy (person_id)
         VALUES (?)
@@ -286,11 +351,10 @@ app.post(api + "/person", (req, res) => {
       );
 
       const previousexperienceSql = `
-    INSERT INTO previousexperience (person_id)
-    VALUES (?)
-    ON DUPLICATE KEY UPDATE Experience_Completion = VALUES(Experience_Completion)
-`;
-
+        INSERT INTO previousexperience (person_id)
+        VALUES (?)
+        ON DUPLICATE KEY UPDATE Experience_Completion = VALUES(Experience_Completion)
+      `;
       insertions.push(
         new Promise((resolve, reject) => {
           connection.query(previousexperienceSql, [personId], (err) => {
@@ -302,16 +366,16 @@ app.post(api + "/person", (req, res) => {
 
       const pointsSummary = `
         INSERT INTO person_points_summary (person_id, last_updated)
-        VALUES (?, NOW())`;
-
-          insertions.push(
-            new Promise((resolve, reject) => {
-              connection.query(pointsSummary, [personId], (err) => {
-                if (err) reject(err);
-                resolve();
-              });
-            })
-          );
+        VALUES (?, NOW())
+      `;
+      insertions.push(
+        new Promise((resolve, reject) => {
+          connection.query(pointsSummary, [personId], (err) => {
+            if (err) reject(err);
+            resolve();
+          });
+        })
+      );
 
       // Execute all insertions
       Promise.all(insertions)
@@ -328,18 +392,18 @@ app.post(api + "/person", (req, res) => {
   });
 });
 //////////////////////// Sub-Connections///////////////////////////////
-app.post(api + "/subconnections", (req, res) => {
-  const { email, selectedPersonId, connectionInfo, imagePath, Completion, TotalProgress } =
-    req.body;
+app.post(api + "/subconnections", authenticate, (req, res) => {
+  const { email, selectedPersonId, connectionInfo, imagePath, Completion, TotalProgress } = req.body;
+
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
 
-    // SQL query to insert data into the connections table
+    // SQL query to insert data into the personalinfo table
     let sql = `
-      INSERT INTO personalinfo (useremail,fullname, phonenumber, age, email, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion, sub_id)
+      INSERT INTO personalinfo (useremail, fullname, phonenumber, age, email, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion, sub_id)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
@@ -408,6 +472,7 @@ app.post(api + "/subconnections", (req, res) => {
         })
       );
 
+      // Other table insertions follow the same pattern
       const consultancySql = `
         INSERT INTO consultancy (person_id)
         VALUES (?)
@@ -479,11 +544,10 @@ app.post(api + "/subconnections", (req, res) => {
       );
 
       const previousexperienceSql = `
-    INSERT INTO previousexperience (person_id)
-    VALUES (?)
-    ON DUPLICATE KEY UPDATE Experience_Completion = VALUES(Experience_Completion)
-`;
-
+        INSERT INTO previousexperience (person_id)
+        VALUES (?)
+        ON DUPLICATE KEY UPDATE Experience_Completion = VALUES(Experience_Completion)
+      `;
       insertions.push(
         new Promise((resolve, reject) => {
           connection.query(previousexperienceSql, [personId], (err) => {
@@ -495,16 +559,16 @@ app.post(api + "/subconnections", (req, res) => {
 
       const pointsSummary = `
         INSERT INTO person_points_summary (person_id, last_updated)
-        VALUES (?, NOW())`;
-
-          insertions.push(
-            new Promise((resolve, reject) => {
-              connection.query(pointsSummary, [personId], (err) => {
-                if (err) reject(err);
-                resolve();
-              });
-            })
-          );
+        VALUES (?, NOW())
+      `;
+      insertions.push(
+        new Promise((resolve, reject) => {
+          connection.query(pointsSummary, [personId], (err) => {
+            if (err) reject(err);
+            resolve();
+          });
+        })
+      );
 
       // Execute all insertions
       Promise.all(insertions)
@@ -521,7 +585,7 @@ app.post(api + "/subconnections", (req, res) => {
   });
 });
 
-app.get(api + "/personalinfo/main/:personId", (req, res) => {
+app.get(api + "/personalinfo/main/:personId", authenticate,(req, res) => {
   const { personId } = req.params;
 
   const query = "SELECT * FROM personalinfo WHERE person_id = ?";
@@ -536,7 +600,7 @@ app.get(api + "/personalinfo/main/:personId", (req, res) => {
 });
 
 // API to fetch sub-connections (entries where sub_id = selectedPersonId)
-app.get(api + "/personalinfo/subconnections/:personId", (req, res) => {
+app.get(api + "/personalinfo/subconnections/:personId", authenticate, (req, res) => {
   const { personId } = req.params;
 
   const query = `SELECT personalinfo.*, person_points_summary.*
@@ -555,7 +619,7 @@ app.get(api + "/personalinfo/subconnections/:personId", (req, res) => {
 });
 
 
-app.get(api + "/userNetworks", (req, res) => {
+app.get(api + "/userNetworks", authenticate, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -617,7 +681,7 @@ ORDER BY p1.person_id DESC;
   });
 });
 
-app.post(api + "/userConnections", (req, res) => {
+app.post(api + "/userConnections", authenticate, (req, res) => {
   const { email } = req.body;
   
   if (!email) {
@@ -692,7 +756,7 @@ ORDER BY p1.person_id DESC;
   });
 });
 
-app.post(api + '/personstatus', (req, res) => {
+app.post(api + '/personstatus', authenticate, (req, res) => {
   const {person, reason, status} = req.body;
   // console.log(req.body);
   const query = `UPDATE personalinfo
@@ -735,7 +799,7 @@ app.post(api + '/userranks', (req, res) => {
   });
 });
 
-app.post(api + '/networkranks', (req, res) => {
+app.post(api + '/networkranks', authenticate, (req, res) => {
 
   const query = `
     SELECT
@@ -761,7 +825,7 @@ app.post(api + '/networkranks', (req, res) => {
 });
 
 
-app.post(api + "/summary", (req, res) => {
+app.post(api + "/summary", authenticate, (req, res) => {
   const {selectedPersonId} = req.body;
   // console.log("This is id:", person_id);
 
@@ -832,7 +896,7 @@ GROUP BY
 
 
 
-app.get(api + "/persondata/:id", (req, res) => {
+app.get(api + "/persondata/:id", authenticate, (req, res) => {
   const person_id = req.params.id;
 
   pool.getConnection((err, connection) => {
@@ -856,10 +920,10 @@ app.get(api + "/persondata/:id", (req, res) => {
         }
 
         // If no data is found
-        if (results.length === 0) {
-          res.status(404).json({ message: "Person not found." });
-          return;
-        }
+        // if (results.length === 0) {
+        //   res.status(404).json({ message: "Person not found." });
+        //   return;
+        // }
 
         res.json(results[0]);
       }
@@ -867,7 +931,7 @@ app.get(api + "/persondata/:id", (req, res) => {
   });
 });
 
-app.post(api + "/experiencedata", (req, res) => {
+app.post(api + "/experiencedata", authenticate, (req, res) => {
   const { person_id } = req.body;
   // console.log("Fetching experience data for ID:", person_id);
 
@@ -904,7 +968,7 @@ app.post(api + "/experiencedata", (req, res) => {
   });
 });
 
-app.post(api + "/companydata", (req, res) => {
+app.post(api + "/companydata", authenticate, (req, res) => {
   const { person_id } = req.body;
   // console.log("This is id:", person_id);
 
@@ -941,7 +1005,7 @@ app.post(api + "/companydata", (req, res) => {
   });
 });
 
-app.get(api + "/expertisedata/:id", (req, res) => {
+app.get(api + "/expertisedata/:id", authenticate, (req, res) => {
   const person_id = req.params.id;
   // console.log("This is id:", person_id);
 
@@ -978,7 +1042,7 @@ app.get(api + "/expertisedata/:id", (req, res) => {
   });
 });
 
-app.get(api + "/expertisedata/domains" , (req, res) => {
+app.get(api + "/expertisedata/domains", authenticate, (req, res) => {
 
   pool.getConnection((err,connection) => {
     if(err) {
@@ -1017,7 +1081,7 @@ app.get(api + "/expertisedata/domains" , (req, res) => {
   })
 })
 
-app.get(api + "/placementdata/:id", (req, res) => {
+app.get(api + "/placementdata/:id", authenticate, (req, res) => {
   const person_id = req.params.id;
   // console.log("This is id:", person_id);
 
@@ -1054,7 +1118,7 @@ app.get(api + "/placementdata/:id", (req, res) => {
   });
 });
 
-app.post(api + "/consultancydata", (req, res) => {
+app.post(api + "/consultancydata", authenticate, (req, res) => {
   const { person_id } = req.body;
   // console.log("This is id:", person_id);
 
@@ -1091,7 +1155,7 @@ app.post(api + "/consultancydata", (req, res) => {
   });
 });
 
-app.post(api + "/internshipdata", (req, res) => {
+app.post(api + "/internshipdata", authenticate, (req, res) => {
   const { person_id } = req.body;
   // console.log("This is internship:", person_id);
 
@@ -1128,7 +1192,7 @@ app.post(api + "/internshipdata", (req, res) => {
   });
 });
 
-app.post(api + "/alumnidata", (req, res) => {
+app.post(api + "/alumnidata", authenticate, (req, res) => {
   const { person_id } = req.body;
   // console.log("This is internship:", person_id);
 
@@ -1165,7 +1229,7 @@ app.post(api + "/alumnidata", (req, res) => {
   });
 });
 
-app.post(api + "/outcomedata", (req, res) => {
+app.post(api + "/outcomedata", authenticate, (req, res) => {
   const { person_id } = req.body;
 
   pool.getConnection((err, connection) => {
@@ -1201,7 +1265,7 @@ app.post(api + "/outcomedata", (req, res) => {
   });
 });
 
-app.put(api + "/personupload", (req, res) => {
+app.put(api + "/personupload", authenticate, (req, res) => {
   const {
     selectedPersonId,
     personInfo,
@@ -1256,7 +1320,7 @@ app.put(api + "/personupload", (req, res) => {
   });
 });
 
-app.put(api + "/companyupload", (req, res) => {
+app.put(api + "/companyupload", authenticate, (req, res) => {
   const { selectedPersonId, CompanyInfo, Company_Completion } = req.body;
   console.log(req.body);
 
@@ -1300,7 +1364,7 @@ app.put(api + "/companyupload", (req, res) => {
   });
 });
 
-app.put(api + "/alumniupload", (req, res) => {
+app.put(api + "/alumniupload", authenticate, (req, res) => {
   const { selectedPersonId, Alumniinfo, Alumni_Completion } = req.body;
 
   pool.getConnection((err, connection) => {
@@ -1340,7 +1404,7 @@ app.put(api + "/alumniupload", (req, res) => {
   });
 });
 
-app.put(api + "/outcomeupload", (req, res) => {
+app.put(api + "/outcomeupload", authenticate, (req, res) => {
   const { selectedPersonId, Outcomeinfo, Outcome_Completion } = req.body;
 
   pool.getConnection((err, connection) => {
@@ -1378,7 +1442,7 @@ app.put(api + "/outcomeupload", (req, res) => {
   });
 });
 
-app.put(api + "/experienceupload", (req, res) => {
+app.put(api + "/experienceupload", authenticate, (req, res) => {
   const {
     selectedPersonId,
     Ifexperience,
@@ -1424,7 +1488,7 @@ app.put(api + "/experienceupload", (req, res) => {
   });
 });
 
-app.put(api + "/placementupload", (req, res) => {
+app.put(api + "/placementupload", authenticate, (req, res) => {
   const { selectedPersonId, Ifplacement, Placementinfo, Placement_Completion } =
     req.body;
 
@@ -1469,7 +1533,7 @@ app.put(api + "/placementupload", (req, res) => {
   });
 });
 
-app.put(api + "/consultancyupload", (req, res) => {
+app.put(api + "/consultancyupload", authenticate, (req, res) => {
   const {
     selectedPersonId,
     Ifconsultancy,
@@ -1519,7 +1583,7 @@ app.put(api + "/consultancyupload", (req, res) => {
   });
 });
 
-app.put(api + "/internshipupload", (req, res) => {
+app.put(api + "/internshipupload", authenticate, (req, res) => {
   const {
     selectedPersonId,
     Ifinternship,
@@ -1569,7 +1633,7 @@ app.put(api + "/internshipupload", (req, res) => {
   });
 });
 
-app.put(api + "/expertiseupload", (req, res) => {
+app.put(api + "/expertiseupload", authenticate, (req, res) => {
   const { selectedPersonId, ExpertiseInfo, Expertise_Completion } = req.body;
   // console.log(req.body);
 
@@ -1619,22 +1683,44 @@ app.put(api + "/expertiseupload", (req, res) => {
   });
 });
 
-app.post(api + '/addhistory', (req, res) => {
-  const { selectedPersonId, username, type, note, purpose, points, scheduled_date, imagePath1, imagePath2, status } = req.body;
+
+const moment = require('moment-timezone');
+
+// Example timezone you want to use, e.g., 'Asia/Kolkata'
+const timezone = 'Asia/Kolkata'; 
+
+app.post(api + '/addhistory', authenticate, (req, res) => {
+  const {
+    selectedPersonId,
+    username,
+    email,
+    type,
+    note,
+    purpose,
+    points,
+    scheduled_date,
+    imagePath1,
+    imagePath2,
+    status
+  } = req.body;
+
   console.log('Original data received:', req.body);
 
-  // Parse and format the scheduled_date
-  const formattedDate = scheduled_date ? moment(scheduled_date).format('YYYY-MM-DD HH:mm:ss') : null; // Format to MySQL datetime format
-  console.log("Formated date: ", formattedDate);
+  // Format the provided scheduled_date to MySQL datetime format with the correct timezone
+  const formattedDate = scheduled_date
+    ? moment.tz(scheduled_date, timezone).format('YYYY-MM-DD HH:mm:ss')
+    : null;
+
+  console.log("Formatted date: ", formattedDate);
 
   // Prepare the SQL query
   const query = `
-    INSERT INTO history (person_id, agent, type, note, purpose, scheduleddate, visited1, visited2, points, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO history (person_id, agent, email, type, note, purpose, scheduleddate, visited1, visited2, points, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   // Execute the SQL query
-  pool.query(query, [selectedPersonId, username, type, note, purpose, formattedDate, imagePath1, imagePath2, points, status], (err, result) => {
+  pool.query(query, [selectedPersonId, username, email, type, note, purpose, formattedDate, imagePath1, imagePath2, points, status], (err, result) => {
     if (err) {
       console.error('Database insert error:', err);
       return res.status(500).json({ message: 'Failed to insert record.' });
@@ -1644,7 +1730,8 @@ app.post(api + '/addhistory', (req, res) => {
   });
 });
 
-app.get(api + '/fetch-scheduled', (req, res) => {
+
+app.get(api + '/fetch-scheduled', authenticate, (req, res) => {
   const query = `SELECT h.*, p.*
                 FROM history h
                 JOIN personalinfo p ON h.person_id = p.person_id
@@ -1661,7 +1748,7 @@ app.get(api + '/fetch-scheduled', (req, res) => {
 });
 
 // Route to fetch all schedule data
-app.post(api + '/schedule', (req, res) => {
+app.post(api + '/schedule', authenticate, (req, res) => {
   const { email } = req.body;
 
   if (!email) {
@@ -1687,7 +1774,7 @@ app.post(api + '/schedule', (req, res) => {
 });
 
 
-app.post(api + '/history-status', (req, res) => {
+app.post(api + '/history-status', authenticate, (req, res) => {
   const { history_id, status } = req.body;
 
   if (!history_id || typeof status === 'undefined') {
@@ -1710,7 +1797,7 @@ app.post(api + '/history-status', (req, res) => {
   });
 });
 
-app.post(api + '/history-status', (req, res) => {
+app.post(api + '/history-status', authenticate, (req, res) => {
   const { history_id, status } = req.body;
 
   if (!history_id || typeof status === 'undefined') {
@@ -1734,54 +1821,143 @@ app.post(api + '/history-status', (req, res) => {
 });
 
 
-app.post(api + "/history", (req, res) => {
+app.post(api + "/history", authenticate, (req, res) => {
   const { selectedPersonId } = req.body;
 
-  if (!selectedPersonId) {
-    return res.status(400).json({ message: "selectedPersonId is required" });
+  // Get the token from the Authorization header
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
+  
+  // Log for debugging
+  console.log("Authorization Header:", authHeader);
+  console.log("Token:", token);
+
+  if (!token) {
+    return res.status(401).json({ message: "Authorization token is required" });
   }
 
-  pool.getConnection((err, connection) => {
+  // Verify the token
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
-      console.error("Error getting database connection:", err);
-      return res.status(500).json({ message: "Database error" });
+      console.error("Token verification error:", err.message);
+      return res.status(403).json({ message: "Invalid token" });
     }
 
-    // Fetch the history records and count them in two separate queries
-    const sql = "SELECT * FROM history WHERE person_id = ? ORDER BY history_id DESC";
-    const countSql = "SELECT COUNT(*) AS totalCount FROM history WHERE person_id = ?";
+    // Proceed with the rest of the logic if token is valid
+    if (!selectedPersonId) {
+      return res.status(400).json({ message: "selectedPersonId is required" });
+    }
 
-    // Execute the first query to get the history records
-    connection.query(sql, [selectedPersonId], (err, results) => {
+    pool.getConnection((err, connection) => {
       if (err) {
-        connection.release();
-        console.error("Error executing database query:", err);
+        console.error("Error getting database connection:", err);
         return res.status(500).json({ message: "Database error" });
       }
 
-      // If no records found, respond with a 404 status
-      if (results.length === 0) {
-        connection.release();
-        return res.status(404).json({ message: "No data found for the given person_id" });
-      }
-
-      // Execute the second query to get the count of records
-      connection.query(countSql, [selectedPersonId], (err, countResult) => {
-        connection.release();
-
+      // Fetch the history records
+      const sql = "SELECT * FROM history WHERE person_id = ? ORDER BY history_id DESC";
+      connection.query(sql, [selectedPersonId], async (err, results) => {
         if (err) {
-          console.error("Error executing count query:", err);
+          connection.release();
+          console.error("Error executing database query:", err);
           return res.status(500).json({ message: "Database error" });
         }
 
-        // Send the records and the count in the response
-        res.json({ data: results, totalCount: countResult[0].totalCount });
+        // If no records found, respond with a 404 status
+        // if (results.length === 0) {
+        //   connection.release();
+        //   return res.status(404).json({ message: "No data found for the given person_id" });
+        // }
+
+        // Count the total number of records
+        const countSql = "SELECT COUNT(*) AS totalCount FROM history WHERE person_id = ?";
+        connection.query(countSql, [selectedPersonId], async (err, countResult) => {
+          connection.release();
+
+          if (err) {
+            console.error("Error executing count query:", err);
+            return res.status(500).json({ message: "Database error" });
+          }
+
+          const totalCount = countResult[0].totalCount;
+
+          // Send the records and the count in the response
+          res.json({ data: results, totalCount });
+          console.log("Fetched Data:", results);
+        });
       });
     });
   });
 });
 
-app.get(api + '/addressdata',(req,res) => {
+const checkAndSendEmails = () => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error getting database connection:", err);
+      return;
+    }
+
+    const now = new Date();
+    const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000); // 30 minutes ago
+
+    // Fetch records within the last 30 minutes where email has not been sent
+    const sql = `
+      SELECT * 
+      FROM history 
+      WHERE scheduledDate >= ? 
+      AND emailSent = FALSE
+    `;
+    connection.query(sql, [thirtyMinutesAgo], async (err, results) => {
+      if (err) {
+        console.error("Error executing database query:", err);
+        connection.release();
+        return;
+      }
+      console.log(results);
+
+      if (results.length > 0) {
+        for (const record of results) {
+          const { note, scheduleddate, email } = record; // Extract note and scheduleddate for each record
+
+          const mailOptions = {
+            from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
+            to: email, // Change this to your recipient
+            subject: "Upcoming Event Reminder",
+            text: `You have an event rescheduled within the next 30 minutes about ${note} on ${new Date(scheduleddate).toLocaleString()}.`,
+          };
+
+          try {
+            await transporter.sendMail(mailOptions);
+            console.log('Email sent successfully');
+
+            // Update records to set emailSent to TRUE
+            const updateSql = "UPDATE history SET emailSent = TRUE WHERE history_id = ?";
+            connection.query(updateSql, [record.history_id], (err) => {
+              if (err) {
+                console.error("Error updating emailSent status:", err);
+              }
+            });
+
+          } catch (error) {
+            console.error('Error sending email:', error);
+          }
+        }
+      }
+
+      connection.release();
+    });
+  });
+};
+
+// Schedule the task to run every minute
+cron.schedule('* * * * *', () => {
+  console.log('Checking for upcoming events...');
+  checkAndSendEmails();
+});
+
+
+
+app.get(api + '/addressdata', authenticate, (req,res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -1799,7 +1975,7 @@ app.get(api + '/addressdata',(req,res) => {
   });
 });
 
-   app.put(api + '/updatestatusaddress', (req, res) => {
+   app.put(api + '/updatestatusaddress', authenticate, (req, res) => {
   const { id, status } = req.body;
   const query = 'UPDATE address_table SET status = ? WHERE id = ?';
 
@@ -1824,7 +2000,7 @@ app.get(api + '/addressdata',(req,res) => {
   });
 });
 
-app.post(api + '/addresspost', (req,res) => {
+app.post(api + '/addresspost', authenticate, (req,res) => {
   const {location} = req.body;
   // console.log(req.body);
 
@@ -1845,7 +2021,7 @@ app.post(api + '/addresspost', (req,res) => {
   });
 });
 
-app.get(api + '/companydata',(req,res) => {
+app.get(api + '/companydata', authenticate, (req,res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -1863,7 +2039,7 @@ app.get(api + '/companydata',(req,res) => {
   });
 });
 
-app.put(api + '/updatestatuscompany', (req, res) => {
+app.put(api + '/updatestatuscompany', authenticate, (req, res) => {
   const { id, status } = req.body;
   const query = 'UPDATE company_table SET status = ? WHERE id = ?';
 
@@ -1889,7 +2065,7 @@ app.put(api + '/updatestatuscompany', (req, res) => {
 });
 
 // server.js
-app.post(api + '/update-status', (req, res) => {
+app.post(api + '/update-status', authenticate, (req, res) => {
   const { history_id } = req.body; // Get the history_id from the request body
 
   if (!history_id) {
@@ -1907,7 +2083,7 @@ app.post(api + '/update-status', (req, res) => {
     res.status(200).json({ message: 'Status updated successfully' });
   });
 });
-app.post(api + '/update-status', (req, res) => {
+app.post(api + '/update-status', authenticate, (req, res) => {
   const { history_id, status } = req.body;
 
   if (!history_id || status === undefined) {
@@ -1930,7 +2106,7 @@ app.post(api + '/update-status', (req, res) => {
 });
 
 
-app.post(api + '/companypost', (req,res) => {
+app.post(api + '/companypost', authenticate, (req,res) => {
   const {company} = req.body;
   // console.log(req.body);
 
@@ -1947,7 +2123,7 @@ app.post(api + '/companypost', (req,res) => {
   });
 });
 
-app.get(api + '/domaindata',(req,res) => {
+app.get(api + '/domaindata', authenticate, (req,res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -1965,7 +2141,7 @@ app.get(api + '/domaindata',(req,res) => {
   });
 });
 
-app.put(api + '/updatestatusdomain', (req, res) => {
+app.put(api + '/updatestatusdomain', authenticate, (req, res) => {
   const { id, status } = req.body;
   const query = 'UPDATE domain_table SET status = ? WHERE id = ?';
 
@@ -1990,7 +2166,7 @@ app.put(api + '/updatestatusdomain', (req, res) => {
   });
 });
 
-app.post(api + '/domainpost', (req,res) => {
+app.post(api + '/domainpost', authenticate, (req,res) => {
   const {domain} = req.body;
   // console.log(req.body);
 
@@ -2011,7 +2187,7 @@ app.post(api + '/domainpost', (req,res) => {
   });
 });
 
-app.get(api + '/roledata',(req,res) => {
+app.get(api + '/roledata', authenticate, (req,res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -2029,7 +2205,7 @@ app.get(api + '/roledata',(req,res) => {
   });
 });
 
-app.put(api + '/updatestatusrole', (req, res) => {
+app.put(api + '/updatestatusrole', authenticate, (req, res) => {
   const { id, status } = req.body;
   const query = 'UPDATE role_table SET status = ? WHERE id = ?';
 
@@ -2054,7 +2230,7 @@ app.put(api + '/updatestatusrole', (req, res) => {
   });
 });
 
-app.post(api + '/rolepost', (req, res) => {
+app.post(api + '/rolepost', authenticate, (req, res) => {
   const { role } = req.body;
 
   pool.getConnection((err, connection) => {
@@ -2077,7 +2253,7 @@ app.post(api + '/rolepost', (req, res) => {
   });
 });
 
-app.get(api + '/skilldata',(req,res) => {
+app.get(api + '/skilldata', authenticate, (req,res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -2095,7 +2271,7 @@ app.get(api + '/skilldata',(req,res) => {
   });
 });
 
-app.put(api + '/updatestatusskill', (req, res) => {
+app.put(api + '/updatestatusskill', authenticate, (req, res) => {
   const { id, status } = req.body;
   const query = 'UPDATE skillset_table SET status = ? WHERE id = ?';
 
@@ -2120,7 +2296,7 @@ app.put(api + '/updatestatusskill', (req, res) => {
   });
 });
 
-app.post(api + '/skillpost', (req, res) => {
+app.post(api + '/skillpost', authenticate, (req, res) => {
   const { skill } = req.body;
 
   pool.getConnection((err, connection) => {
@@ -2144,7 +2320,7 @@ app.post(api + '/skillpost', (req, res) => {
 });
 
 
-app.get(api + '/logindata',(req,res) => {
+app.get(api + '/logindata', authenticate, (req,res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -2162,7 +2338,7 @@ app.get(api + '/logindata',(req,res) => {
   });
 });
 
-app.put(api + '/updatestatuslogin', (req, res) => {
+app.put(api + '/updatestatuslogin', authenticate, (req, res) => {
   const { id, status } = req.body;
   // console.log("Update login",req.body);
   const query = 'UPDATE login SET STATUS = ? WHERE ID = ?';
@@ -2188,7 +2364,7 @@ app.put(api + '/updatestatuslogin', (req, res) => {
   });
 });
 
-app.post(api + '/loginpost', (req, res) => {
+app.post(api + '/loginpost', authenticate, (req, res) => {
   const { name, email } = req.body;
 
   pool.getConnection((err, connection) => {

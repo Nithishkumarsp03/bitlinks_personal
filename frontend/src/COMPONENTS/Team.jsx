@@ -52,7 +52,7 @@ const Team = () => {
     <div className="team-section">
       <h2 className="team-title">Meet Our Team</h2>
       <p className="team-subtitle">
-        Members who contributed for BITLINKS development.
+        {/* Members who contributed for BITLINKS development. */}
       </p>
       <div className="team-grid">
         {teamMembers.map((member, index) => (

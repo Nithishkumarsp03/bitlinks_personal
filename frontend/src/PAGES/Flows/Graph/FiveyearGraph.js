@@ -2,77 +2,118 @@ import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import Diamond from "../../../Assets/Gem.svg";
 import { usePerson } from '../../../COMPONENTS/Context';
+import Cookies from 'js-cookie';
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 export default function ApexChartFiveYearlyGraph() {
   const [seriesData, setSeriesData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [totalPoints, setTotalPoints] = useState(0);
   const { selectedPersonId } = usePerson();
+  const decrypt = (ciphertext) => {
+    try {
+        if (ciphertext) {
+            const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
+        return '';
+    } catch (error) {
+        console.error("Decryption error:", error.message);
+        return '';
+    }
+};
+
+const token = decrypt(Cookies.get("token"));
   
 
   useEffect(() => {
     const fetchYearlyData = async () => {
-      console.log(`${process.env.REACT_APP_API}/history`)
+      if (!selectedPersonId) {
+        console.error("Selected person ID is not defined.");
+        return;
+      }
+  
       try {
         const response = await fetch(`${process.env.REACT_APP_API}/history`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({ selectedPersonId }),
         });
-
-        const data = await response.json();
-        console.log('Fetched Data:', data);
-
+  
+        if (!response.ok) {
+          console.error('Failed to fetch data:', response.statusText);
+          return;
+        }
+  
+        const result = await response.json();
+        // console.log('Fetched Data:', result);
+  
+        // Extract the array from the 'data' property
+        const data = result.data;
+  
+        // Check if 'data' is an array
+        if (!Array.isArray(data)) {
+          console.error('Unexpected data format:', data);
+          return;
+        }
+  
         let totalPoints = 0;
         const currentYear = new Date().getFullYear();
         let maxYear = currentYear;
-
-        // Find the maximum year from the data
+  
+        // Process the data
         data.forEach(entry => {
+          if (!entry.datetime || entry.points === undefined) {
+            console.error('Invalid entry format:', entry);
+            return;
+          }
+  
           const entryYear = new Date(entry.datetime).getFullYear();
           if (entryYear > maxYear) {
-            maxYear = entryYear;  // Set maxYear based on the data
+            maxYear = entryYear;
           }
         });
-
+  
         const fiveYearRanges = {};
-
-        // Create up to 5 ranges ending with the last year found in the data (maxYear)
         for (let startYear = maxYear - 4; startYear <= maxYear; startYear++) {
           const range = `${startYear - 4}-${startYear}`;
-          fiveYearRanges[range] = 0;  // Initialize points for each range
+          fiveYearRanges[range] = 0;
         }
-
-        // Add points to the correct 5-year ranges
+  
         data.forEach(entry => {
           const entryYear = new Date(entry.datetime).getFullYear();
-
           Object.keys(fiveYearRanges).forEach(range => {
             const [startYear, endYear] = range.split('-').map(Number);
             if (entryYear >= startYear && entryYear <= endYear) {
               fiveYearRanges[range] += entry.points;
             }
           });
-
           totalPoints += entry.points;
         });
-
-        // Get the most recent 5 ranges
+  
         const labels = Object.keys(fiveYearRanges).slice(-5);
         const values = Object.values(fiveYearRanges).slice(-5);
-
-        setLabels(labels);  // Set the 5-year ranges as labels
-        setSeriesData([{ name: 'Points', data: values }]);  // Update the series data
-        setTotalPoints(totalPoints);  // Update total points
+  
+        if (labels.length === 0 || values.length === 0) {
+          console.error('No data to display.');
+          return;
+        }
+  
+        setLabels(labels);
+        setSeriesData([{ name: 'Points', data: values }]);
+        setTotalPoints(totalPoints);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
+  
     fetchYearlyData();
-  }, [selectedPersonId]);
+  }, [selectedPersonId]);  
 
   const options = {
     chart: {

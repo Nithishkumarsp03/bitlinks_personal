@@ -148,16 +148,24 @@ dayjs.extend(timezone);
 
 export default function History() {
   const decrypt = (ciphertext) => {
-    if (ciphertext) {
-      const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
-      return bytes.toString(CryptoJS.enc.Utf8);
+    try {
+      if (ciphertext) {
+        const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      }
+      return '';
+    } catch (error) {
+      console.error("Decryption error:", error.message);
+      return '';
     }
-    return '';
   };
+  
+  const token = decrypt(Cookies.get("token"));
   const api = process.env.REACT_APP_API
   const timezoneString = 'America/New_York'; 
 
   const username = decrypt(Cookies.get("name"));
+  const email = decrypt(Cookies.get("email"));
   const { selectedPersonId } = usePerson();
   const [activeStep, setActiveStep] = useState(null);
   const [AddHistory, setAddHistory] = useState(false);
@@ -212,7 +220,7 @@ export default function History() {
       .then(data => {
         if (data.path) {
           setImagePath(data.path);
-          console.log(`${label}: ${data.path}`);
+          // console.log(`${label}: ${data.path}`);
         } else {
           console.error('Error: Image path not returned');
         }
@@ -228,7 +236,7 @@ export default function History() {
   const pointsMapping = {
     Call: 3,
     "Missed Call": 0,
-    "Reschedule Call": 1,
+    "Reschedule Call": 0,
     SMS: 4,
     Email: 5,
     Messenger: 8,
@@ -292,14 +300,14 @@ export default function History() {
     // Ensure the time is converted and stored in the correct timezone
     const localizedDate = newDate.tz(timezoneString);
     setCreatedDate(localizedDate);
-    console.log('Selected Date/Time:', localizedDate.format('YYYY-MM-DD HH:mm:ss Z')); // Logs in local timezone
+    // console.log('Selected Date/Time:', localizedDate.format('YYYY-MM-DD HH:mm:ss Z')); // Logs in local timezone
   };
 
   const handlescheduleddate = (newDate) => {
     // Ensure the time is converted and stored in the correct timezone
     const localizedDate = newDate.tz(timezoneString);
     setScheduledDate(localizedDate);
-    console.log('Selected Date/Time:', localizedDate.format('YYYY-MM-DD HH:mm:ss Z')); // Logs in local timezone
+    // console.log('Selected Date/Time:', localizedDate.format('YYYY-MM-DD HH:mm:ss Z')); // Logs in local timezone
   };
   const statusMapping = (type) => {
     if (type === "Reschedule Call" || type === "Rescheduled Visit") {
@@ -329,6 +337,7 @@ export default function History() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(updateData),
     })
@@ -341,7 +350,7 @@ export default function History() {
         return response.json();
       })
       .then((data) => {
-        console.log("Status updated successfully:", data);
+        // console.log("Status updated successfully:", data);
   
         // Update the state of the specific item in the frontend
         fetchHistory();
@@ -373,6 +382,7 @@ export default function History() {
   };  
   
   const handleAdd = (e) => {
+    // console.log('clicked');
     e.preventDefault();
     
     if (type === "") {
@@ -399,6 +409,7 @@ export default function History() {
     const data = {
       selectedPersonId,
       username,
+      email,
       type: type || "",
       note,
       purpose,
@@ -409,13 +420,14 @@ export default function History() {
       status: type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : 0,
     };
   
-    console.log("Data being sent:", JSON.stringify(data));
+    // console.log("Data being sent:", JSON.stringify(data));
   
     // Make the API call to add the history record
     fetch(api + "/addhistory", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(data),
     })
@@ -428,7 +440,7 @@ export default function History() {
         return response.json();
       })
       .then((newRecord) => {
-        console.log("Record added:", newRecord);
+        // console.log("Record added:", newRecord);
         // Update the local state with the new record
         setHistoryRecords((prevRecords) => [...prevRecords, newRecord]);
         fetchHistory(); // Fetch the updated history immediately after adding new record
@@ -446,6 +458,7 @@ export default function History() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ selectedPersonId }),
       });
@@ -968,7 +981,7 @@ export default function History() {
                 <div
                   style={{
                     margin: "0% 0% 0% 5%",
-                    width: "11.4vw",
+                    width: "13.4vw",
                     display: "flex",
                     backgroundColor: bgcolorMapping[selectedItem.type],
                     padding: "0% 2% 0% 2%",
@@ -1008,7 +1021,7 @@ export default function History() {
                 <div
                   style={{
                     margin: "0% 0% 0% 5%",
-                    width: "11.4vw",
+                    width: "12.4vw",
                     display: "flex",
                     backgroundColor: bgcolorMapping[selectedItem.type],
                     padding: "0% 2% 0% 2%",

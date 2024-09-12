@@ -5,6 +5,10 @@ import { TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import BeatLoader from './BeatLoader';
+import Cookies from 'js-cookie';
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 export default function LoginData() {
   const api = process.env.REACT_APP_API
@@ -16,6 +20,20 @@ export default function LoginData() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const decrypt = (ciphertext) => {
+    try {
+        if (ciphertext) {
+            const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
+        return '';
+    } catch (error) {
+        console.error("Decryption error:", error.message);
+        return '';
+    }
+};
+const token = decrypt(Cookies.get("token"));
+
   const handleStatusChange = async (params) => {
     const newStatus = params.value === 1 ? 0 : 1;
     try {
@@ -23,6 +41,7 @@ export default function LoginData() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ id: params.row.id, status: newStatus }),
       });
@@ -58,7 +77,13 @@ export default function LoginData() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(api + '/logindata');
+      const response = await fetch(api + '/logindata', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
       const data = await response.json();
       setLoading(false);
 

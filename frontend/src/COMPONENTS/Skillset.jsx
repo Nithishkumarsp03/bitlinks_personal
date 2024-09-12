@@ -3,6 +3,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Button, Dialog } from '@mui/material';
 import { Input } from '@mui/joy';
 import BeatLoader from './BeatLoader';
+import Cookies from 'js-cookie';
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 export default function Skillset() {
   const api = process.env.REACT_APP_API;
@@ -13,6 +17,20 @@ export default function Skillset() {
   const [searchQuery, setSearchQuery] = useState(''); // State to handle the search query
   const [loading, setLoading] = useState(true);
 
+  const decrypt = (ciphertext) => {
+    try {
+        if (ciphertext) {
+            const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
+        return '';
+    } catch (error) {
+        console.error("Decryption error:", error.message);
+        return '';
+    }
+};
+const token = decrypt(Cookies.get("token"));
+
   const handleStatusChange = async (params) => {
     const newStatus = params.value === 1 ? 0 : 1;
     try {
@@ -20,6 +38,7 @@ export default function Skillset() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ id: params.row.id, status: newStatus }),
       });
@@ -54,7 +73,13 @@ export default function Skillset() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(api + '/skilldata'); // Replace with your backend endpoint
+      const response = await fetch(api + '/skilldata', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      }); // Replace with your backend endpoint
       const data = await response.json();
       setLoading(false);
 

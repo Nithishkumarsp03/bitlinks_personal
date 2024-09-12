@@ -1,19 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { FormControl, InputLabel } from '@mui/material';
 import Select from 'react-select';
+import Cookies from 'js-cookie';
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
+
 
 const SkillsetDropdown = ({ value = [], onChange }) => {
     const [skillsets, setSkillsets] = useState([]);
+    const api = process.env.REACT_APP_API;
+
+    const decrypt = (ciphertext) => {
+        try {
+            if (ciphertext) {
+                const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+                return bytes.toString(CryptoJS.enc.Utf8);
+            }
+            return '';
+        } catch (error) {
+            console.error("Decryption error:", error.message);
+            return '';
+        }
+    };
+
+    const token = decrypt(Cookies.get("token"));
 
     useEffect(() => {
-        fetch(process.env.REACT_APP_API + '/skilldata')
-            .then(response => response.json())
-            .then(data => { 
-                const activeSkills = data.filter(skill => skill.status === 1); 
-                setSkillsets(activeSkills);
-            })
-            .catch(error => console.error('Error fetching skillsets:', error));
-    }, []);
+        const fetchskill = async () => {
+            try {
+                const response = await fetch(api + '/skilldata', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Include token in the headers
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                const activeSkill = data.filter(role => role.status === 1);
+                setSkillsets(activeSkill);
+            } catch (error) {
+                console.error('Error fetching roles:', error);
+            }
+        };
+
+        fetchskill();
+    }, [token, api]);
 
     const handleSelectChange = (selectedOptions) => {
         const newValues = selectedOptions ? selectedOptions.map(option => option.value) : [];

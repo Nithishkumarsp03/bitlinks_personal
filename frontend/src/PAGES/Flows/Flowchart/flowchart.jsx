@@ -36,12 +36,19 @@ const ChangingProgressProvider = ({ value, children }) => {
 
 const Flowchart = () => {
   const decrypt = (ciphertext) => {
-    if (ciphertext) {
-      const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
-      return bytes.toString(CryptoJS.enc.Utf8);
+    try {
+        if (ciphertext) {
+            const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
+        return '';
+    } catch (error) {
+        console.error("Decryption error:", error.message);
+        return '';
     }
-    return '';
-  };
+};
+
+  const token = decrypt(Cookies.get("token"));
   const email = decrypt(Cookies.get("email"));
   const { selectedPersonId } = usePerson();
   const [person, setPerson] = useState(false);
@@ -401,7 +408,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
     const Alumni_Completion = (filledFields / totalFields) * 100;
     setAlumni_Completion(Alumni_Completion);
     setAlumni_Progress(Alumni_Completion);
-    console.log("ALUMNI = ", Alumni_Completion);
+    // console.log("ALUMNI = ", Alumni_Completion);
   };
   
   
@@ -512,9 +519,9 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
       // Set the total progress
       setTotal_Progress(Total_Completion);
     
-      console.log("SUM OF INPUTS = ", totalFilledFields);
-      console.log("TOTAL INPUTS = ", totalFields);
-      console.log("TOTAL = ", Total_Completion);
+      // console.log("SUM OF INPUTS = ", totalFilledFields);
+      // console.log("TOTAL INPUTS = ", totalFields);
+      // console.log("TOTAL = ", Total_Completion);
     };
     
     // useEffect with the correct function call and dependencies
@@ -628,7 +635,14 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
     const fetchPerson = async () => {
       try {
         const personResponse = await fetch(
-          `${process.env.REACT_APP_API}/persondata/${selectedPersonId}`
+          process.env.REACT_APP_API + `/persondata/${selectedPersonId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`
+            },
+          }
         );
         if (!personResponse.ok) {
           throw new Error(`HTTP error! status: ${personResponse.status}`);
@@ -655,6 +669,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ person_id: selectedPersonId }),
           }
@@ -686,6 +701,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,
@@ -715,6 +731,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ person_id: selectedPersonId }),
         });
@@ -738,9 +755,13 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
     if (!selectedPersonId) return;
     const fetchexpertise = async () => {
       try {
-        const personResponse = await fetch(
-          `${process.env.REACT_APP_API}/expertisedata/${selectedPersonId}`
-        );
+        const personResponse = await fetch(process.env.REACT_APP_API + `/expertisedata/${selectedPersonId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
+        });
         if (!personResponse.ok) {
           // throw new Error(`HTTP error! status: ${personResponse.status}`);
         }
@@ -764,9 +785,13 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
     if (!selectedPersonId) return;
     const fetchplacement = async () => {
       try {
-        const personResponse = await fetch(
-          `${process.env.REACT_APP_API}/placementdata/${selectedPersonId}`
-        );
+        const personResponse = await fetch(process.env.REACT_APP_API + `/placementdata/${selectedPersonId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
+        });
         if (!personResponse.ok) {
           // throw new Error(`HTTP error! status: ${personResponse.status}`);
         }
@@ -797,6 +822,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ person_id: selectedPersonId }),
           }
@@ -833,6 +859,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ person_id: selectedPersonId }),
           }
@@ -866,6 +893,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ person_id: selectedPersonId }),
         });
@@ -892,6 +920,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ person_id: selectedPersonId }),
         });
@@ -959,6 +988,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(requestBody),
       });
@@ -1014,6 +1044,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           selectedPersonId,
@@ -1046,6 +1077,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,
@@ -1077,6 +1109,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           selectedPersonId,
@@ -1106,6 +1139,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           selectedPersonId,
@@ -1137,6 +1171,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,
@@ -1170,6 +1205,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,
@@ -1203,6 +1239,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,

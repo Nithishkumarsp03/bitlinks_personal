@@ -2,9 +2,28 @@ import React, { useState, useEffect } from "react";
 import "./Details.css";
 import RankFlow from "../RankFlow/RankFlow/RankFlow";
 import { usePerson } from "../../COMPONENTS/Context";
+import Cookies from 'js-cookie';
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 export default function Details({ handlecancelviewconnections }) {
   const api = process.env.REACT_APP_API;
+  const decrypt = (ciphertext) => {
+    try {
+        if (ciphertext) {
+            const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+            return bytes.toString(CryptoJS.enc.Utf8);
+        }
+        return '';
+    } catch (error) {
+        console.error("Decryption error:", error.message);
+        return '';
+    }
+};
+
+const token = decrypt(Cookies.get("token"));
+  
   const [viewdetails, setviewdetails] = useState(true);
   const [viewconnections, setviewconnections] = useState(false);
   const [data, setData] = useState(null); // Initial state as null
@@ -29,6 +48,7 @@ export default function Details({ handlecancelviewconnections }) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ selectedPersonId }),
         });
@@ -38,7 +58,7 @@ export default function Details({ handlecancelviewconnections }) {
         }
 
         const result = await response.json();
-        console.log(result);
+        // console.log(result);
 
         if (typeof result === "object" && !Array.isArray(result)) {
           setData(result); // Directly set the object if it's not an array

@@ -32,6 +32,7 @@ const decrypt = (ciphertext) => {
 
 const ShowAddAccount = () =>  {
   const email = decrypt(Cookies.get("email"));
+  const token = decrypt(Cookies.get("token"));
   // const parsedProfile = userProfile ? JSON.parse(userProfile) : null;
   // const email = parsedProfile?.email;
   const navigate = useNavigate();
@@ -156,7 +157,7 @@ const ShowAddAccount = () =>  {
     const totalCompletion = (filledFields/43) * 100;
     setCompletion(calculatedCompletion);
     setTotal_Progress(totalCompletion);
-    console.log("Status = ",Completion);
+    // console.log("Status = ",Completion);
   }
 
   useEffect(() => {
@@ -201,7 +202,7 @@ const ShowAddAccount = () =>  {
             }
 
             const uploadData = await uploadResponse.json();
-            console.log('Imagepath: ', uploadData.path);
+            // console.log('Imagepath: ', uploadData.path);
             imagePath = uploadData.path;
         } catch (error) {
             console.error("Error:", error);
@@ -215,6 +216,7 @@ const ShowAddAccount = () =>  {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 personInfo,
@@ -258,7 +260,7 @@ const CalculateProgress_Subconnections = () => {
   const totalCompletion = (filledFields / 43) * 100;
   setSubCompletion(calculatedCompletion);
   setSubTotal_Progress(totalCompletion)
-  console.log("Status = ",SubCompletion);
+  // console.log("Status = ",SubCompletion);
 }
 
 useEffect(() => {
@@ -295,7 +297,7 @@ const handleSubconnections = async (e) => {
           }
 
           const uploadData = await uploadResponse.json();
-          console.log('Imagepath: ', uploadData.path);
+          // console.log('Imagepath: ', uploadData.path);
           imagePath = uploadData.path;
       } catch (error) {
           console.error("Error:", error);
@@ -309,6 +311,7 @@ const handleSubconnections = async (e) => {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
               email,

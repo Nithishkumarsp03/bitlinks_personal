@@ -102,7 +102,7 @@ const PreviousExperienceDialog = ({
 
             <div style={{ display: "flex", gap: "15px" }}>
               <Input
-                placeholder="Experience"
+                placeholder="Experience in (Yrs)"
                 onChange={handleDetailsChange2}
                 value={PreviousExperienceinfo.experience}
                 name="experience"

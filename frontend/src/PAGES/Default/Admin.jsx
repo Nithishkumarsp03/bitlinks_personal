@@ -71,6 +71,7 @@ export default function Default(subPersonId) {
   // const userProfile = Cookies.get("userProfile");
   // const parsedProfile = userProfile ? JSON.parse(userProfile) : null;
   const email = decrypt(Cookies.get("email"));
+  const token = decrypt(Cookies.get("token"));
   const username = decrypt(Cookies.get("NAME"));
   const picture = decrypt(Cookies.get("picture"));
   // const id = parsedProfile?.id;
@@ -240,10 +241,12 @@ export default function Default(subPersonId) {
   const handleCheck = async () => {
     setLoading(true);
     try {
+      // console.log("token",token);
       const response = await fetch(api + "/check-connection", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ name: inputValue }),
       });
@@ -281,21 +284,35 @@ export default function Default(subPersonId) {
 
   useEffect(() => {
     setConnectionloading(true);
-    const fetchuserNetworks = async () => {
+    const fetchUserNetworks = async () => {
       try {
-        const response = await fetch(api + "/userNetworks");
+        const response = await fetch(api + "/userNetworks", {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await response.json();
-        setuserNetworks(data);
-        
-    setConnectionloading(false);
+        // console.log('Fetched user networks:', data);
+        if (Array.isArray(data)) {
+          setuserNetworks(data);
+        } else {
+          console.error('Data is not an array:', data);
+          // Set userNetworks to empty array in case of unexpected data format
+          setuserNetworks([]);
+        }
+        setConnectionloading(false);
       } catch (error) {
-        
-    setConnectionloading(false);
+        setConnectionloading(false);
         console.error("Error fetching user connections:", error);
+        // Set userNetworks to empty array in case of error
+        setuserNetworks([]);
       }
     };
+    
 
-    const intervalId = setInterval(fetchuserNetworks, 1000);
+    const intervalId = setInterval(fetchUserNetworks, 1000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -306,6 +323,7 @@ export default function Default(subPersonId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ email, picture }), // Send email as JSON
         });
@@ -328,7 +346,8 @@ export default function Default(subPersonId) {
     //   const intervalId = setInterval(fetchPersonalInfo, 1000);
     //   return () => clearInterval(intervalId);
     // }
-    fetchPersonalInfo();
+    const intervalId = setInterval(fetchPersonalInfo, 1000);
+    return () => clearInterval(intervalId);
   }, [email]);
 
   const handleDiscard = () => {
@@ -359,7 +378,7 @@ export default function Default(subPersonId) {
     navigate("../bitcontacts/dashboard/admin", {
       state: { subConnections: SubConnectionsvalue },
     });
-    console.log("DEFAULT = ", SubConnectionsvalue);
+    // console.log("DEFAULT = ", SubConnectionsvalue);
     setAddConnections(true);
     setTableOpen(false);
     setConnections(false);
@@ -373,7 +392,7 @@ export default function Default(subPersonId) {
     setShowmore(false);
 
     if (!isButtonDisabled) {
-      console.log("Connection added:", inputValue);
+      // console.log("Connection added:", inputValue);
       setAdd(false);
     }
   };
@@ -414,11 +433,12 @@ export default function Default(subPersonId) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ person, reason, status }),
       });
       if (response.ok) {
-        console.log("Status changed successfully");
+        // console.log("Status changed successfully");
         setReason("");
         setPerson(0);
         setStatus(0);
@@ -528,7 +548,7 @@ export default function Default(subPersonId) {
     setFilter(false); // Close the popup
   };
 
-  const filteredNetworks = userNetworks.filter((connection) => {
+  const filteredNetworks = (userNetworks || []).filter((connection) => {
     // Split the search term by commas and trim spaces
     const searchTerms = searchtermnetworks
       .toLowerCase()
@@ -578,7 +598,6 @@ export default function Default(subPersonId) {
   
     return searchMatch && levelMatch;
   });  
-  
 
   const filteredConnections = personalInfos.filter((connection) => {
     const searchLower = searchtermconnections.toLowerCase().trim();
@@ -619,13 +638,21 @@ export default function Default(subPersonId) {
 
   const [rescheduleData, setRescheduleData] = useState([]);
   const [showRescheduleNotification, setShowRescheduleNotification] = useState(false);
+
+  const [notifiedReschedules, setNotifiedReschedules] = useState(new Set());
+
   useEffect(() => {
     const fetchRescheduleData = async () => {
       try {
-        const response = await fetch(api + "/fetch-scheduled");
-
+        const response = await fetch(api + "/fetch-scheduled", {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         const data = await response.json();
-        console.log("Fetched Reschedule Data:", data);
+        // console.log("Fetched Reschedule Data:", data);
         setLengthScheduled(data.length);
 
         // Get the current time
@@ -633,27 +660,54 @@ export default function Default(subPersonId) {
 
         // Filter reschedules that are within 12 hours of the current time
         const upcomingReschedules = data.filter((item) => {
-          const rescheduleTime = new Date(item.scheduleddate); // Assuming your reschedule time is stored in the field `rescheduleTime`
+          const rescheduleTime = new Date(item.scheduleddate);
           const timeDifference = rescheduleTime - currentTime;
-
-          // 12 hours in milliseconds: 12 * 60 * 60 * 1000
           return timeDifference <= 12 * 60 * 60 * 1000;
-          // return timeDifference > 0 && timeDifference <= 12 * 60 * 60 * 1000;
         });
 
         // Update state with the filtered data
         setRescheduleData(upcomingReschedules);
-
-        // Show notification if there are upcoming reschedules
         setShowRescheduleNotification(upcomingReschedules.length > 0);
         setScheduleloading(false);
+
+        // Check for reschedules less than 2 hours away
+        const reschedulesLessThanTwoHours = data.filter((item) => {
+          const rescheduleTime = new Date(item.scheduleddate);
+          const timeDifference = rescheduleTime - currentTime;
+          return timeDifference > 0 && timeDifference <= 2 * 60 * 60 * 1000;
+        });
+
+        // Send email notifications for reschedules less than 2 hours away
+        for (const reschedule of reschedulesLessThanTwoHours) {
+          if (!notifiedReschedules.has(reschedule.id)) {
+            const name = decrypt(Cookies.get("name"));
+            const email = decrypt(Cookies.get("email")); // Make sure to have the user's email in your data
+            const subject = "Upcoming Reschedule Reminder";
+            const message = `Your scheduled event is less than 2 hours away! Please take note of the reschedule time: ${reschedule.scheduleddate}`;
+
+            // Send a request to the backend to send the email
+            await fetch(api + "/send-email", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({ name, email, subject, message }),
+            });
+
+            // Mark this reschedule as notified
+            setNotifiedReschedules(prev => new Set(prev.add(reschedule.id)));
+          }
+        }
       } catch (error) {
         setScheduleloading(false);
         console.error("Error fetching reschedule data:", error);
       }
     };
-    fetchRescheduleData();
-  }, []);
+
+    const intervalId = setInterval(fetchRescheduleData, 1000);
+    return () => clearInterval(intervalId);
+  }, [notifiedReschedules]);
 
   const colorPriority = {
     "#FEECEC": 1, // Red
@@ -755,12 +809,13 @@ export default function Default(subPersonId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ email }),
         });
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setLengthconnection(data.length);
 
         const currentTime = new Date();
@@ -799,6 +854,7 @@ export default function Default(subPersonId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ email }),
         });
@@ -824,6 +880,7 @@ export default function Default(subPersonId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
         });
 
@@ -1352,6 +1409,7 @@ export default function Default(subPersonId) {
                                   <div
                                     style={{
                                       marginLeft: "20px",
+                                      marginTop: "0%"
                                     }}>
                                     {connection.linkedinurl ? (
                                       <div

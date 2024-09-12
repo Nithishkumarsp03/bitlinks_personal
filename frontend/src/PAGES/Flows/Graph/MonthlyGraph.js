@@ -2,12 +2,33 @@ import React, { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import Diamond from "../../../Assets/Gem.svg";
 import { usePerson } from '../../../COMPONENTS/Context';
+import CryptoJS from 'crypto-js';
+import Cookies from 'js-cookie';
+
+const SECRET_KEY = 'your-secret-key';
 
 export default function ApexChartMonthlyGraph() {
   const [seriesData, setSeriesData] = useState([]);
   const [labels, setLabels] = useState([]);
   const [totalPoints, setTotalPoints] = useState(0); // State to hold total points
   const { selectedPersonId } = usePerson();
+
+  // Function to decrypt token
+  const decrypt = (ciphertext) => {
+    try {
+      if (ciphertext) {
+        const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      }
+      return '';
+    } catch (error) {
+      console.error("Decryption error:", error.message);
+      return '';
+    }
+  };
+  
+  const token = decrypt(Cookies.get("token"));
+  // console.log("token:",token);
 
   useEffect(() => {
     const fetchMonthlyData = async () => {
@@ -16,17 +37,27 @@ export default function ApexChartMonthlyGraph() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Send the token in the Authorization header
           },
           body: JSON.stringify({ selectedPersonId }),
         });
 
-        const data = await response.json();
-        console.log('Fetched Data:', data);
+        if (!response.ok) {
+          console.error('Failed to fetch data:', response.statusText);
+          return;
+        }
+
+        const result = await response.json();
+        // console.log('Fetched Data:', result);
+
+        // Extract the array from the 'data' property
+        const data = result.data;
 
         // Initialize total points counter and monthly data object
         let totalPoints = 0;
         const monthlyData = {};
 
+        // Process the data
         data.forEach(entry => {
           const date = new Date(entry.datetime);
           const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
@@ -38,10 +69,23 @@ export default function ApexChartMonthlyGraph() {
           totalPoints += entry.points; // Add points to total
         });
 
-        // Get sorted year-month labels and values (queue structure to only keep last 6 months)
-        const labels = Object.keys(monthlyData).sort();
-        const recentLabels = labels.slice(-6); // Keep only the last 6 months
-        const values = recentLabels.map(label => monthlyData[label]);
+        // Function to generate the last 6 months dynamically
+        const generateLastSixMonths = () => {
+          const months = [];
+          const currentDate = new Date();
+          for (let i = 5; i >= 0; i--) {
+            const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+            const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+            months.push(yearMonth);
+          }
+          return months;
+        };
+
+        // Generate the last 6 months
+        const recentLabels = generateLastSixMonths();
+
+        // Fill in missing months with 0 points
+        const values = recentLabels.map(label => monthlyData[label] || 0);
 
         setLabels(recentLabels);
         setSeriesData([
@@ -58,7 +102,7 @@ export default function ApexChartMonthlyGraph() {
     };
 
     fetchMonthlyData();
-  }, [selectedPersonId]);
+  }, [selectedPersonId, token]); // Include token as a dependency
 
   const options = {
     chart: {
@@ -119,14 +163,13 @@ export default function ApexChartMonthlyGraph() {
       {seriesData.length > 0 ? (
         <ReactApexChart options={options} series={seriesData} type="bar" height={350} />
       ) : (
-        // Check CSS in Home.css
         <div className='empty-error'>
           <div>
-            <i class="fa-solid fa-circle-info" ></i>
+            <i className="fa-solid fa-circle-info"></i>
             <p>No data found for this connection</p>
           </div>
         </div>
       )}  
-      </div>
+    </div>
   );
 }

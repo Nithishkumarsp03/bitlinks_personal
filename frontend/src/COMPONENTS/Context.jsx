@@ -6,7 +6,7 @@ export function PersonProvider({ children }) {
   const [selectedPersonId, setSelectedPersonId] = useState(null);
   // const [selectedsubid, setSelectedsubid] = useState(null);
  
-  console.log('PersonProvider rendering'); // Debug statement
+  // console.log('PersonProvider rendering'); // Debug statement
 
   return (
     <PersonContext.Provider value={{ 

@@ -8,11 +8,29 @@ import ApexChartfiveYearlyGraph from "../Graph/FiveyearGraph";
 import ApexChartYearlyGraph from "../Graph/YearlyGraph";
 import { usePerson } from "../../../COMPONENTS/Context";
 import Cancel from "../../../Assets/cancel.png";
+import CryptoJS from 'crypto-js';
+import Cookies from 'js-cookie';
+
+const SECRET_KEY = 'your-secret-key';
 
 export default function MainFlow({ subPersonId , handlecancelflows}) {
   const [activeFlow, setActiveFlow] = useState("history"); // Default to "graph"
   const [activeGraph, setActiveGraph] = useState("monthly");
   const { selectedPersonId, setSelectedPersonId } = usePerson();
+  const decrypt = (ciphertext) => {
+    if (ciphertext) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      } catch (error) {
+        console.error("Decryption error:", error);
+        return '';
+      }
+    }
+    return '';
+  };
+
+  // console.log(decrypt(Cookies.get("token")));
 
   useEffect(
     () => {

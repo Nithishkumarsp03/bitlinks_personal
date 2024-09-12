@@ -803,6 +803,7 @@ cursor: not-allowed;
   font-size: 12px;
   margin-top: 5px;
   line-height: 10px;
+  text-overflow: ellipsis;
 }
 .card-number.show{
   margin-top: 0%;
@@ -811,11 +812,11 @@ cursor: not-allowed;
   margin-top: 10%;
 }
 .card-number.noneemail{
-  margin-top: 40%;
+  margin-top: 20%;
   /* margin-left: 20px; */
 }
 .card-linkedin{
-  margin-top: 30%;
+  margin-top: 12%;
   font-size: 13px;
 }
 .card-linkedinshowlink{
@@ -838,7 +839,13 @@ cursor: not-allowed;
 
 }
 .card-mail{
-  /* width: 0vw; */
+  /* width: 2vw; */
+  width: 14.5vw;
+  /* background-color: #9e1d1d; */
+  overflow-x: scroll;
+}
+.card-mail::-webkit-scrollbar{
+  display: none;
 }
 .card-mail p {
   /* max-width: 165px; */
