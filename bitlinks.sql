@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 12, 2024 at 02:17 PM
+-- Generation Time: Sep 16, 2024 at 12:59 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -38,7 +38,7 @@ CREATE TABLE `address_table` (
 --
 
 INSERT INTO `address_table` (`id`, `address_column`, `status`) VALUES
-(1, 'Chennai', 1),
+(1, 'Chennai', 0),
 (2, 'Delhi', 1),
 (3, 'Bangalore', 1),
 (4, 'Coimbatore', 1),
@@ -66,11 +66,19 @@ CREATE TABLE `alumni` (
 --
 
 INSERT INTO `alumni` (`alumni_id`, `person_id`, `name`, `batch`, `graduatedyear`, `phonenumber`, `companyaddress`, `Alumni_Completion`) VALUES
-(1, 1, '', NULL, NULL, NULL, NULL, NULL),
-(2, 2, '', NULL, NULL, NULL, NULL, NULL),
-(3, 3, '', NULL, NULL, NULL, NULL, NULL),
-(4, 4, 'cwe', 90, 0, 'ke', 'Chennai', 100),
-(5, 5, '', NULL, NULL, NULL, NULL, NULL);
+(1, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 2, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 3, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 4, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 5, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 7, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 6, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 8, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 9, 'NITHISH KUMAR S P', 2023, 2027, '+918903342911', 'Bangalore', 100),
+(10, 10, NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 11, NULL, NULL, NULL, NULL, NULL, NULL),
+(12, 12, NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 13, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -97,11 +105,19 @@ CREATE TABLE `company` (
 --
 
 INSERT INTO `company` (`company_id`, `person_id`, `companyname`, `position`, `experience`, `role`, `companyaddress`, `websiteurl`, `scale`, `payscale`, `Company_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(1, 1, NULL, NULL, NULL, 'Manager', 'Delhi', NULL, NULL, NULL, 25),
+(2, 2, 'Microsoft', NULL, NULL, 'Manager', 'Delhi', NULL, NULL, NULL, 38),
 (3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, 'Microsoft', 'Head', '43', 'Manager', 'Chennai', '.com', 'Startup', 'Below 3 Lakhs', 100),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(4, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 7, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 9, 'Google', 'Head', '4', 'Manager', 'Delhi', 'google.com', 'Large', 'Above 15 Lakhs', 100),
+(10, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 11, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(12, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -160,8 +176,16 @@ INSERT INTO `consultancy` (`consultancy_id`, `person_id`, `ifconsultancy`, `role
 (1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, 'yes', 'Manager', 'Both Software & Hardware', 'Mobile App Development', 'dw', 'fwfw', 100),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(4, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 7, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 9, 'yes', 'Assistant Manager', 'Both Software & Hardware', 'Full-stack', 'BE EEE', 'Hardware', 100),
+(10, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 11, 'yes', 'Assistant Vice President', 'Software', 'Mobile App Development', '5', '', 80),
+(12, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -207,11 +231,19 @@ CREATE TABLE `expertise` (
 --
 
 INSERT INTO `expertise` (`expertise_id`, `person_id`, `domain`, `specialistskills`, `skillset`, `Expertise_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL),
-(2, 2, NULL, NULL, NULL, NULL),
-(3, 3, 'Software', '', 'Full-stack,Mobile App Development', 67),
-(4, 4, 'Both Software & Hardware', 'dew', 'Full-stack', 100),
-(5, 5, NULL, NULL, NULL, NULL);
+(1, 1, 'AGRI', '', '', 33),
+(2, 2, 'Software', '', '', 33),
+(3, 3, NULL, NULL, NULL, NULL),
+(4, 4, NULL, NULL, NULL, NULL),
+(5, 5, NULL, NULL, NULL, NULL),
+(6, 7, NULL, NULL, NULL, NULL),
+(7, 6, NULL, NULL, NULL, NULL),
+(8, 8, NULL, NULL, NULL, NULL),
+(9, 9, 'Both Software & Hardware', '8 years - Full stack, IOT, Web applications', 'Full-stack,Mobile App Development', 100),
+(10, 10, NULL, NULL, NULL, NULL),
+(11, 11, NULL, NULL, NULL, NULL),
+(12, 12, NULL, NULL, NULL, NULL),
+(13, 13, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -241,15 +273,11 @@ CREATE TABLE `history` (
 --
 
 INSERT INTO `history` (`history_id`, `person_id`, `agent`, `email`, `type`, `note`, `purpose`, `datetime`, `scheduleddate`, `visited1`, `visited2`, `points`, `status`, `emailSent`) VALUES
-(1, 4, 'NITHISH KUMAR S P', 'priyadarshan.cs22@bitsathy.ac.in', 'Reschedule Call', 'Speaking about the lecture', '', '2024-09-12 11:16:52', '2024-09-12 15:30:00', NULL, NULL, 0, 1, 1),
-(2, 4, 'NITHISH KUMAR S P', 'jothshana.cs22@bitsathy.ac.in', 'Reschedule Call', 'djew', '', '2024-09-12 11:23:07', '2024-09-13 15:30:44', NULL, NULL, 0, 1, 1),
-(3, 4, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Reschedule Call', 'devc', '', '2024-09-12 11:41:12', '2024-09-12 21:45:28', NULL, NULL, 0, 0, 1),
-(4, 4, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Reschedule Call', ' hjew', '', '2024-09-12 11:46:50', '2024-09-12 12:15:00', NULL, NULL, 0, 0, 1),
-(5, 4, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Call', 'kkln', '', '2024-09-12 14:51:20', '2024-09-12 14:51:08', NULL, NULL, 3, 0, 1),
-(6, 4, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Call', 'klnlkn', '', '2024-10-12 14:52:43', '2024-09-12 14:52:32', NULL, NULL, 3, 0, 1),
-(7, 3, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'SMS', 'Test email', '', '2024-09-12 15:12:12', NULL, NULL, NULL, 4, 0, 0),
-(8, 4, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Call', 'j eiw', '', '2024-09-12 17:38:08', '2024-09-12 17:38:01', NULL, NULL, 3, 0, 1),
-(9, 4, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Reschedule Call', 'jc ek ', 'Guest Lecture/Seminar', '2024-09-12 17:38:44', '2024-09-13 05:38:22', NULL, NULL, 0, 1, 1);
+(1, 9, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Call', 'Got some notes', 'Guest Lecture/Seminar', '2024-09-15 20:43:43', '2024-09-15 20:43:13', NULL, NULL, 3, 0, 1),
+(2, 10, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Call', 'Completed about guest lecture', 'Guest Lecture/Seminar', '2024-09-15 20:46:27', '2024-09-15 20:46:06', NULL, NULL, 3, 0, 0),
+(3, 10, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Reschedule Call', 'Call and ask about one-credit', 'One Credit Course', '2024-09-15 20:50:42', '2024-09-15 22:00:32', NULL, NULL, 0, 0, 1),
+(4, 11, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Reschedule Call', 'MEETING', 'One Credit Course', '2024-09-16 15:36:02', '2024-09-16 16:00:32', NULL, NULL, 0, 0, 1),
+(5, 11, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Lead Created', 'Good work', 'One Credit Course', '2024-09-16 15:57:58', '2024-09-16 15:57:40', NULL, NULL, 10, 0, 0);
 
 --
 -- Triggers `history`
@@ -342,8 +370,16 @@ INSERT INTO `internship` (`internship_id`, `person_id`, `ifinternship`, `role`, 
 (1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (3, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, 'yes', 'Manager', 'Both Software & Hardware', 'Full-stack', 'fcew', 'dwed', 100),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(4, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 7, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 9, 'yes', 'Manager', 'Both Software & Hardware', 'Mobile App Development', 'BE EEE', 'wdecvf', 100),
+(10, 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 11, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(12, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 13, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -364,7 +400,7 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`ID`, `NAME`, `EMAIL`, `ROLE`, `STATUS`) VALUES
-(1, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'user', 1),
+(1, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'admin', 1),
 (2, 'THAYANITHI S', 'thayanithi.cs23@bitsathy.ac.in', 'user', 1);
 
 -- --------------------------------------------------------
@@ -402,8 +438,16 @@ INSERT INTO `outcome` (`outcome_id`, `person_id`, `eventname`, `date`, `descript
 (1, 1, NULL, NULL, NULL, NULL),
 (2, 2, NULL, NULL, NULL, NULL),
 (3, 3, NULL, NULL, NULL, NULL),
-(4, 4, 'c ek', NULL, 'kem ', 67),
-(5, 5, NULL, NULL, NULL, NULL);
+(4, 4, NULL, NULL, NULL, NULL),
+(5, 5, NULL, NULL, NULL, NULL),
+(6, 7, NULL, NULL, NULL, NULL),
+(7, 6, NULL, NULL, NULL, NULL),
+(8, 8, NULL, NULL, NULL, NULL),
+(9, 9, 'efe', '2024-09-14', 'Came here', 100),
+(10, 10, NULL, NULL, NULL, NULL),
+(11, 11, NULL, NULL, NULL, NULL),
+(12, 12, NULL, NULL, NULL, NULL),
+(13, 13, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -419,6 +463,9 @@ CREATE TABLE `personalinfo` (
   `phonenumber` varchar(255) NOT NULL,
   `age` varchar(50) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `rating` varchar(255) DEFAULT NULL,
+  `visitingcard` varchar(255) DEFAULT NULL,
   `linkedinurl` varchar(1000) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `shortdescription` varchar(255) DEFAULT NULL,
@@ -435,12 +482,20 @@ CREATE TABLE `personalinfo` (
 -- Dumping data for table `personalinfo`
 --
 
-INSERT INTO `personalinfo` (`person_id`, `useremail`, `profile`, `fullname`, `phonenumber`, `age`, `email`, `linkedinurl`, `address`, `shortdescription`, `hashtags`, `Completion`, `overall_completion`, `reason`, `timestamp`, `sub_id`, `status`) VALUES
-(1, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'Test1', '+918903342911', '', '', '', '', '', '', 25, 5, NULL, '2024-09-11 12:31:32', 0, 1),
-(2, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'Sub test1', '43', '', '', '', '', '', '', 0, 0, NULL, '2024-09-11 16:26:03', 1, 1),
-(3, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'Sub test 3', '8r923', '', 'thayanithi.cs23@bitsathy.ac.in', '', '', '', '', 38, 16, NULL, '2024-09-11 16:30:13', 1, 1),
-(4, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'fkelw', '+918903342911', '89', 'nithishkumar3115@gmail.com', 'www.linkedin.com/in/nithish-kumar-s-p-b5295828b', 'dcewfef', 'fed', '#applicationengineer', 100, 105, NULL, '2024-09-11 17:54:15', 0, 1),
-(5, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'NITHISH KUMAR S P', '989034839', '', '', '', '', '', '', 0, 0, NULL, '2024-09-12 17:39:23', 4, 1);
+INSERT INTO `personalinfo` (`person_id`, `useremail`, `profile`, `fullname`, `phonenumber`, `age`, `email`, `dob`, `rating`, `visitingcard`, `linkedinurl`, `address`, `shortdescription`, `hashtags`, `Completion`, `overall_completion`, `reason`, `timestamp`, `sub_id`, `status`) VALUES
+(1, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'NITHISH KUMAR S P', '+918903342911', '', '', NULL, NULL, NULL, '', '', '', '', 25, 19, NULL, '2024-09-12 22:24:34', 0, 1),
+(2, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'THAYANITHI S', '4567', '', '', NULL, NULL, NULL, '', '', '', '', 25, 21, NULL, '2024-09-13 10:53:43', 1, 1),
+(3, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'Test1', '4309', '', '', NULL, NULL, '/uploads/1726465554222.png', '', '', '', '', 25, 0, NULL, '2024-09-14 14:24:16', 0, 1),
+(4, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'Test2', '3000', '', '', NULL, NULL, NULL, '', '', '', '', 18, 5, NULL, '2024-09-14 14:25:30', 0, 1),
+(5, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'TEST3', '23', '', 'nithishkumar.cs23@bitsathy.ac.in', '2023-09-14', 'Higly Recommended', NULL, '', '', '', '', 36, 9, NULL, '2024-09-15 13:02:51', 0, 1),
+(6, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'TEST3', '23', '', '', '1900-01-09', 'Higly Recommended', '/uploads/1726385532232.JPG', '', '', '', '', 36, 9, NULL, '2024-09-15 13:02:51', 0, 1),
+(7, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'TEST3', '23', '', 'nithishkumar3115@gmail.com', '2024-09-16', 'Higly Recommended', NULL, '', '', '', '', 50, 50, NULL, '2024-09-15 13:02:51', 0, 1),
+(8, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'Last test10', '3543', '9', 'nithishkumar.cs23@bitsathy.ac.in', '2024-08-13', 'Recommended', NULL, '', 'jdjdjd', 'jncn', '#applicationengineer', 113, 50, NULL, '2024-09-15 20:21:18', 0, 1),
+(9, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1726426833127.jpg', 'THAYANITHI S', '8903342911', '', 'thayanithi.cs23@bitsathy.ac.in', '2024-09-14', 'Higly Recommended', NULL, 'www.linkedin.com/in/nithish-kumar-s-p-b5295828b', '', '', '', 75, 80, NULL, '2024-09-15 20:32:59', 0, 1),
+(10, 'thayanithi.cs23@bitsathy.ac.in', '/uploads/1726413137338.jpg', 'NITHISH KUMAR S P', '+918903342911', '', 'nithishkumar.cs23@bitsathy.ac.in', '2024-11-03', 'Recommended', '/uploads/1726413137389.png', '', '', '', '', 45, 12, NULL, '2024-09-15 20:42:17', 9, 1),
+(11, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'DHANU SHRI V', '6374129588', '19', 'dhanushri.ec23@bitsathy.ac.in', '2024-09-03', 'Recommended', NULL, '', 'BIT', 'ECE', '#BT', 113, 35, 'TO UK', '2024-09-16 15:35:25', 0, 2),
+(12, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'tytyy', '876', '', '', '2024-09-15', '', NULL, '', '', '', '', 30, 20, NULL, '2024-09-16 16:01:19', 0, 1),
+(13, 'dhanushri.ec23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'ft', '56', '', '', '0000-00-00', '', NULL, '', '', '', '', 18, 5, NULL, '2024-09-16 16:01:52', 11, 1);
 
 -- --------------------------------------------------------
 
@@ -462,11 +517,19 @@ CREATE TABLE `person_points_summary` (
 --
 
 INSERT INTO `person_points_summary` (`summary_id`, `person_id`, `total_points`, `rank`, `last_updated`, `reduction`) VALUES
-(1, 1, '36.00', 2, '2024-09-11 23:13:55', '0.00'),
-(2, 2, '14.00', 1, '2024-09-11 17:25:47', '0.00'),
-(3, 3, '21.00', 1, '2024-09-12 15:12:12', '0.00'),
-(4, 4, '21.00', 1, '2024-09-12 17:38:44', '0.00'),
-(5, 5, '10.00', 0, '2024-09-12 17:39:23', '0.00');
+(1, 1, '13.00', 1, '2024-09-13 10:49:10', '0.00'),
+(2, 2, '13.00', 1, '2024-09-14 12:07:45', '0.00'),
+(3, 3, '10.00', 0, '2024-09-14 14:24:16', '0.00'),
+(4, 4, '10.00', 0, '2024-09-14 14:25:30', '0.00'),
+(5, 7, '10.00', 0, '2024-09-15 13:02:51', '0.00'),
+(6, 5, '10.00', 0, '2024-09-15 13:02:51', '0.00'),
+(7, 6, '10.00', 0, '2024-09-15 13:02:51', '0.00'),
+(8, 8, '10.00', 0, '2024-09-15 20:21:18', '0.00'),
+(9, 9, '13.00', 1, '2024-09-15 20:43:43', '0.00'),
+(10, 10, '13.00', 1, '2024-09-15 20:50:42', '0.00'),
+(11, 11, '20.00', 1, '2024-09-16 15:57:58', '0.00'),
+(12, 12, '10.00', 0, '2024-09-16 16:01:19', '0.00'),
+(13, 13, '10.00', 0, '2024-09-16 16:01:52', '0.00');
 
 --
 -- Triggers `person_points_summary`
@@ -511,8 +574,16 @@ INSERT INTO `placement` (`placement_id`, `person_id`, `ifplacement`, `role`, `do
 (1, 1, NULL, NULL, NULL, NULL, NULL, NULL),
 (2, 2, NULL, NULL, NULL, NULL, NULL, NULL),
 (3, 3, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, 'yes', 'Manager', 'Both Software & Hardware', 'Full-stack', 'dq', 100),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL);
+(4, 4, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 5, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 7, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 6, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 8, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 9, 'yes', 'Manager', 'Both Software & Hardware', 'Mobile App Development', 'BE EEE', 100),
+(10, 10, NULL, NULL, NULL, NULL, NULL, NULL),
+(11, 11, 'no', '', '', '', '', 0),
+(12, 12, NULL, NULL, NULL, NULL, NULL, NULL),
+(13, 13, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -540,8 +611,16 @@ INSERT INTO `previousexperience` (`experience_id`, `person_id`, `ifexperience`, 
 (1, 1, NULL, '', NULL, NULL, NULL, NULL, NULL),
 (2, 2, NULL, '', NULL, NULL, NULL, NULL, NULL),
 (3, 3, NULL, '', NULL, NULL, NULL, NULL, NULL),
-(4, 4, 'yes', 'Microsoft', 'Head', 4, 'Manager', 'Delhi', 100),
-(5, 5, NULL, '', NULL, NULL, NULL, NULL, NULL);
+(4, 4, NULL, '', NULL, NULL, NULL, NULL, NULL),
+(5, 6, NULL, '', NULL, NULL, NULL, NULL, NULL),
+(6, 7, NULL, '', NULL, NULL, NULL, NULL, NULL),
+(7, 5, NULL, '', NULL, NULL, NULL, NULL, NULL),
+(8, 8, NULL, '', NULL, NULL, NULL, NULL, NULL),
+(9, 9, 'yes', 'Microsoft', 'Head', 2, 'Manager', 'Delhi', 100),
+(10, 10, NULL, '', NULL, NULL, NULL, NULL, NULL),
+(11, 11, NULL, '', NULL, NULL, NULL, NULL, NULL),
+(12, 12, NULL, '', NULL, NULL, NULL, NULL, NULL),
+(13, 13, NULL, '', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -724,13 +803,13 @@ ALTER TABLE `address_table`
 -- AUTO_INCREMENT for table `alumni`
 --
 ALTER TABLE `alumni`
-  MODIFY `alumni_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `alumni_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
-  MODIFY `company_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `company_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `company_table`
@@ -742,7 +821,7 @@ ALTER TABLE `company_table`
 -- AUTO_INCREMENT for table `consultancy`
 --
 ALTER TABLE `consultancy`
-  MODIFY `consultancy_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `consultancy_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `domain_table`
@@ -754,13 +833,13 @@ ALTER TABLE `domain_table`
 -- AUTO_INCREMENT for table `expertise`
 --
 ALTER TABLE `expertise`
-  MODIFY `expertise_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `expertise_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `incidents`
@@ -772,7 +851,7 @@ ALTER TABLE `incidents`
 -- AUTO_INCREMENT for table `internship`
 --
 ALTER TABLE `internship`
-  MODIFY `internship_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `internship_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `login`
@@ -790,31 +869,31 @@ ALTER TABLE `others`
 -- AUTO_INCREMENT for table `outcome`
 --
 ALTER TABLE `outcome`
-  MODIFY `outcome_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `outcome_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `personalinfo`
 --
 ALTER TABLE `personalinfo`
-  MODIFY `person_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `person_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `person_points_summary`
 --
 ALTER TABLE `person_points_summary`
-  MODIFY `summary_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `summary_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `placement`
 --
 ALTER TABLE `placement`
-  MODIFY `placement_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `placement_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `previousexperience`
 --
 ALTER TABLE `previousexperience`
-  MODIFY `experience_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `experience_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `role_table`
