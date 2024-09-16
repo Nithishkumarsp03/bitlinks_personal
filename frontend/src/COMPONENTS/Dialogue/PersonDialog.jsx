@@ -323,6 +323,7 @@ const PersonDialog = ({
   const options = [
     { label: "Higly Recommended", value: "Higly Recommended" },
     { label: "Recommended", value: "Recommended" },
+    { label: "Not Recommended", value: "Not Recommended" },
   ];
 
   const handleClosePopup = () => {
