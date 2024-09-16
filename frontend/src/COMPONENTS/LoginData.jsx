@@ -59,7 +59,8 @@ const token = decrypt(Cookies.get("token"));
   const columns = [
     { field: 'sno', headerName: 'S.No', width: 70 },
     { field: 'NAME', headerName: 'NAME', width: 200 },
-    { field: 'EMAIL', headerName: 'EMAIL', width: 200 },
+    { field: 'EMAIL', headerName: 'EMAIL', width: 280 },
+    { field: 'ROLE', headerName: 'ROLE', width: 100 },
     {
       field: 'status',
       headerName: 'Status',
@@ -92,6 +93,7 @@ const token = decrypt(Cookies.get("token"));
         sno: index + 1,
         NAME: item.NAME,
         EMAIL: item.EMAIL,
+        ROLE: item.ROLE,
         status: item.STATUS,
       }));
 
@@ -138,7 +140,8 @@ const token = decrypt(Cookies.get("token"));
     const lowercasedQuery = searchQuery.toLowerCase();
     const filtered = rows.filter(row =>
       row.NAME.toLowerCase().includes(lowercasedQuery) ||
-      row.EMAIL.toLowerCase().includes(lowercasedQuery)
+      row.EMAIL.toLowerCase().includes(lowercasedQuery) ||
+      row.ROLE.toLowerCase().includes(lowercasedQuery)
     );
     setFilteredRows(filtered);
   }, [searchQuery, rows]);

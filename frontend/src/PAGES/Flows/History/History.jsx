@@ -173,7 +173,7 @@ export default function History() {
   const [note, setNote] = useState("");
   const [purpose, setPurpose] = useState("");
   const [created_date, setCreatedDate] = useState(dayjs().tz(timezoneString));
-  const [scheduled_date, setScheduledDate] = useState(dayjs().tz(timezoneString));
+  const [scheduled_date, setScheduledDate] = useState(dayjs());
   const [points, setPoints] = useState(0);
   const [historyRecords, setHistoryRecords] = useState([]);
   const [history, setHistory] = useState([]);
@@ -382,6 +382,7 @@ export default function History() {
   };  
   
   const handleAdd = (e) => {
+    setError('');
     // console.log('clicked');
     e.preventDefault();
     
@@ -414,7 +415,8 @@ export default function History() {
       note,
       purpose,
       points,
-      scheduled_date: scheduled_date ? scheduled_date.tz("America/New_York").format() : "",
+      scheduled_date: scheduled_date,
+      // ? scheduled_date.tz("America/New_York").format() : "",
       imagePath1,
       imagePath2,
       status: type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : 0,
@@ -444,6 +446,7 @@ export default function History() {
         // Update the local state with the new record
         setHistoryRecords((prevRecords) => [...prevRecords, newRecord]);
         fetchHistory(); // Fetch the updated history immediately after adding new record
+        handleCloseAddHistory();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -596,7 +599,10 @@ export default function History() {
       <h3 style={{fontSize: '15px'}}>TotalCount: {totalCount}</h3>
       <button
         className="history-add-button"
-        onClick={() => setAddHistory(true)}>
+        onClick={() => {
+          setAddHistory(true);  // Update addHistory state
+          setError('');         // Clear the error message
+        }}>
         Add<i className="fa-solid fa-square-plus"></i>
       </button>
       <div className="history-container">
@@ -900,7 +906,7 @@ export default function History() {
                   className="add-addhistory"
                   onClick={(e) => {
                     handleAdd(e);
-                    handleCloseAddHistory(e);
+                    // handleCloseAddHistory(e);
                   }}>
                   Add
                 </button>

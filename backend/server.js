@@ -86,8 +86,8 @@ app.post('/send-email', authenticate, (req, res) => {
   const token = authHeader && authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
 
   // Log for debugging
-  console.log("Authorization Header:", authHeader);
-  console.log("Token:", token);
+  // console.log("Authorization Header:", authHeader);
+  // console.log("Token:", token);
 
   if (!token) {
     return res.status(401).json({ message: "Authorization token is required" });
@@ -199,7 +199,8 @@ app.post(api + '/upload/history', upload.array('files', 2), (req, res) => {
 });
 
 app.post(api + "/person", authenticate, (req, res) => {
-  const { personInfo, imagePath, email, Completion, TotalProgress } = req.body;
+  const { personInfo, imagePath1, imagePath2, email, Completion, TotalProgress } = req.body;
+  console.log(req.body);
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -209,8 +210,8 @@ app.post(api + "/person", authenticate, (req, res) => {
 
     // SQL query to insert data into the personalinfo table
     let sql = `
-      INSERT INTO personalinfo (useremail, fullname, phonenumber, age, email, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO personalinfo (useremail, fullname, phonenumber, age, email, dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
       email,
@@ -218,6 +219,9 @@ app.post(api + "/person", authenticate, (req, res) => {
       personInfo.phonenumber,
       personInfo.age,
       personInfo.email,
+      personInfo.dob,
+      personInfo.rating,
+      imagePath2,
       personInfo.linkedinurl,
       personInfo.address,
       personInfo.shortdescription,
@@ -227,12 +231,12 @@ app.post(api + "/person", authenticate, (req, res) => {
     ];
 
     // If imagePath is provided, include it in the SQL query and values
-    if (imagePath) {
+    if (imagePath1) {
       sql = `
-        INSERT INTO personalinfo (useremail, profile, fullname, phonenumber, age, email, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO personalinfo (useremail, profile, fullname, phonenumber, age, email, dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      values.splice(1, 0, imagePath);
+      values.splice(1, 0, imagePath1);
     }
 
     // Insert into personalinfo table
@@ -393,7 +397,8 @@ app.post(api + "/person", authenticate, (req, res) => {
 });
 //////////////////////// Sub-Connections///////////////////////////////
 app.post(api + "/subconnections", authenticate, (req, res) => {
-  const { email, selectedPersonId, connectionInfo, imagePath, Completion, TotalProgress } = req.body;
+  const { subemail, selectedPersonId, connectionInfo, imagePath1, imagePath2, Completion, TotalProgress } = req.body;
+  console.log(req.body);
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -403,15 +408,18 @@ app.post(api + "/subconnections", authenticate, (req, res) => {
 
     // SQL query to insert data into the personalinfo table
     let sql = `
-      INSERT INTO personalinfo (useremail, fullname, phonenumber, age, email, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion, sub_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO personalinfo (useremail, fullname, phonenumber, age, email, dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion, sub_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
-      email,
+      subemail,
       connectionInfo.fullname,
       connectionInfo.phonenumber,
       connectionInfo.age,
       connectionInfo.email,
+      connectionInfo.dob,
+      connectionInfo.rating,
+      imagePath2,
       connectionInfo.linkedinurl,
       connectionInfo.address,
       connectionInfo.shortdescription,
@@ -422,12 +430,12 @@ app.post(api + "/subconnections", authenticate, (req, res) => {
     ];
 
     // If imagePath is provided, include it in the SQL query and values
-    if (imagePath) {
+    if (imagePath1) {
       sql = `
-        INSERT INTO personalinfo (useremail, profile, fullname, phonenumber, age, email, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion, sub_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO personalinfo (useremail, profile, fullname, phonenumber, age, email, dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion, sub_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
-      values.splice(1, 0, imagePath);
+      values.splice(1, 0, imagePath1);
     }
 
     // Insert into personalinfo table
@@ -1269,10 +1277,12 @@ app.put(api + "/personupload", authenticate, (req, res) => {
   const {
     selectedPersonId,
     personInfo,
-    imagePreview,
+    imagePath1,
+    imagePath2,
     Completion,
     TotalProgress,
   } = req.body;
+  console.log("here",req.body);
   // console.log("BACKEND TOTAL VALUE = ", TotalProgress);
   pool.getConnection((err, connection) => {
     if (err) {
@@ -1281,13 +1291,16 @@ app.put(api + "/personupload", authenticate, (req, res) => {
     }
 
     let sql = `UPDATE personalinfo
-               SET fullname = ?, phonenumber = ?, age = ?, email = ?, linkedinurl = ?, address = ?, shortdescription = ?, hashtags = ? ,Completion = ?, overall_completion = ? `;
+               SET fullname = ?, phonenumber = ?, age = ?, email = ?, dob = ?, rating = ?, visitingcard = ?, linkedinurl = ?, address = ?, shortdescription = ?, hashtags = ? ,Completion = ?, overall_completion = ? `;
 
     let queryParams = [
       personInfo.fullname,
       personInfo.phonenumber,
       personInfo.age,
       personInfo.email,
+      personInfo.dob,
+      personInfo.rating,
+      imagePath2,
       personInfo.linkedinurl,
       personInfo.address,
       personInfo.shortdescription,
@@ -1297,9 +1310,9 @@ app.put(api + "/personupload", authenticate, (req, res) => {
     ];
 
     // Add profile column update only if imagePreview is not null or empty
-    if (imagePreview) {
+    if (imagePath1) {
       sql += `, profile = ?`;
-      queryParams.push(imagePreview);
+      queryParams.push(imagePath1);
     }
 
     sql += ` WHERE person_id = ?`;
@@ -1704,14 +1717,12 @@ app.post(api + '/addhistory', authenticate, (req, res) => {
     status
   } = req.body;
 
-  console.log('Original data received:', req.body);
+  // console.log('Original data received:', req.body);
 
   // Format the provided scheduled_date to MySQL datetime format with the correct timezone
-  const formattedDate = scheduled_date
-    ? moment.tz(scheduled_date, timezone).format('YYYY-MM-DD HH:mm:ss')
-    : null;
+  const formattedDate = moment(scheduled_date).format('YYYY-MM-DD HH:mm:ss');
 
-  console.log("Formatted date: ", formattedDate);
+  // console.log("Formatted date: ", formattedDate);
 
   // Prepare the SQL query
   const query = `
@@ -1829,8 +1840,8 @@ app.post(api + "/history", authenticate, (req, res) => {
   const token = authHeader && authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
   
   // Log for debugging
-  console.log("Authorization Header:", authHeader);
-  console.log("Token:", token);
+  // console.log("Authorization Header:", authHeader);
+  // console.log("Token:", token);
 
   if (!token) {
     return res.status(401).json({ message: "Authorization token is required" });
@@ -1883,12 +1894,68 @@ app.post(api + "/history", authenticate, (req, res) => {
 
           // Send the records and the count in the response
           res.json({ data: results, totalCount });
-          console.log("Fetched Data:", results);
+          // console.log("Fetched Data:", results);
         });
       });
     });
   });
 });
+
+const checkAndSendWishes = () => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error getting database connection:", err);
+      return;
+    }
+
+    const today = new Date();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+    const day = String(today.getDate()).padStart(2, '0');
+
+    // Format today's month and day as MM-DD
+    const formattedDate = `${month}-${day}`;
+
+    // Query to fetch records where the month and day of DOB match today's month and day
+    const sql = `
+      SELECT dob, fullname, email
+      FROM personalinfo
+      WHERE DATE_FORMAT(dob, '%m-%d') = ?
+    `;
+
+    connection.query(sql, [formattedDate], async (err, results) => {
+      if (err) {
+        console.error("Error executing database query:", err);
+        connection.release();
+        return;
+      }
+
+      if (results.length > 0) {
+        for (const record of results) {
+          const { dob, fullname, email } = record;
+
+          const mailOptions = {
+            from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: `Happy Birthday`,
+            text: `Many more happy returns of the day, ${fullname}!`,
+          };
+
+          try {
+            await transporter.sendMail(mailOptions);
+            // console.log('Email sent successfully for birthday wishes');
+
+          } catch (error) {
+            console.error('Error sending email:', error);
+          }
+        }
+      }
+
+      connection.release();
+    });
+  });
+};
+
+
 
 const checkAndSendEmails = () => {
   pool.getConnection((err, connection) => {
@@ -1898,22 +1965,24 @@ const checkAndSendEmails = () => {
     }
 
     const now = new Date();
-    const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000); // 30 minutes ago
+    const thirtyMinutesFromNow = new Date(now.getTime() + 30 * 60 * 1000);
 
     // Fetch records within the last 30 minutes where email has not been sent
     const sql = `
       SELECT * 
       FROM history 
       WHERE scheduledDate >= ? 
+      AND scheduledDate <= ? 
+      AND status = 1 
       AND emailSent = FALSE
     `;
-    connection.query(sql, [thirtyMinutesAgo], async (err, results) => {
+    connection.query(sql, [now, thirtyMinutesFromNow], async (err, results) => {
       if (err) {
         console.error("Error executing database query:", err);
         connection.release();
         return;
       }
-      console.log(results);
+      // console.log(results);
 
       if (results.length > 0) {
         for (const record of results) {
@@ -1928,7 +1997,7 @@ const checkAndSendEmails = () => {
 
           try {
             await transporter.sendMail(mailOptions);
-            console.log('Email sent successfully');
+            // console.log('Email sent successfully for remainder');
 
             // Update records to set emailSent to TRUE
             const updateSql = "UPDATE history SET emailSent = TRUE WHERE history_id = ?";
@@ -1953,6 +2022,10 @@ const checkAndSendEmails = () => {
 cron.schedule('* * * * *', () => {
   console.log('Checking for upcoming events...');
   checkAndSendEmails();
+});
+
+cron.schedule('0 9 * * *', () => {
+  checkAndSendWishes();
 });
 
 

@@ -4,6 +4,7 @@ const PersonContext = createContext();
 
 export function PersonProvider({ children }) {
   const [selectedPersonId, setSelectedPersonId] = useState(null);
+  const [subemail, setSubemail] = useState(null)
   // const [selectedsubid, setSelectedsubid] = useState(null);
  
   // console.log('PersonProvider rendering'); // Debug statement
@@ -12,8 +13,8 @@ export function PersonProvider({ children }) {
     <PersonContext.Provider value={{ 
       selectedPersonId, 
       setSelectedPersonId,
-      // selectedsubid,
-      // setSelectedsubid,
+      subemail,
+      setSubemail,
       }}>
       {children}
     </PersonContext.Provider>

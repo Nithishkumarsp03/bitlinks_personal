@@ -75,7 +75,7 @@ export default function Default(subPersonId) {
   const username = decrypt(Cookies.get("NAME"));
   const picture = decrypt(Cookies.get("picture"));
   // const id = parsedProfile?.id;
-  const { setSelectedPersonId } = usePerson();
+  const { setSelectedPersonId, setSubemail } = usePerson();
   // const { selectedPersonId, setSelectedPersonId } = usePerson();
   const [userNetworks, setuserNetworks] = useState([]);
   const [Connections, setConnections] = useState(true);
@@ -376,6 +376,7 @@ export default function Default(subPersonId) {
   const navigate = useNavigate();
 
   const handleContinue = () => {
+    console.log('clicked');
     const SubConnectionsvalue = SubConnections; // Set your desired value
     navigate("../bitcontacts/dashboard/admin", {
       state: { subConnections: SubConnectionsvalue },
@@ -452,12 +453,14 @@ export default function Default(subPersonId) {
     return () => clearInterval(intervalId);
   };
 
-  const handleCard = (personId) => {
+  const handleCard = (personId, email) => {
     // updateStatus(historyId);
     if (connectionActive) {
       // console.log("Cannot access Card, View Connection is active");
       return;
     }
+    console.log("selectedid:",personId);
+    console.log("selectedemail:",email);
 
     // If clicked on the same card again, reset to normal and allow connection view
     if (selectedCardId === personId && cardActive) {
@@ -470,6 +473,7 @@ export default function Default(subPersonId) {
     }
 
     setSelectedPersonId(personId);
+    setSubemail(email)
     setView(!view); // Card view is now active
     setViewConnection(false); // Ensure connection view is inactive
     setSelectedCardId(personId); // Set the clicked card's ID
@@ -601,40 +605,50 @@ export default function Default(subPersonId) {
     return searchMatch && levelMatch;
   });  
 
-  const filteredConnections = personalInfos.filter((connection) => {
-    const searchLower = searchtermconnections.toLowerCase().trim();
-
+  const filteredConnections = (personalInfos || []).filter((connection) => {
+    const searchTerms = searchtermconnections
+      .toLowerCase()
+      .split(',')
+      .map((term) => term.trim());
     // Check if the fullname contains the search term
-    const nameMatch = connection.fullname
-      ? connection.fullname.toLowerCase().includes(searchLower)
-      : false;
-    const roleMatch = connection.role
-      ? connection.role.toLowerCase().includes(searchLower)
-      : false;
-    const companyMatch = connection.companyname
-      ? connection.companyname.toLowerCase().includes(searchLower)
-      : false;
-    const domainMatch = connection.domain
-      ? connection.domain.toLowerCase().includes(searchLower)
-      : false;
-
-    // Check if the role contains the search term
-    // const roleMatch = connection.role ? connection.role.toLowerCase().includes(searchLower) : false;
-
-    // Check if any hashtag contains the search term
-    const hashtagsArray = connection.hashtags
-      ? connection.hashtags.split(" ").map((tag) => tag.trim().toLowerCase())
-      : [];
-
-    const hashtagMatch = hashtagsArray.some((tag) => tag.includes(searchLower));
-
-    // Combine search and level filtering
-    const searchMatch = nameMatch || hashtagMatch || roleMatch || companyMatch || domainMatch;
-
+    const isMatch = (term) => {
+      // Check if the fullname contains the search term
+      const nameMatch = connection.fullname.toLowerCase().includes(term);
+      const roleMatch = connection.role
+        ? connection.role.toLowerCase().includes(term)
+        : false;
+      const companyMatch = connection.companyname
+        ? connection.companyname.toLowerCase().includes(term)
+        : false;
+      const domainMatch = connection.domain
+        ? connection.domain.toLowerCase().includes(term)
+        : false;
+      const locationMatch = connection.companyaddress
+        ? connection.companyaddress.toLowerCase().includes(term)
+        : false;
+  
+      // Check if any hashtag contains the search term
+      const hashtagsArray = connection.hashtags
+        ? connection.hashtags.split(" ").map((tag) => tag.trim().toLowerCase())
+        : [];
+  
+      const hashtagMatch = hashtagsArray.some((tag) => tag.includes(term));
+  
+      return (
+        nameMatch ||
+        hashtagMatch ||
+        roleMatch ||
+        companyMatch ||
+        domainMatch ||
+        locationMatch
+      );
+    };
+    const searchMatch = searchTerms.every((term) => isMatch(term));
+  
     // Adjust the filtering logic based on the selected level and connection.rank
     const levelMatch =
       selectedLevel !== null ? connection.rank === selectedLevel : true;
-
+  
     return searchMatch && levelMatch;
   });
 
@@ -1293,7 +1307,7 @@ export default function Default(subPersonId) {
                                   view || viewconnection ? "show" : ""
                                 }`}
                                 onClick={() =>
-                                  handleCard(connection.person_id)
+                                  handleCard(connection.person_id, connection.email)
                                 }>
                                 <div
                                   className={`${
@@ -1625,7 +1639,7 @@ export default function Default(subPersonId) {
                                   view || viewconnection ? "show" : ""
                                 }`}
                                 onClick={() =>
-                                  handleCard(connection.person_id)
+                                  handleCard(connection.person_id, connection.email)
                                 }>
                                 <div
                                   className={`${

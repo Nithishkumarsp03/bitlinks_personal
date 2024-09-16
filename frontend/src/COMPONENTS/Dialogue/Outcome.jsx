@@ -67,7 +67,7 @@ const OutcomeDialog = ({ open, onClose, Outcomeinfo, handleDetailsChange6, error
             />
           </Box>
         </div>
-        <p style={{color: 'red'}}>{error}</p>
+        <p style={{color: 'green'}}>{error}</p>
         <div id="buttonContainer-flowchart-person">
           <button
             onClick={onClose}

@@ -143,16 +143,20 @@ const ConsultancyDialog = ({
                 gap: "15px",
               }}>
               <div style={{ display: "flex", gap: "15px" }}>
+                <div style={{width:'50%'}}>
                 <RoleDropdown
                   value={consultancyInfo.role}
                   onChange={handleRoleChange}
                   onTextChange={handleRoleTextChange}
                 />
+                </div>
+                <div style={{width:'50%'}}>
                 <DomainDropdown
                     value={consultancyInfo.domain}
                     onChange={handleDomainChange}
                     onTextChange={handleDomainTextChange}
                 />
+                </div>
               </div>
               <div style={{ display: "flex", gap: "15px" }}>
                 <SkillsetDropdown

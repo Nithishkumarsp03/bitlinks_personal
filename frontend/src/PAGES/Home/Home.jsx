@@ -55,7 +55,8 @@ export default function Home() {
 
       useEffect(() => {
         const email = decrypt(Cookies.get('email'));
-        if (!email) {
+        const token = decrypt(Cookies.get('token'));
+        if (!email && !token) {
           navigate('/bitcontacts');
         }
       }, [navigate]);

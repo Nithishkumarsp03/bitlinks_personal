@@ -105,6 +105,7 @@ const PreviousExperienceDialog = ({
                 placeholder="Experience in (Yrs)"
                 onChange={handleDetailsChange2}
                 value={PreviousExperienceinfo.experience}
+                type='number'
                 name="experience"
               />
               <RoleDropdown

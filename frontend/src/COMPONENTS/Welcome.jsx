@@ -57,6 +57,9 @@ const Welcome = () => {
         };
 
         // console.log("Saved JSON data:", savedData);
+        if(!savedData.email){
+          navigate("/bitcontacts");
+        }
 
         if (savedData.role === 'admin') {
           navigate("/bitcontacts/dashboard/admin");

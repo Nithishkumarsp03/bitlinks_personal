@@ -1,5 +1,6 @@
-import React, { useState, useRef , useEffect} from "react";
-import { useNavigate , useLocation } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import Select from "react-select";
 import "./Addaccount.css";
 import { Dialog } from "@mui/material";
 import Box from "@mui/joy/Box";
@@ -15,9 +16,9 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import Cookies from "js-cookie";
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
-const SECRET_KEY = 'your-secret-key';
+const SECRET_KEY = "your-secret-key";
 
 const ChangingProgressProvider = ({ value, children }) => {
   return children(value);
@@ -27,10 +28,10 @@ const decrypt = (ciphertext) => {
     const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
     return bytes.toString(CryptoJS.enc.Utf8);
   }
-  return '';
+  return "";
 };
 
-const ShowAddAccount = () =>  {
+const ShowAddAccount = () => {
   const email = decrypt(Cookies.get("email"));
   const token = decrypt(Cookies.get("token"));
   // const parsedProfile = userProfile ? JSON.parse(userProfile) : null;
@@ -39,15 +40,17 @@ const ShowAddAccount = () =>  {
   const [person_1, setPerson_1] = useState(false);
   const [person_2, setPerson_2] = useState(false);
   const [progress_1, setProgress_1] = useState(0);
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null); // For the first image
+  const [file2, setFile2] = useState(null); // For the second image
   const [imagePreview, setImagePreview] = useState(Profile);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [Person_Progress, setPerson_Progress] = useState(0);
   const { selectedPersonId } = usePerson();
   const [Completion, setCompletion] = useState(0);
   const [Total_Progress, setTotal_Progress] = useState(0);
   const [SubCompletion, setSubCompletion] = useState(0);
   const [SubTotal_Progress, setSubTotal_Progress] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   // const [SubConnections, setsubconnections] = useState();
 
   const [personInfo, setPersonInfo] = useState({
@@ -55,6 +58,9 @@ const ShowAddAccount = () =>  {
     phonenumber: "",
     age: "",
     email: "",
+    dob: "",
+    rating: "",
+    visitingcard: "",
     linkedinurl: "",
     address: "",
     shortdescription: "",
@@ -66,11 +72,15 @@ const ShowAddAccount = () =>  {
     phonenumber: "",
     age: "",
     email: "",
+    dob: "",  
+    rating: "",
+    visitingcard: "",
     linkedinurl: "",
     address: "",
     shortdescription: "",
     hashtags: "",
-  })
+  });
+  // console.log('add')
 
   const handleDetailsChange_1 = (e) => {
     const { name, value } = e.target;
@@ -86,21 +96,21 @@ const ShowAddAccount = () =>  {
       ...prevDetails_1,
       [name]: value,
     }));
-  }
+  };
 
   const location = useLocation();
   const subConnections = location.state?.subConnections;
 
   // console.log('SubConnections:', subConnections);
- 
+
   const handlePersonInput = () => {
-    if(subConnections===1){
+    console.log('inside')
+    if (subConnections === 1) {
       setPerson_1(true);
-    }
-    else if(subConnections===2){
+    } else if (subConnections === 2) {
       setPerson_2(true);
     }
-  }
+  };
   // const CalculateProgress_Person = () => {
   //   const totalFields = Object.keys(personInfo).length;
   //   if (totalFields === 0) return 0; // Avoid division by zero
@@ -128,25 +138,66 @@ const ShowAddAccount = () =>  {
   // };
 
   const fileInputRef = useRef(null);
+  const fileInputRef2 = useRef(null);
 
   const handleClickOpen = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
+  const handleClickOpen2 = () => {
+    if (fileInputRef2.current) {
+      fileInputRef2.current.click();
+    }
+  };
+  const [previewUrl1, setPreviewUrl1] = useState(null); // Preview URL for first image
+  const [previewUrl2, setPreviewUrl2] = useState(null); // Preview URL for second image
+  const [cardAdded, setCardAdded] = useState(false); // Track if card is added
+  const [showPopup, setShowPopup] = useState(false); // Track popup visibility
 
+  // Handle the file change for the first image
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
 
+    // Create a preview URL
     if (selectedFile) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setPreviewUrl1(reader.result);
       };
       reader.readAsDataURL(selectedFile);
     }
   };
+
+  // Handle the file change for the second image
+  const handleFileChange2 = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile2(selectedFile);
+
+    // Create a preview URL
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl2(reader.result); // Set the preview URL
+        setCardAdded(true); // Mark card as added
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  // const handleFileChange = (e) => {
+  //   const selectedFile = e.target.files[0];
+  //   setFile(selectedFile);
+
+  //   if (selectedFile) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setImagePreview(reader.result);
+  //     };
+  //     reader.readAsDataURL(selectedFile);
+  //   }
+  // };
 
   const CalculateProgress_Person = () => {
     const totalFields = Object.keys(personInfo).length;
@@ -154,180 +205,218 @@ const ShowAddAccount = () =>  {
       (value) => value !== ""
     ).length;
     const calculatedCompletion = (filledFields / totalFields) * 100;
-    const totalCompletion = (filledFields/43) * 100;
+    const totalCompletion = (filledFields / 43) * 100;
     setCompletion(calculatedCompletion);
     setTotal_Progress(totalCompletion);
     // console.log("Status = ",Completion);
-  }
+  };
 
   useEffect(() => {
     CalculateProgress_Person();
   }, [personInfo]);
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    CalculateProgress_Person()
-    // Calculate the completion progress before submission
-    // const totalFields = Object.keys(personInfo).length;
-    // const filledFields = Object.values(personInfo).filter(
-    //   (value) => value !== ""
-    // ).length;
-    // const calculatedCompletion = (filledFields / totalFields) * 100;
-    // const totalCompletion = (filledFields/43) * 100;
-    // setCompletion(calculatedCompletion);
-    // setTotal_Progress(totalCompletion);
-    
-    let imagePath = null;
-    if (personInfo.fullname === '' || personInfo.phonenumber === '') {
-        setError('Name and Phonenumber are required to create a connection');
-        return;
-    }
+    CalculateProgress_Person();
 
-    if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
+    let imagePath1 = null;
+    let imagePath2 = null;
 
-        try {
-            const uploadResponse = await fetch(`${process.env.REACT_APP_API}/upload`, {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!uploadResponse.ok) {
-                const text = await uploadResponse.text();
-                console.error("Upload failed with status:", uploadResponse.status);
-                console.error("Response text:", text);
-                throw new Error("Network response was not ok");
-            }
-
-            const uploadData = await uploadResponse.json();
-            // console.log('Imagepath: ', uploadData.path);
-            imagePath = uploadData.path;
-        } catch (error) {
-            console.error("Error:", error);
-            setError("An error occurred during file upload. Please try again.");
-            return;
-        }
-    }
-
-    try {
-        const personResponse = await fetch(`${process.env.REACT_APP_API}/person`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                personInfo,
-                imagePath, // Only send imagePath if a file was uploaded
-                email,
-                Completion: Completion, // Use the calculated value directly
-                TotalProgress: Total_Progress,
-            }),
-        });
-
-        if (!personResponse.ok) {
-            const text = await personResponse.text();
-            console.error("Upload failed with status:", personResponse.status);
-            console.error("Response text:", text);
-            throw new Error("Network response was not ok");
-        }
-
-        const personData = await personResponse.json();
-        setError("Saved Successfully. You may now close this popup");
-
-        // Navigate to /dashboard after 3 seconds using window.location
-        setTimeout(() => {
-            window.location.href = '/bitcontacts/dashboard/admin';
-        }, 2000);
-
-    } catch (error) {
-        console.error("Error:", error);
-        setError("An error occurred. Please try again.");
-    }
-
-    e.target.value = null;
-};
-
-
-const CalculateProgress_Subconnections = () => {
-  const totalFields = Object.keys(connectionInfo).length;
-  const filledFields = Object.values(connectionInfo).filter(
-    (value) => value !== ""
-  ).length;
-  const calculatedCompletion = (filledFields / totalFields) * 100;
-  const totalCompletion = (filledFields / 43) * 100;
-  setSubCompletion(calculatedCompletion);
-  setSubTotal_Progress(totalCompletion)
-  // console.log("Status = ",SubCompletion);
-}
-
-useEffect(() => {
-  CalculateProgress_Subconnections();
-}, [personInfo]);
-
-
-const handleSubconnections = async (e) => {
-  e.preventDefault();
-  CalculateProgress_Subconnections();
-
-  // Calculate the completion progress before submission
-  let imagePath = null;
-  if (connectionInfo.fullname === '' || connectionInfo.phonenumber === '') {
-      setError('Name and Phonenumber are required to create a connection');
+    // Check if the required fields are filled
+    if (personInfo.fullname === "" || personInfo.phonenumber === "") {
+      setError("Name and Phonenumber are required to create a connection");
       return;
-  }
+    }
 
-  if (file) {
+    // Upload the first image if it exists
+    if (file) {
       const formData = new FormData();
       formData.append("file", file);
 
       try {
-          const uploadResponse = await fetch(`${process.env.REACT_APP_API}/upload`, {
-              method: "POST",
-              body: formData,
-          });
-
-          if (!uploadResponse.ok) {
-              const text = await uploadResponse.text();
-              console.error("Upload failed with status:", uploadResponse.status);
-              console.error("Response text:", text);
-              throw new Error("Network response was not ok");
+        const uploadResponse = await fetch(
+          `${process.env.REACT_APP_API}/upload`,
+          {
+            method: "POST",
+            body: formData,
           }
+        );
 
-          const uploadData = await uploadResponse.json();
-          // console.log('Imagepath: ', uploadData.path);
-          imagePath = uploadData.path;
-      } catch (error) {
-          console.error("Error:", error);
-          setError("An error occurred during file upload. Please try again.");
-          return;
-      }
-  }
-
-  try {
-      const personResponse = await fetch(`${process.env.REACT_APP_API}/subconnections`, {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-              email,
-              selectedPersonId,
-              connectionInfo,
-              imagePath, // Only send imagePath if a file was uploaded
-              Completion: SubCompletion, // Use the calculated value directly
-              TotalProgress: SubTotal_Progress,
-          }),
-      });
-
-      if (!personResponse.ok) {
-          const text = await personResponse.text();
-          console.error("Upload failed with status:", personResponse.status);
+        if (!uploadResponse.ok) {
+          const text = await uploadResponse.text();
+          console.error("Upload failed with status:", uploadResponse.status);
           console.error("Response text:", text);
           throw new Error("Network response was not ok");
+        }
+
+        const uploadData = await uploadResponse.json();
+        imagePath1 = uploadData.path;
+      } catch (error) {
+        console.error("Error:", error);
+        setError("An error occurred during file upload. Please try again.");
+        return;
+      }
+    }
+
+    // Upload the second image if it exists
+    if (file2) {
+      // Assume 'file2' is the state for the second file
+      const formData2 = new FormData();
+      formData2.append("file", file2);
+
+      try {
+        const uploadResponse = await fetch(
+          `${process.env.REACT_APP_API}/upload`,
+          {
+            method: "POST",
+            body: formData2,
+          }
+        );
+
+        if (!uploadResponse.ok) {
+          const text = await uploadResponse.text();
+          console.error("Upload failed with status:", uploadResponse.status);
+          console.error("Response text:", text);
+          throw new Error("Network response was not ok");
+        }
+
+        const uploadData = await uploadResponse.json();
+        imagePath2 = uploadData.path;
+      } catch (error) {
+        console.error("Error:", error);
+        setError(
+          "An error occurred during the second file upload. Please try again."
+        );
+        return;
+      }
+    }
+
+    // Continue with the form submission
+    try {
+      const personResponse = await fetch(
+        `${process.env.REACT_APP_API}/person`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            personInfo,
+            imagePath1, // First image path
+            imagePath2, // Second image path
+            email,
+            Completion: Completion,
+            TotalProgress: Total_Progress,
+          }),
+        }
+      );
+
+      if (!personResponse.ok) {
+        const text = await personResponse.text();
+        console.error("Upload failed with status:", personResponse.status);
+        console.error("Response text:", text);
+        throw new Error("Network response was not ok");
+      }
+
+      const personData = await personResponse.json();
+      setError("Saved Successfully. You may now close this popup");
+
+      // Navigate to /dashboard after 2 seconds
+      setTimeout(() => {
+        window.location.href = "/bitcontacts/dashboard/admin";
+      }, 2000);
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred. Please try again.");
+    }
+
+    e.target.value = null;
+  };
+
+  const CalculateProgress_Subconnections = () => {
+    const totalFields = Object.keys(connectionInfo).length;
+    const filledFields = Object.values(connectionInfo).filter(
+      (value) => value !== ""
+    ).length;
+    const calculatedCompletion = (filledFields / totalFields) * 100;
+    const totalCompletion = (filledFields / 43) * 100;
+    setSubCompletion(calculatedCompletion);
+    setSubTotal_Progress(totalCompletion);
+    // console.log("Status = ",SubCompletion);
+  };
+
+  useEffect(() => {
+    CalculateProgress_Subconnections();
+  }, [personInfo]);
+
+  const handleSubconnections = async (e) => {
+    e.preventDefault();
+    CalculateProgress_Subconnections();
+
+    // Calculate the completion progress before submission
+    let imagePath1 = null;
+    let imagePath2 = null;
+    if (connectionInfo.fullname === "" || connectionInfo.phonenumber === "") {
+      setError("Name and Phonenumber are required to create a connection");
+      return;
+    }
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const uploadResponse = await fetch(
+          `${process.env.REACT_APP_API}/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!uploadResponse.ok) {
+          const text = await uploadResponse.text();
+          console.error("Upload failed with status:", uploadResponse.status);
+          console.error("Response text:", text);
+          throw new Error("Network response was not ok");
+        }
+
+        const uploadData = await uploadResponse.json();
+        // console.log('Imagepath: ', uploadData.path);
+        imagePath1 = uploadData.path;
+      } catch (error) {
+        console.error("Error:", error);
+        setError("An error occurred during file upload. Please try again.");
+        return;
+      }
+    }
+
+    try {
+      const personResponse = await fetch(
+        `${process.env.REACT_APP_API}/subconnections`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            email,
+            selectedPersonId,
+            connectionInfo,
+            imagePath1, // Only send imagePath if a file was uploaded
+            Completion: SubCompletion, // Use the calculated value directly
+            TotalProgress: SubTotal_Progress,
+          }),
+        }
+      );
+
+      if (!personResponse.ok) {
+        const text = await personResponse.text();
+        console.error("Upload failed with status:", personResponse.status);
+        console.error("Response text:", text);
+        throw new Error("Network response was not ok");
       }
 
       const personData = await personResponse.json();
@@ -335,23 +424,59 @@ const handleSubconnections = async (e) => {
 
       // Navigate to /dashboard after 3 seconds using window.location
       setTimeout(() => {
-        window.location.href = '/bitcontacts/dashboard/admin';
+        window.location.href = "/bitcontacts/dashboard/admin";
       }, 2000);
-
-  } catch (error) {
+    } catch (error) {
       console.error("Error:", error);
       setError("An error occurred. Please try again.");
-  }
+    }
 
-  e.target.value = null;
-};
+    e.target.value = null;
+  };
+
+  const handleViewClick = () => {
+    setShowPopup(true);
+  };
+
+  // Close the popup
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+  const handleRemoveImage = () => {
+    setFile2(null); // Clear the selected file
+    setPreviewUrl2(null); // Clear the preview URL
+    setCardAdded(false); // Reset the card added state
+  };
+
+  const formatDateForInput = (isoString) => {
+    const date = new Date(isoString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formattedDate = formatDateForInput(personInfo.dob);
+
+  const options = [
+    { label: "Higly Recommended", value: "Higly Recommended" },
+    { label: "Recommended", value: "Recommended" },
+  ];
+
+  const handleRatingchange = (selectedOption) => {
+    setPersonInfo((prevDetails_1) => ({
+      ...prevDetails_1,
+      rating: selectedOption.value,  // Store the selected value
+    }));
+  }
 
   return (
     <div className="add-account-main">
       <div className="addaccount">
         <div className="inputs_page">
           <div>
-          {/* <h1>Completion from props: {personInfo.Completion}%</h1> */}
+            {/* <h1>Completion from props: {personInfo.Completion}%</h1> */}
             <h1 className="addacc">Add Account</h1>
             <p className="period2req">
               <h6 className="period2">.</h6>
@@ -376,7 +501,7 @@ const handleSubconnections = async (e) => {
           <a1
             onClick={handlePersonInput}
             className="addconnections-a1-flow"
-            style={{cursor: 'pointer'}}
+            style={{ cursor: "pointer" }}
           >
             <span className="addconnection-topics-flowchart">
               <ChangingProgressProvider value={Completion}>
@@ -460,6 +585,7 @@ const handleSubconnections = async (e) => {
                 ref={fileInputRef}
                 style={{ display: "none" }}
                 onChange={handleFileChange}
+                accept="image/*"
               />
               <div
                 style={{
@@ -472,25 +598,30 @@ const handleSubconnections = async (e) => {
               >
                 <img
                   className="addconnection-profilepic"
-                  src={imagePreview || Profile}
+                  src={previewUrl1 || Profile}
                 />
               </div>
             </div>
           </div>
           <div className="2ndline" style={{ display: "flex", gap: "15px" }}>
-            <Input
-              placeholder="Phone Number"
-              name="phonenumber"
-              value={personInfo.phonenumber}
-              onChange={handleDetailsChange_1}
-            />
-            <Input
-              placeholder="Age"
-              name="age"
-              type="number"
-              value={personInfo.age}
-              onChange={handleDetailsChange_1}
-            />
+            <div style={{ flexGrow: "1" }}>
+              <Input
+                placeholder="Phone Number"
+                name="phonenumber"
+                type="number"
+                value={personInfo.phonenumber}
+                onChange={handleDetailsChange_1}
+              />
+            </div>
+            <div style={{ flexGrow: "1" }}>
+              <Input
+                placeholder="Age"
+                name="age"
+                type="number"
+                value={personInfo.age}
+                onChange={handleDetailsChange_1}
+              />
+            </div>
           </div>
           <div
             className="3rdline"
@@ -523,6 +654,92 @@ const handleSubconnections = async (e) => {
               />
             </Box>
           </div>
+          <div className="container">
+            {/* Hidden file input for selecting the image */}
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              ref={fileInputRef2}
+              onChange={handleFileChange2}
+            />
+
+            {/* Show "Add card" text or "Card added successfully" depending on the state */}
+            {!cardAdded ? (
+              <p onClick={handleClickOpen2}>
+                Add card <i className="fa-regular fa-id-card"></i>
+              </p>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <p>Card added successfully!</p>
+                <i
+                  className="fa-regular fa-eye"
+                  onClick={handleViewClick}
+                  style={{
+                    marginLeft: "10px",
+                    cursor: "pointer",
+                    color: "blue",
+                  }}
+                ></i>
+                <p
+                  onClick={handleRemoveImage}
+                  style={{
+                    marginLeft: "10px",
+                    cursor: "pointer",
+                    color: "red",
+                  }}
+                >
+                  Remove image
+                </p>
+              </div>
+            )}
+
+            {/* Popup for viewing the added card */}
+            <Dialog open={showPopup} onClose={handleClosePopup}>
+              <div className="popup">
+                <div className="popup-content">
+                  <span className="close" onClick={handleClosePopup}>
+                    &times;
+                  </span>
+                  <h2>Card Details</h2>
+                  {/* Show the card preview image if available */}
+                  {previewUrl2 ? (
+                    <img
+                      src={previewUrl2}
+                      alt="Card Preview"
+                      style={{ width: "100%" }}
+                    />
+                  ) : (
+                    <p>No card available</p>
+                  )}
+                </div>
+              </div>
+            </Dialog>
+          </div>
+          <div style={{ width: "100%", display: "flex", gap: "20px" }}>
+            <div style={{ flexGrow: "1" }}>
+              <Input
+                type="date"
+                value={formattedDate}
+                onChange={handleDetailsChange_1}
+                name="dob"
+              />
+            </div>
+            <div style={{ flexGrow: "9" }}>
+              <Select
+                options={options}
+                onChange={handleRatingchange}
+                value={options.find(option => option.value === personInfo.rating)}
+                name="rating"
+              />
+            </div>
+          </div>
           <div>
             <Box>
               <Textarea
@@ -537,14 +754,14 @@ const handleSubconnections = async (e) => {
           </div>
           <div>
             <Input
-                placeholder="Hashtags"
-                name="hashtags"
-                style={{ flexGrow: 1 }}
-                value={personInfo.hashtags}
-                onChange={handleDetailsChange_1}
+              placeholder="Hashtags"
+              name="hashtags"
+              style={{ flexGrow: 1 }}
+              value={personInfo.hashtags}
+              onChange={handleDetailsChange_1}
             />
           </div>
-          <p style={{color: 'green'}}>{error}</p>
+          <p style={{ color: "green" }}>{error}</p>
           <div id="buttonContainer-flowchart-person">
             <button
               onClick={() => setPerson_1(false)}
@@ -568,23 +785,31 @@ const handleSubconnections = async (e) => {
           </div>
         </div>
       </Dialog>
-        <Subconnections
-          open={person_2}
-          onClose={() => setPerson_2(false)}
-          connectionInfo={connectionInfo}
-          handleSubconnections={handleSubconnections}
-          handleSubconnectionsvalue={handleSubconnectionsvalue}
-          fileInputRef={fileInputRef}
-          imagePreview={imagePreview} // Pass your image preview source
-          handleClickOpen={handleClickOpen}
-          Profile={Profile}  // Pass the profile image source
-          error={error}
-          handleFileChange={handleFileChange}
-          // CalculateProgress_Person={CalculateProgress_Person}
-        />
-        {/* </Dialog> */}
+      <Subconnections
+        open={person_2}
+        onClose={() => setPerson_2(false)}
+        connectionInfo={connectionInfo}
+        handleSubconnections={handleSubconnections}
+        handleSubconnectionsvalue={handleSubconnectionsvalue}
+        fileInputRef={fileInputRef}
+        fileInputRef2={fileInputRef2}
+        imagePreview={imagePreview} // Pass your image preview source
+        handleClickOpen={handleClickOpen}
+        handleClickOpen2={handleClickOpen2}
+        handleViewClick={handleViewClick}
+        handleRemoveImage={handleRemoveImage}
+        handleClosePopup={handleClosePopup}
+        formattedDate={formattedDate}
+        handleRatingchange={handleRatingchange}
+        Profile={Profile} // Pass the profile image source
+        error={error}
+        handleFileChange={handleFileChange}
+        handleFileChange2={handleFileChange2}
+        // CalculateProgress_Person={CalculateProgress_Person}
+      />
+      {/* </Dialog> */}
     </div>
   );
-}
+};
 
 export default ShowAddAccount;

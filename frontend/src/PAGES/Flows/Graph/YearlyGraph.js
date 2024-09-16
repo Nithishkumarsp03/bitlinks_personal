@@ -38,55 +38,61 @@ export default function ApexChartYearlyGraph() {
           },
           body: JSON.stringify({ selectedPersonId }),
         });
-
+  
         if (!response.ok) {
           console.error('Failed to fetch data:', response.statusText);
           return;
         }
-
+  
         const result = await response.json();
-        // console.log('Fetched Data:', result);
-
-        // Extract the array from the 'data' property
         const data = result.data;
-
+  
         // Initialize total points counter and yearly data object
         let totalPoints = 0;
         const yearlyData = {};
-
-        // Process the data
+  
+        // Get current year
+        const currentYear = new Date().getFullYear();
+  
+        // Prepopulate the last 5 years with 0 points
+        const recentLabels = [];
+        for (let i = 4; i >= 0; i--) {
+          const year = currentYear - i;
+          yearlyData[year] = 0; // Set 0 points initially for each year
+          recentLabels.push(year.toString()); // Store the label as a string
+        }
+  
+        // Process the fetched data
         data.forEach(entry => {
           const date = new Date(entry.datetime);
           const year = date.getFullYear();
-
-          if (!yearlyData[year]) {
-            yearlyData[year] = 0;
+  
+          // If the year exists in the last 5 years, update its points
+          if (yearlyData[year] !== undefined) {
+            yearlyData[year] += entry.points;
           }
-          yearlyData[year] += entry.points;
           totalPoints += entry.points; // Add points to total
         });
-
-        // Get sorted year labels and values (queue structure to only keep the last 5 years)
-        const labels = Object.keys(yearlyData).sort();
-        const recentLabels = labels.slice(-5); // Keep only the last 5 years
+  
+        // Get values for the last 5 years
         const values = recentLabels.map(label => yearlyData[label]);
-
-        setLabels(recentLabels);
+  
+        setLabels(recentLabels); // Set the last 5 years as labels
         setSeriesData([
           {
             name: "Points",
             data: values,
           }
         ]);
-
+  
         setTotalPoints(totalPoints); // Update total points state
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
+  
     fetchYearlyData();
-  }, [selectedPersonId]);
+  }, [selectedPersonId]);  
 
   const options = {
     chart: {

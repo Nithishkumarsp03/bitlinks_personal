@@ -78,6 +78,41 @@ const Flowchart = () => {
   const [Ifinternship, setIfinternship] = useState("");
   // const [Ifalumni, setIfalumni] = useState("");
   // const [Ifoutcome, setIfoutcome] = useState("");
+  const fileInputRef2 = useRef(null);
+  const [cardAdded, setCardAdded] = useState(false);
+  const [showPopup, setShowPopup] = useState(false); // Track popup visibility
+  const [file2, setFile2] = useState(null);
+  const [previewUrl2, setPreviewUrl2] = useState(null);
+  // Preview URL for second image
+
+  const handleClickOpen2 = () => {
+    if (fileInputRef2.current) {
+      fileInputRef2.current.click();
+    }
+  };
+  const handleFileChange2 = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile2(selectedFile);
+
+    // Create a preview URL
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl2(reader.result); // Set the preview URL
+        setCardAdded(true); // Mark card as added
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+  const handleViewClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleRemoveImage = () => {
+    setFile2(null); // Clear the selected file
+    setPreviewUrl2(null); // Clear the preview URL
+    setCardAdded(false); // Reset the card added state
+  };
 
   const [error, setError] = useState({
     person: "",
@@ -143,6 +178,9 @@ const Flowchart = () => {
     phonenumber: "",
     age: "",
     email: "",
+    dob: "",
+    rating: "",
+    visitingcard: "",
     linkedinurl: "",
     address: "",
     shortdescription: "",
@@ -220,6 +258,13 @@ const Flowchart = () => {
     Internship_Completion: "",
   });
 
+  const handleRatingchange = (selectedOption) => {
+    setPersoninfo((prevDetails_1) => ({
+      ...prevDetails_1,
+      rating: selectedOption.value,  // Store the selected value
+    }));
+  }
+
   const updateErrorField = (field, message) => {
     setError((prevError) => ({
       ...prevError,
@@ -227,7 +272,7 @@ const Flowchart = () => {
     }));
   };
   const CalculateProgress_Person = () => {
-    const { fullname, phonenumber, age, email, linkedinurl, address, shortdescription, hashtags} = personInfo;
+    const { fullname, phonenumber, age, email,dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags} = personInfo;
 
     const totalFields = 8;
 
@@ -238,6 +283,9 @@ const Flowchart = () => {
     (typeof phonenumber === 'string' && phonenumber.trim() !== "" ? 1 : 0) +
     (age.trim() !== "" ? 1 : 0) + 
     (typeof email === 'string' && email.trim() !== "" ? 1 : 0) +
+    (typeof dob === 'string' && dob.trim() !== "" ? 1 : 0) +
+    (typeof rating === 'string' && rating.trim() !== "" ? 1 : 0) +
+    (typeof visitingcard === 'string' && visitingcard.trim() !== "" ? 1 : 0) +
     (typeof linkedinurl === 'string' && linkedinurl.trim() !== "" ? 1 : 0) +
     (typeof address === 'string' && address.trim() !== "" ? 1 : 0) +
     (typeof shortdescription === 'string' && shortdescription.trim() !== "" ? 1 : 0) +
@@ -430,33 +478,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
     CalculateProgress_Outcome();
   }, [Outcomeinfo]);
 
-  // useEffect(() => {
-    const CalculateTotal_Progress = () => {
-      // Total fields for each section
-      const personTotalFields = 8;
-      const experienceTotalFields = 5;
-      const companyTotalFields = 5;
-      const expertiseTotalFields = 3;
-      const placementTotalFields = 4;
-      const consultancyTotalFields = 5;
-      const internshipTotalFields = 5;
-      const alumniTotalFields = 5;
-      const outcomeTotalFields = 3;
-    
-      // Sum of all total fields
-      const totalFields =
-        personTotalFields +
-        experienceTotalFields +
-        companyTotalFields +
-        expertiseTotalFields +
-        placementTotalFields +
-        consultancyTotalFields +
-        internshipTotalFields +
-        alumniTotalFields +
-        outcomeTotalFields;
-    
-      // Filled fields for each section
-      const personFilledFields =
+  const personFilledFields =
         Object.values(personInfo).filter(
           (value) => typeof value === "string" && value.trim() !== ""
         ).length;
@@ -500,6 +522,31 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         Object.values(Outcomeinfo).filter(
           (value) => typeof value === "string" && value.trim() !== ""
         ).length;
+
+  // useEffect(() => {
+    const CalculateTotal_Progress = () => {
+      // Total fields for each section
+      const personTotalFields = 12
+      const experienceTotalFields = 5;
+      const companyTotalFields = 9;
+      const expertiseTotalFields = 3;
+      const placementTotalFields = 4;
+      const consultancyTotalFields = 5;
+      const internshipTotalFields = 5;
+      const alumniTotalFields = 5;
+      const outcomeTotalFields = 3;
+    
+      // Sum of all total fields
+      const totalFields =
+        personTotalFields +
+        experienceTotalFields +
+        companyTotalFields +
+        expertiseTotalFields +
+        placementTotalFields +
+        consultancyTotalFields +
+        internshipTotalFields +
+        alumniTotalFields +
+        outcomeTotalFields;
     
       // Sum of all filled fields
       const totalFilledFields =
@@ -2291,17 +2338,13 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         <PersonDialog
           open={person}
           onClose={() => setPerson(false)}
-          personInfo={personInfo}
-          handleDetailsChange1={handleDetailsChange1}
-          handlePerson={handlePerson}
-          fileInputRef={fileInputRef}
-          imagePreview={imagePreview}
-          handleClickOpen={handleClickOpen}
-          Profile={Profile}
-          error={error.person}
-          handleFileChange={handleFileChange}
-          handleTotalValue={handlePerson}
-          CalculateProgress_Person={CalculateProgress_Person}
+          experienceFilledFields={experienceFilledFields}
+          companyFilledFields={companyFilledFields}
+          placementFilledFields={placementFilledFields}
+          consultancyFilledFields={consultancyFilledFields}
+          internshipFilledFields={internshipFilledFields}
+          alumniFilledFields={alumniFilledFields}
+          outcomeFilledFields={outcomeFilledFields}
           CalculateTotal_Progress={CalculateTotal_Progress}
         />
         <PreviousExperienceDialog

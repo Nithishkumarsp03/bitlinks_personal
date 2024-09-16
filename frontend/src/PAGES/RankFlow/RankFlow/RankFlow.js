@@ -5,12 +5,30 @@ import { usePerson } from "../../../COMPONENTS/Context";
 import { useNavigate } from "react-router-dom";
 import MainFlow from "../../Flows/MainFlow/Flows";
 import Default from "../../Default/Admin";
+import Cookies from "js-cookie";
+import CryptoJS from 'crypto-js';
+
+const SECRET_KEY = 'your-secret-key';
 
 export default function RankFlow({ viewConnectionIndex, handlecancelviewconnections }) {
   const { selectedPersonId } = usePerson();
   const [mainConnection, setMainConnection] = useState(null);
   const [mainflows, setmainflows] = useState(false);
   const [selectedSubPersonId, setSelectedSubPersonId] = useState(null);
+  const decrypt = (ciphertext) => {
+    try {
+      if (ciphertext) {
+        const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      }
+      return '';
+    } catch (error) {
+      console.error("Decryption error:", error.message);
+      return '';
+    }
+  };
+  
+  const token = decrypt(Cookies.get("token"));
 
   useEffect(() => {
     if (selectedPersonId) {
@@ -21,7 +39,13 @@ export default function RankFlow({ viewConnectionIndex, handlecancelviewconnecti
   const fetchMainConnection = async (selectedPersonId) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API}/personalinfo/main/${selectedPersonId}`
+        `${process.env.REACT_APP_API}/personalinfo/main/${selectedPersonId}`,{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
+        }
       );
       const data = await response.json();
       setMainConnection(data);
@@ -118,6 +142,19 @@ export default function RankFlow({ viewConnectionIndex, handlecancelviewconnecti
 
 function SubConnections({ personId }) {
   const [subConnections, setSubConnections] = useState([]);
+  const decrypt = (ciphertext) => {
+    try {
+      if (ciphertext) {
+        const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      }
+      return '';
+    } catch (error) {
+      console.error("Decryption error:", error.message);
+      return '';
+    }
+  };
+  const token = decrypt(Cookies.get("token"));
 
   useEffect(() => {
     fetchSubConnections(personId);
@@ -126,7 +163,13 @@ function SubConnections({ personId }) {
   const fetchSubConnections = async (personId) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API}/personalinfo/subconnections/${personId}`
+        `${process.env.REACT_APP_API}/personalinfo/subconnections/${personId}`,{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+          },
+        }
       );
       const data = await response.json();
       setSubConnections(data);
