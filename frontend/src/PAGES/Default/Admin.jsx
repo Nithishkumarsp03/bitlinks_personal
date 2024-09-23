@@ -282,9 +282,9 @@ export default function Default(subPersonId) {
     }
   };
 
-  useEffect(() => {
-    setConnectionloading(true);
+    
     const fetchUserNetworks = async () => {
+      setConnectionloading(true);
       try {
         const response = await fetch(api + "/userNetworks", {
           method: 'GET',
@@ -310,14 +310,7 @@ export default function Default(subPersonId) {
         setuserNetworks([]);
       }
     };
-    
-    fetchUserNetworks()
 
-    // const intervalId = setInterval(fetchUserNetworks, 1000);
-    // return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
     const fetchPersonalInfo = async () => {
       try {
         const response = await fetch(api + "/userConnections", {
@@ -342,15 +335,6 @@ export default function Default(subPersonId) {
     setConnectionloading(false);
       }
     };
-
-    // if (email) {
-    //   const intervalId = setInterval(fetchPersonalInfo, 1000);
-    //   return () => clearInterval(intervalId);
-    // }
-    fetchPersonalInfo()
-    // const intervalId = setInterval(fetchPersonalInfo, 1000);
-    // return () => clearInterval(intervalId);
-  }, [email]);
 
   const handleDiscard = () => {
     setInputValue(""); // Clear the input
@@ -459,8 +443,8 @@ export default function Default(subPersonId) {
       // console.log("Cannot access Card, View Connection is active");
       return;
     }
-    console.log("selectedid:",personId);
-    console.log("selectedemail:",email);
+    // console.log("selectedid:",personId);
+    // console.log("selectedemail:",email);
 
     // If clicked on the same card again, reset to normal and allow connection view
     if (selectedCardId === personId && cardActive) {
@@ -657,8 +641,9 @@ export default function Default(subPersonId) {
 
   const [notifiedReschedules, setNotifiedReschedules] = useState(new Set());
 
-  useEffect(() => {
-    const fetchRescheduleData = async () => {
+
+    const fetchRescheduleDataNetworks = async () => {
+      // console.log('called networks');
       try {
         const response = await fetch(api + "/fetch-scheduled", {
           method: 'GET',
@@ -694,38 +679,32 @@ export default function Default(subPersonId) {
         });
 
         // Send email notifications for reschedules less than 2 hours away
-        for (const reschedule of reschedulesLessThanTwoHours) {
-          if (!notifiedReschedules.has(reschedule.id)) {
-            const name = decrypt(Cookies.get("name"));
-            const email = decrypt(Cookies.get("email")); // Make sure to have the user's email in your data
-            const subject = "Upcoming Reschedule Reminder";
-            const message = `Your scheduled event is less than 2 hours away! Please take note of the reschedule time: ${reschedule.scheduleddate}`;
+        // for (const reschedule of reschedulesLessThanTwoHours) {
+        //   if (!notifiedReschedules.has(reschedule.id)) {
+        //     const name = decrypt(Cookies.get("name"));
+        //     const email = decrypt(Cookies.get("email")); // Make sure to have the user's email in your data
+        //     const subject = "Upcoming Reschedule Reminder";
+        //     const message = `Your scheduled event is less than 2 hours away! Please take note of the reschedule time: ${reschedule.scheduleddate}`;
 
-            // Send a request to the backend to send the email
-            await fetch(api + "/send-email", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({ name, email, subject, message }),
-            });
+        //     // Send a request to the backend to send the email
+        //     await fetch(api + "/send-email", {
+        //       method: "POST",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //         'Authorization': `Bearer ${token}`
+        //       },
+        //       body: JSON.stringify({ name, email, subject, message }),
+        //     });
 
-            // Mark this reschedule as notified
-            setNotifiedReschedules(prev => new Set(prev.add(reschedule.id)));
-          }
-        }
+        //     // Mark this reschedule as notified
+        //     setNotifiedReschedules(prev => new Set(prev.add(reschedule.id)));
+        //   }
+        // }
       } catch (error) {
         setScheduleloading(false);
         console.error("Error fetching reschedule data:", error);
       }
     };
-
-    fetchRescheduleData()
-
-    // const intervalId = setInterval(fetchRescheduleData, 1000);
-    // return () => clearInterval(intervalId);
-  }, [notifiedReschedules]);
 
   const colorPriority = {
     "#FEECEC": 1, // Red
@@ -815,58 +794,55 @@ export default function Default(subPersonId) {
     setMyNetworkPopup(false); // Close the dialog after selecting
   };
 
-  useEffect(() => {
-    const fetchRescheduleData = async () => {
-      if (!email) {
-        console.error("Email is not defined.");
+  const fetchRescheduleData = async () => {
+    // console.log('called connection');
+    if (!email) {
+      console.error("Email is not defined.");
+      return;
+    }
+    setScheduleloading(true);
+    try {
+      const response = await fetch(api + "/schedule", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      // If the data is empty, display "No data found"
+      if (data.length === 0) {
+        setScheduleloading(false);
         return;
       }
-      setScheduleloading(true);
-      try {
-        const response = await fetch(api + "/schedule", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ email }),
-        });
-  
-        const data = await response.json();
-  
-        // If the data is empty, display "No data found"
-        if (data.length === 0) {
-          setScheduleloading(false);
-          return;
-        }
-  
-        setLengthconnection(data.length);
-  
-        const currentTime = new Date();
-  
-        const upcomingReschedules = data.filter((item) => {
-          const rescheduleTime = new Date(item.scheduleddate);
-          const timeDifference = rescheduleTime - currentTime;
-  
-          // 12 hours in milliseconds: 12 * 60 * 60 * 1000
-          return timeDifference <= 12 * 60 * 60 * 1000;
-        });
-  
-        setReschedulemyData(upcomingReschedules);
-        setScheduleloading(false);
-      } catch (error) {
-        console.error("Error fetching reschedule data:", error);
-        setScheduleloading(false);
-      }
-    };
-    fetchRescheduleData();
-  }, [email]);
+
+      setLengthconnection(data.length);
+
+      const currentTime = new Date();
+
+      const upcomingReschedules = data.filter((item) => {
+        const rescheduleTime = new Date(item.scheduleddate);
+        const timeDifference = rescheduleTime - currentTime;
+
+        // 12 hours in milliseconds: 12 * 60 * 60 * 1000
+        return timeDifference <= 12 * 60 * 60 * 1000;
+      });
+
+      setReschedulemyData(upcomingReschedules);
+      setScheduleloading(false);
+    } catch (error) {
+      console.error("Error fetching reschedule data:", error);
+      setScheduleloading(false);
+    }
+  };
 
   const handleshowmore = () => {
     setShowmore(!showmore);
   };
 
-  useEffect(() => {
     const fetchuserRankData = async () => {
       if (!email) {
         console.error("Email is not defined.");
@@ -883,21 +859,17 @@ export default function Default(subPersonId) {
         });
 
         const data = await response.json();
+        setRankloading(false);
         // console.log(data);
         setUserranks(data);
       } catch (error) {
+        setRankloading(false);
         console.error("Error fetching reschedule data:", error);
       }
     };
-
-    setRankloading(false);
-    const intervalId = setInterval(fetchuserRankData, 1000);
-    return () => clearInterval(intervalId);
-  }, [email]);
-
-  useEffect(() => {
-    setRankloading(true);
+    
     const fetchnetworkRankData = async () => {
+      setRankloading(true);
       try {
         const response = await fetch(api + "/networkranks", {
           method: "POST",
@@ -908,17 +880,22 @@ export default function Default(subPersonId) {
         });
 
         const data = await response.json();
+        setRankloading(false);
         // console.log(data);
         setNetworkranks(data);
       } catch (error) {
+        setRankloading(false);
         console.error("Error fetching reschedule data:", error);
       }
     };
 
-    setRankloading(false);
-    fetchnetworkRankData()
-    // const intervalId = setInterval(fetchnetworkRankData, 1000);
-    // return () => clearInterval(intervalId);
+  useEffect(() => {
+    fetchRescheduleData();
+    fetchnetworkRankData();
+    fetchuserRankData();
+    fetchRescheduleDataNetworks();
+    fetchPersonalInfo();
+    fetchUserNetworks();
   }, [email]);
 
   return (
@@ -1273,7 +1250,8 @@ export default function Default(subPersonId) {
                     className={`filtericon-connections ${view || viewconnection ? "show" : ""}`}
                       style={{
                         marginTop: "0px",
-                        marginLeft: "0%",
+                        marginLeft: "auto",
+                        marginRight: "55px",
                         cursor: "pointer",
                       }}
                       onClick={handleFilter}
@@ -1606,7 +1584,8 @@ export default function Default(subPersonId) {
                     />
                     <FilterIcon
                     className={`filtericon-connections ${view || viewconnection ? "show" : ""}`}
-                      style={{ marginTop: "0px", cursor: "pointer" }}
+                      style={{ marginLeft: "auto",
+                        marginRight: "55px", cursor: "pointer" }}
                       onClick={handleFilter}
                     />
                   </div>
@@ -1930,7 +1909,11 @@ export default function Default(subPersonId) {
           {Connections ? (
             view || viewconnection || ExpertiseConnection ? (
               view ? (
-                <MainFlow handlecancelflows={handlecancelflows} />
+                <MainFlow 
+                  handlecancelflows={handlecancelflows} 
+                  fetchRescheduleData={fetchRescheduleData}
+                  fetchRescheduleDataNetworks={fetchRescheduleDataNetworks}
+                />
               ) : viewconnection ? (
                 <Details
                   handlecancelviewconnections={handlecancelviewconnections}
@@ -1962,7 +1945,8 @@ export default function Default(subPersonId) {
                     <FilterIcon
                       style={{
                         marginTop: "0px",
-                        marginLeft: "40%",
+                        marginLeft: "auto",
+                        marginRight: "0",
                         cursor: "pointer",
                       }}
                       onClick={handleOpenMyNetwork}
@@ -2092,7 +2076,8 @@ export default function Default(subPersonId) {
               </div>
             )
           ) : view ? (
-            <MainFlow handlecancelflows={handlecancelflows} />
+            <MainFlow handlecancelflows={handlecancelflows} fetchRescheduleData={fetchRescheduleData}
+            fetchRescheduleDataNetworks={fetchRescheduleDataNetworks}/>
           ) : viewconnection ? (
             <Details
               handlecancelviewconnections={handlecancelviewconnections}
@@ -2121,7 +2106,8 @@ export default function Default(subPersonId) {
                   <FilterIcon
                     style={{
                       marginTop: "0px",
-                      marginLeft: "17%",
+                      marginLeft: "auto",
+                      marginRight: "0",
                       cursor: "pointer",
                     }}
                     onClick={() => setScheduledNetworkPopup(true)}
@@ -2297,7 +2283,7 @@ export default function Default(subPersonId) {
       <Dialog
         open={MyNetworkPopup}
         onClose={() => setMyNetworkPopup(false)}
-        style={{ left: "85%", bottom: "25%" }}>
+        style={{ left: "90%", bottom: "38%" }}>
         <div
           style={{
             display: "flex",
@@ -2352,7 +2338,7 @@ export default function Default(subPersonId) {
       <Dialog
         open={ScheduledNetworkPopup}
         onClose={() => setScheduledNetworkPopup(false)}
-        style={{ left: "85%", bottom: "25%", padding: "10px" }}>
+        style={{ left: "90%", bottom: "38%", padding: "10px" }}>
         <div
           style={{
             display: "flex",
@@ -2432,7 +2418,7 @@ export default function Default(subPersonId) {
       style={{
         // position: "absolute",
         top: "0px",
-        bottom: "20%",
+        bottom: "25%",
         left: "35%",
         // width: "200px",
         // padding: "12%",

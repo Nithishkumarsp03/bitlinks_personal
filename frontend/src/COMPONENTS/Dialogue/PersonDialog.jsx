@@ -84,17 +84,20 @@ const PersonDialog = ({
   };
   const handleFileChange2 = (e) => {
     const selectedFile = e.target.files[0];
-    setFile(selectedFile);
+    setFile2(selectedFile);
 
+    // Create a preview URL
     if (selectedFile) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview2(reader.result);
+        setPreviewUrl2(reader.result); // Set the preview URL
+        setCardAdded(true); // Mark card as added
       };
-      reader.readAsDataURL2(selectedFile);
+      reader.readAsDataURL(selectedFile);
     }
   };
-  const handleClickOpenn = () => {
+  const handleClickOpen2 = () => {
+    console.log('clicked')
     if (fileInputRef2.current) {
       fileInputRef2.current.click();
     }
@@ -444,7 +447,7 @@ const PersonDialog = ({
 
           {/* Show "Add card" text or "Card added successfully" depending on the state */}
           {!cardAdded ? (
-            <p onClick={handleClickOpenn}>
+            <p onClick={handleClickOpen2}>
               Add card <i className="fa-regular fa-id-card"></i>
             </p>
           ) : (

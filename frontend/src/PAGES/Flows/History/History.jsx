@@ -146,7 +146,7 @@ const CustomStepIconWithLine = ({ src, className, showLine }) => (
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function History() {
+export default function History({fetchRescheduleData, fetchRescheduleDataNetworks}) {
   const decrypt = (ciphertext) => {
     try {
       if (ciphertext) {
@@ -354,6 +354,8 @@ export default function History() {
   
         // Update the state of the specific item in the frontend
         fetchHistory();
+        fetchRescheduleData();
+        fetchRescheduleDataNetworks();
         setHistoryRecords((prevRecords) =>
           prevRecords.map((record) =>
             record.history_id === item.history_id
@@ -371,6 +373,8 @@ export default function History() {
         }, 1000);
       })
       .catch((error) => {
+        fetchRescheduleData();
+        fetchRescheduleDataNetworks();
         // console.error("Error updating status:", error);
   
         // Ensure loader is hidden if there's an error
@@ -379,6 +383,8 @@ export default function History() {
           [item.history_id]: false,
         }));
       });
+      fetchRescheduleData();
+      fetchRescheduleDataNetworks();
   };  
   
   const handleAdd = (e) => {
@@ -447,6 +453,8 @@ export default function History() {
         setHistoryRecords((prevRecords) => [...prevRecords, newRecord]);
         fetchHistory(); // Fetch the updated history immediately after adding new record
         handleCloseAddHistory();
+        fetchRescheduleData();
+        fetchRescheduleDataNetworks();
       })
       .catch((error) => {
         console.error("Error:", error);

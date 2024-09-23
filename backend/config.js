@@ -18,7 +18,7 @@ const pool = mysql.createPool({
   user: user,
   password: password,
   database: database,
-  connectionLimit: 200,
+  connectionLimit: 500,
 });
 
 // Export the pool for use in other files

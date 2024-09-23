@@ -2020,7 +2020,7 @@ const checkAndSendEmails = () => {
 
 // Schedule the task to run every minute
 cron.schedule('* * * * *', () => {
-  console.log('Checking for upcoming events...');
+  // console.log('Checking for upcoming events...');
   checkAndSendEmails();
 });
 
