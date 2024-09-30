@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import LoginCover from "../../Assets/Login_bg.png";
+import LoginCover from "../../Assets/Login_bg_11zon.png";
 import Bitlinks from "../../Assets/bitlinks-bg.png";
 import { Checkbox } from "@mui/material";
 import Input from "@mui/joy/Input";

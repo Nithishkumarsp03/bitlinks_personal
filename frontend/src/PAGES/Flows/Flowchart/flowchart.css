@@ -1,3 +1,8 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
 
 .flowchart {
   margin-top: 0px;
@@ -35,6 +40,82 @@
   font-weight: 600;
   margin-left: 7%;
 }
+
+.dialogue::-webkit-scrollbar {
+  width: 7px; /* Width of the scrollbar */
+  height: 0px; /* Height of the scrollbar (for horizontal scrollbars) */
+}
+
+.dialogue::-webkit-scrollbar-thumb {
+  background-color: #003eaa; /* Color of the scrollbar thumb */
+  /* border-radius: 10px; */
+}
+
+.dialogue::-webkit-scrollbar-track {
+  background-color: #bec9ff; /* Background of the scrollbar track */
+}
+
+@media only screen and (max-width: 1000px) {
+  #save-flowchart-person, #discard-flowchart-person, #discard-flowchart-person-new, #save-flowchart-person-new{
+    width: 10vw;
+  }
+}
+
+@media only screen and (max-width: 900px){
+  #save-flowchart-person, #discard-flowchart-person, #discard-flowchart-person-new, #save-flowchart-person-new{
+    font-size: 10px;
+    width: 10vw;
+    /* display: none; */
+  }
+}
+
+@media only screen and (max-width: 700px) and (max-height: 600px) {
+  .dialogue {
+    padding-top: 25%;
+    overflow-x: hidden;
+  }
+}
+
+@media only screen and (max-height: 660px){
+  .dialogue{
+    padding-top: 25%;
+    overflow-x: hidden;
+  }
+}
+
+@media only screen and (max-height: 560px){
+  .dialogue{
+    padding-top: 40%;
+    overflow-x: hidden;
+  }
+}
+
+@media only screen and (max-height: 480px){
+  .dialogue{
+    padding-top: 50%;
+    overflow-x: hidden;
+  }
+}
+
+@media only screen and (max-height: 430px){
+  .dialogue{
+    padding-top: 60%;
+    height: 100%;
+    overflow-x: hidden;
+  }
+}
+
+@media only screen and (max-height: 350px){
+  .dialogue{
+    padding-top: 60%;
+    height: 100%;
+    overflow-x: hidden;
+  }
+}
+
+
+
+
 
 .flowchart-headers {
   display: flex;

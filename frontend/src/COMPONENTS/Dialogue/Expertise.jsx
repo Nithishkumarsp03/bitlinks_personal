@@ -83,6 +83,7 @@ const ExpertiseDialog = ({ open, onClose, ExpertiseInfo, handleDetailsChange4, e
           gap: "25px",
           display: "flex",
           flexDirection: "column",
+          overflow: "auto",
         }}>
         <h3
           style={{

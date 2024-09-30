@@ -341,6 +341,7 @@ const PersonDialog = ({
           gap: "15px",
           display: "flex",
           flexDirection: "column",
+          overflow: "auto",
         }}
       >
         <h3
@@ -488,7 +489,7 @@ const PersonDialog = ({
                 <span className="close" onClick={handleClosePopup}>
                   &times;
                 </span>
-                <h2>Card Details</h2>
+                {/* <h2>Card Details</h2> */}
                 {/* Show the card preview image if available */}
                 {imagePreview2 ? (
                   <img

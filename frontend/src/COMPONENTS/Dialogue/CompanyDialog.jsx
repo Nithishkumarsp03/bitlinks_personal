@@ -78,7 +78,7 @@ const CompanyDialog = ({ open, onClose, CompanyInfo, handleDetailsChange3, error
 
     return (
         <Dialog open={open} onClose={onClose} onKeyDown={handleKeyPress}>
-            <div className="dialogue" style={{ gap: "15px", display: "flex", flexDirection: "column" }}>
+            <div className="dialogue" style={{ gap: "15px", display: "flex", flexDirection: "column", overflow: "auto" }}>
                 <h3 style={{ fontSize: "25px", fontFamily: "Open Sans, sans-serif" }}>Company</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                     <div style={{ display: "flex", gap: "15px" }}>

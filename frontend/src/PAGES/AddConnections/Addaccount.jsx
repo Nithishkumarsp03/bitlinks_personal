@@ -459,6 +459,16 @@ const ShowAddAccount = () => {
 
   const formattedDate = formatDateForInput(personInfo.dob);
 
+  const getYearDifference = (isoString) => {
+    const enteredYear = new Date(isoString).getFullYear();
+    const currentYear = new Date().getFullYear();
+    return currentYear - enteredYear;
+  };
+  
+  const yearDifference = getYearDifference(personInfo.dob);
+  console.log(`The difference in years is: ${yearDifference}`);
+  personInfo.age = yearDifference;
+
   const options = [
     { label: "Higly Recommended", value: "Higly Recommended" },
     { label: "Recommended", value: "Recommended" },
@@ -708,7 +718,7 @@ const ShowAddAccount = () => {
                   <span className="close" onClick={handleClosePopup}>
                     &times;
                   </span>
-                  <h2>Card Details</h2>
+                  {/* <h2>Card Details</h2> */}
                   {/* Show the card preview image if available */}
                   {previewUrl2 ? (
                     <img

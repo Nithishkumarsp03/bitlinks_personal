@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Round from "../../Assets/icons.svg";
 import Networks from "../../Assets/Networks.svg";
+import Spoc from "../Spoc/Spoc";
 import Add from "../../Assets/add.svg";
 import info from "../../Assets/Information.svg";
 import Rank4 from "../../Assets/Rank-1.svg";
@@ -80,8 +81,10 @@ export default function Default(subPersonId) {
   const [userNetworks, setuserNetworks] = useState([]);
   const [Connections, setConnections] = useState(true);
   const [networks, setNetworks] = useState(false);
+  const [spoc, setSpoc] = useState(false);
   const [sidebarOpen1, setSidebarOpen1] = useState(true);
   const [sidebarOpen2, setSidebarOpen2] = useState(false);
+  const [sidebarOpen3, setSidebarOpen3] = useState(false);
   const [graph, setGraph] = useState(false);
   const [filter, setFilter] = useState(false);
   const [add, setAdd] = useState(false);
@@ -127,8 +130,10 @@ export default function Default(subPersonId) {
   const handleConnections = () => {
     setSidebarOpen1(true);
     setSidebarOpen2(false);
+    setSidebarOpen3(false);
     setConnections(true); // Connections section active
     setNetworks(false); // Networks section inactive
+    setSpoc(false);
     setFilter(false); // No filters
     setView(false); // Reset the card view
     setMyconnectionshr(true); // Show my connections
@@ -150,8 +155,35 @@ export default function Default(subPersonId) {
   const handleNetworks = () => {
     setSidebarOpen1(false);
     setSidebarOpen2(true);
+    setSidebarOpen3(false);
     setConnections(false);
     setNetworks(true);
+    setSpoc(false);
+    setFilter(false);
+    setView(false);
+    setMyconnectionshr(false);
+    setNetworkshr(true);
+    setViewConnection(false);
+    setExpertiseConnection(false);
+    setAddConnections(false);
+    setTableOpen(false);
+    setSelectedCardId(null);
+    setCardActive(false);
+    setConnectionActive(false);
+    setShowmore(false);
+    setSelectedLevel(null);
+    setFilterMyNetworks(null);
+    setFilterScheduledNetworks(null);
+  };
+
+  const handleSpoc = () => {
+    setSidebarOpen1(false);
+    setSidebarOpen2(false);
+    setSidebarOpen3(true);
+    setConnections(false);
+    setNetworks(false);
+    setSpoc(true)
+    setSpoc(true)
     setFilter(false);
     setView(false);
     setMyconnectionshr(false);
@@ -226,6 +258,7 @@ export default function Default(subPersonId) {
     setAddConnections(false);
     setConnections(false);
     setNetworks(false);
+    setSpoc(false)
     setFilter(false);
     setMyconnectionshr(false);
     setNetworkshr(false);
@@ -360,7 +393,7 @@ export default function Default(subPersonId) {
   const navigate = useNavigate();
 
   const handleContinue = () => {
-    console.log('clicked');
+    // console.log('clicked');
     const SubConnectionsvalue = SubConnections; // Set your desired value
     navigate("../bitcontacts/dashboard/admin", {
       state: { subConnections: SubConnectionsvalue },
@@ -370,8 +403,10 @@ export default function Default(subPersonId) {
     setTableOpen(false);
     setConnections(false);
     setNetworks(false);
+    setSpoc(false);
     setFilter(false);
     setMyconnectionshr(false);
+
     setNetworkshr(false);
     setView(false);
     setViewConnection(false);
@@ -938,6 +973,23 @@ export default function Default(subPersonId) {
             </h4>
           </div>
 
+          <div
+            className={`buttons-networks ${sidebarOpen3 ? "open" : ""}`}
+            onClick={handleSpoc}>
+            <h4 style={{ display: "flex", width: "100%" }}>
+              <img src={Networks} alt="" className="nav-icons" />
+              <p
+                style={{
+                  fontSize: "110%",
+                  fontWeight: "600",
+                  marginLeft: "6%",
+                }}>
+                SPOC
+              </p>
+              <p style={{ marginLeft: "47%" }}>Spoc len</p>
+            </h4>
+          </div>
+
           <div className="add-new" onClick={handleaddConnections}>
             <img src={Add} alt="" />
             <p style={{ fontSize: "16px", fontWeight: "600" }}>
@@ -1222,7 +1274,7 @@ export default function Default(subPersonId) {
             ""
           )
         ) : (
-          <div>
+          <div style={{height: "100%", width: "100%"}}>
             {Connections ? (
               <div
                 style={{
@@ -1559,7 +1611,7 @@ export default function Default(subPersonId) {
 
                 {/* {filter && <Popup />} */}
               </div>
-            ) : (
+            ) : networks?(
               <div
                 style={{
                   width: "100%",
@@ -1893,6 +1945,10 @@ export default function Default(subPersonId) {
                 </div>
                 {/* {filter && <Popup />} */}
               </div>
+            ):(
+              <>
+                <Spoc />
+              </>
             )}
           </div>
         )}

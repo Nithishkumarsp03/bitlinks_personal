@@ -292,6 +292,7 @@ const Subconnections = ({
           gap: "15px",
           display: "flex",
           flexDirection: "column",
+          overflow: "auto",
         }}>
         <h3
           style={{
