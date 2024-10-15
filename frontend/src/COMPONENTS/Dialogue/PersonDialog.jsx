@@ -336,7 +336,7 @@ const PersonDialog = ({
   return (
     <Dialog open={open} onClose={onClose}>
       <div
-        className="dialogue"
+        className="dialogue-addaccount"
         style={{
           gap: "15px",
           display: "flex",
