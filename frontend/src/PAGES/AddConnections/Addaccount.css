@@ -135,9 +135,19 @@
   font-weight: bold;
 }
 
-#save-flowchart-person-new{
-  width: 20vw;
-  height: 5vh;
+.addconnection-discard-but,#discard-flowchart-person {
+  width: 200px;
+  height: 40px; 
+  border-radius: 4px;
+  border: #8891aa 1px solid;
+  font-weight: 600;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.addconnection-create-but,#save-flowchart-person{
+  width: 400px;
+  height: 40px; 
   border-radius: 4px;
   font-size: 14px;
   color: white;
@@ -147,14 +157,18 @@
   /* margin-left: 20px; */
 }
 
-#discard-flowchart-person-new {
-  width: 10vw;
-  height: 5vh;
-  border-radius: 4px;
-  border: #8891aa 1px solid;
-  font-weight: 600;
-  font-size: 14px;
-  margin-right: 10px;
+#save-flowchart-person{
+  width: 300px;
+}
+
+#spoc-input{
+  gap: 15px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin: 5%; */
+  /* background-color: #f52c2c; */
 }
 
 /*************** CSS VISITED********************/

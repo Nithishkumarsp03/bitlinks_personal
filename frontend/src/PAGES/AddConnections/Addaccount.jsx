@@ -589,7 +589,7 @@ const ShowAddAccount = () => {
           </a1>
         </div>
       </div>
-      <Dialog open={person_1} onClose={() => setPerson_1(false)}>
+      <Dialog open={person_1} onClose={() => setPerson_1(false)} style={{height: "100%"}}>
         <div
           className="dialogue"
           style={{
@@ -797,7 +797,7 @@ const ShowAddAccount = () => {
               value={personInfo.hashtags}
               onChange={handleDetailsChange_1}
             />
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div id="spoc-input">
               If {personInfo.fullname} is Spoc, Please check this{" "}
               <div onClick={handleSwitchChange}>
                 <CustomizedSwitches checked={checked} />
@@ -809,13 +809,13 @@ const ShowAddAccount = () => {
             <button
               onClick={() => setPerson_1(false)}
               color="primary"
-              id="discard-flowchart-person-new"
+              className="addconnection-discard-but"
             >
               Discard
             </button>
             <button
               color="primary"
-              id="save-flowchart-person-new"
+              className="addconnection-create-but"
               onClick={(event) => {
                 event.preventDefault();
                 handleSubmit(event);
