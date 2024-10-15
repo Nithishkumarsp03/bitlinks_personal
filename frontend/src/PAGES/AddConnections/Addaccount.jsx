@@ -589,14 +589,9 @@ const ShowAddAccount = () => {
           </a1>
         </div>
       </div>
-      <Dialog open={person_1} onClose={() => setPerson_1(false)} style={{height: "100%"}}>
+      <Dialog open={person_1} onClose={() => setPerson_1(false)} style={{height: "100%",display: "flex",justifyContent: "center",alignItems: "center"}}>
         <div
-          className="dialogue"
-          style={{
-            gap: "15px",
-            display: "flex",
-            flexDirection: "column",
-          }}
+          className="dialogue-addaccount"
         >
           <h3
             style={{
