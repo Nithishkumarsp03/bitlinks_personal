@@ -22,21 +22,37 @@
   text-align: center;
 } */
 
-.dialogue {
+.dialogue-addaccount {
+  overflow-x: hidden;
+  /* height: 10vh; */
+  justify-self: flex-start;
+  align-self: flex-start;
+  /* margin-top: -10%; */
+  /* justify-self: center; */
+  align-self: center;
   /* justify-content: center; */
   text-align: center;
   gap: 15px;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 2% 6% 0% 6%;
+  /* height: 10vh; */
   width: 100%;
-  max-width: 600px; /* Limiting the width for large screens */
-  margin: auto;
+  max-width: 600px; 
+  /* margin: auto; */
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
 }
 
+
+.dialogue {
+  max-width: 640px;
+  padding: 30px;
+  justify-content: center;
+  text-align: center;
+}
 
 #discard2-flowchart,#discard-flowchart-person {
   width: 5vw;
@@ -60,17 +76,17 @@
   margin-left: 7%;
 }
 
-.dialogue::-webkit-scrollbar {
+.dialogue::-webkit-scrollbar,.dialogue-addaccount::-webkit-scrollbar {
   width: 7px; /* Width of the scrollbar */
   height: 0px; /* Height of the scrollbar (for horizontal scrollbars) */
 }
 
-.dialogue::-webkit-scrollbar-thumb {
+.dialogue::-webkit-scrollbar-thumb,.dialogue-addaccount::-webkit-scrollbar-thumb {
   background-color: #003eaa; /* Color of the scrollbar thumb */
   /* border-radius: 10px; */
 }
 
-.dialogue::-webkit-scrollbar-track {
+.dialogue::-webkit-scrollbar-track,.dialogue-addaccount::-webkit-scrollbar-track {
   background-color: #bec9ff; /* Background of the scrollbar track */
 }
 
