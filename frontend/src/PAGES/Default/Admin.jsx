@@ -973,7 +973,7 @@ export default function Default(subPersonId) {
             </h4>
           </div>
 
-          <div
+          {/* <div
             className={`buttons-networks ${sidebarOpen3 ? "open" : ""}`}
             onClick={handleSpoc}>
             <h4 style={{ display: "flex", width: "100%" }}>
@@ -988,7 +988,7 @@ export default function Default(subPersonId) {
               </p>
               <p style={{ marginLeft: "47%" }}>Spoc len</p>
             </h4>
-          </div>
+          </div> */}
 
           <div className="add-new" onClick={handleaddConnections}>
             <img src={Add} alt="" />
@@ -1222,9 +1222,9 @@ export default function Default(subPersonId) {
             )}
           </div>
         )}
-        <div className="tables-page" onClick={handletable}>
+        {/* <div className="tables-page" onClick={handletable}>
           Dashboard
-        </div>
+        </div> */}
 
         {/* <div className="graph" onClick={handleGraph}>
           <div className="graph-contents">

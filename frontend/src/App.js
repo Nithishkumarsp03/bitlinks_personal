@@ -17,6 +17,7 @@ import User from "./PAGES/Home/User";
 import Welcome from "./COMPONENTS/Welcome";
 import Cookies from "js-cookie";
 import { decrypt } from "./COMPONENTS/cookieUtils";
+import CustomizedSwitches from "./utils/Switch";
 
 function Protected({ children }) {
   const navigate = useNavigate();
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="/bitcontacts/settings" element={<Settings />} />
           <Route path="/bitcontacts/welcome" element={<Welcome />} />
           <Route path="/404" element={<ErrorPage />} />
+          <Route path="/bitcontacts/switch" element={<CustomizedSwitches />} />
           <Route
             path="/bitcontacts/dashboard/admin"
             element={

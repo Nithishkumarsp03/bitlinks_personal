@@ -201,6 +201,9 @@ app.post(api + '/upload/history', upload.array('files', 2), (req, res) => {
 app.post(api + "/person", authenticate, (req, res) => {
   const { personInfo, imagePath1, imagePath2, email, Completion, TotalProgress } = req.body;
   console.log(req.body);
+  if (!personInfo.spoc || personInfo.spoc === '') {
+    personInfo.spoc = 'no'; // Default to 'no' if not provided
+  }
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -210,8 +213,8 @@ app.post(api + "/person", authenticate, (req, res) => {
 
     // SQL query to insert data into the personalinfo table
     let sql = `
-      INSERT INTO personalinfo (useremail, fullname, phonenumber, age, email, dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO personalinfo (useremail, fullname, phonenumber, age, email, dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags, spoc, Completion, overall_completion)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
       email,
@@ -226,6 +229,7 @@ app.post(api + "/person", authenticate, (req, res) => {
       personInfo.address,
       personInfo.shortdescription,
       personInfo.hashtags,
+      personInfo.spoc,
       Completion,
       TotalProgress,
     ];
@@ -233,8 +237,8 @@ app.post(api + "/person", authenticate, (req, res) => {
     // If imagePath is provided, include it in the SQL query and values
     if (imagePath1) {
       sql = `
-        INSERT INTO personalinfo (useremail, profile, fullname, phonenumber, age, email, dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags, Completion, overall_completion)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO personalinfo (useremail, profile, fullname, phonenumber, age, email, dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags, spoc, Completion, overall_completion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       values.splice(1, 0, imagePath1);
     }
@@ -1936,13 +1940,26 @@ const checkAndSendWishes = () => {
           const mailOptions = {
             from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: `Happy Birthday`,
-            text: `Many more happy returns of the day, ${fullname}!`,
+            subject: `Warm Birthday Wishes from Bannari Amman Institute of Technology`,
+            text: `
+Dear ${fullname},
+
+On behalf of the management, faculty, and students of Bannari Amman Institute of Technology, I would like to extend our warmest birthday wishes to you.
+
+Your continued support and collaboration with us have been invaluable in fostering innovation, growth, and excellence in education. We truly appreciate your contributions to the industry and the opportunities you provide to bridge the gap between academia and real-world applications.
+
+May this year bring you success, health, and happiness in all your endeavours. We look forward to strengthening our partnership and working together on many more impactful initiatives.
+
+Wishing you a wonderful birthday and a prosperous year ahead!
+
+Warm regards,
+Bannari Amman Institute of Technology.
+`,
           };
 
           try {
             await transporter.sendMail(mailOptions);
-            // console.log('Email sent successfully for birthday wishes');
+            console.log('Email sent successfully for birthday wishes');
 
           } catch (error) {
             console.error('Error sending email:', error);
@@ -1967,37 +1984,51 @@ const checkAndSendEmails = () => {
     const now = new Date();
     const thirtyMinutesFromNow = new Date(now.getTime() + 30 * 60 * 1000);
 
-    // Fetch records within the last 30 minutes where email has not been sent
+    // Fetch records from history and join with personalinfo to get the fullname
     const sql = `
-      SELECT * 
-      FROM history 
-      WHERE scheduledDate >= ? 
-      AND scheduledDate <= ? 
-      AND status = 1 
-      AND emailSent = FALSE
+      SELECT h.*, p.fullname 
+      FROM history h
+      JOIN personalinfo p ON h.person_id = p.person_id
+      WHERE h.scheduledDate >= ? 
+      AND h.scheduledDate <= ? 
+      AND h.status = 1 
+      AND h.emailSent = FALSE
     `;
+    
     connection.query(sql, [now, thirtyMinutesFromNow], async (err, results) => {
       if (err) {
         console.error("Error executing database query:", err);
         connection.release();
         return;
       }
-      // console.log(results);
 
       if (results.length > 0) {
         for (const record of results) {
-          const { note, scheduleddate, email } = record; // Extract note and scheduleddate for each record
+          const { agent, fullname, scheduleddate, email } = record; // Extract relevant fields
 
+          // Format the scheduled date
+          const formattedDate = new Date(scheduleddate).toLocaleString();
+
+          // Construct the email options with dynamic content
           const mailOptions = {
             from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
-            to: email, // Change this to your recipient
+            to: email, // Recipient's email
             subject: "Upcoming Event Reminder",
-            text: `You have an event rescheduled within the next 30 minutes about ${note} on ${new Date(scheduleddate).toLocaleString()}.`,
+            text: `
+Dear ${agent || 'Recipient'},
+
+I hope this message finds you well. This is a kind reminder regarding the rescheduled call on ${formattedDate}, ensuring the smooth progress of collaboration with ${fullname}.
+Thank you for your attention to this matter, and we appreciate your time.
+
+Regards,
+IECC
+            `,
           };
 
           try {
+            // Send email using the transporter
             await transporter.sendMail(mailOptions);
-            // console.log('Email sent successfully for remainder');
+            console.log('Email sent successfully for reminder');
 
             // Update records to set emailSent to TRUE
             const updateSql = "UPDATE history SET emailSent = TRUE WHERE history_id = ?";
@@ -2013,10 +2044,11 @@ const checkAndSendEmails = () => {
         }
       }
 
-      connection.release();
+      connection.release(); // Release the connection back to the pool
     });
   });
 };
+
 
 // Schedule the task to run every minute
 cron.schedule('* * * * *', () => {
@@ -2027,6 +2059,10 @@ cron.schedule('* * * * *', () => {
 cron.schedule('0 9 * * *', () => {
   checkAndSendWishes();
 });
+
+// cron.schedule('* * * * *', () => {
+//   checkAndSendWishes();
+// });
 
 
 

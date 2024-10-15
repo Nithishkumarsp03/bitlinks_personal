@@ -9,6 +9,7 @@ import Textarea from "@mui/joy/Textarea";
 import Profile from "../../Assets/Profile.png";
 import "react-circular-progressbar/dist/styles.css";
 import Subconnections from "../../COMPONENTS/Dialogue/Subconnections";
+import CustomizedSwitches from "../../utils/Switch";
 import { usePerson } from "../../COMPONENTS/Context";
 import { easeQuadInOut } from "d3-ease";
 import {
@@ -51,6 +52,7 @@ const ShowAddAccount = () => {
   const [SubCompletion, setSubCompletion] = useState(0);
   const [SubTotal_Progress, setSubTotal_Progress] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [checked, setChecked] = useState(false);
   // const [SubConnections, setsubconnections] = useState();
 
   const [personInfo, setPersonInfo] = useState({
@@ -65,6 +67,7 @@ const ShowAddAccount = () => {
     address: "",
     shortdescription: "",
     hashtags: "",
+    spoc: "",
   });
 
   const [connectionInfo, setConnectionInfo] = useState({
@@ -72,7 +75,7 @@ const ShowAddAccount = () => {
     phonenumber: "",
     age: "",
     email: "",
-    dob: "",  
+    dob: "",
     rating: "",
     visitingcard: "",
     linkedinurl: "",
@@ -98,13 +101,33 @@ const ShowAddAccount = () => {
     }));
   };
 
+  useEffect(() => {
+    console.log("spoc updated:", personInfo.spoc);
+  }, [personInfo.spoc]);
+  
+  const handleSwitchChange = () => {
+    setChecked((prevChecked) => {
+      const newChecked = !prevChecked;
+  
+      // Update the 'spoc' field in personInfo based on new state
+      setPersonInfo((prevInfo) => ({
+        ...prevInfo,
+        spoc: newChecked ? "yes" : "no", // Set "yes" for true, "no" for false
+      }));
+  
+      console.log("spoc will be:", newChecked ? "yes" : "no");
+  
+      return newChecked;
+    });
+  };
+
   const location = useLocation();
   const subConnections = location.state?.subConnections;
 
   // console.log('SubConnections:', subConnections);
 
   const handlePersonInput = () => {
-    console.log('inside')
+    console.log("inside");
     if (subConnections === 1) {
       setPerson_1(true);
     } else if (subConnections === 2) {
@@ -227,6 +250,7 @@ const ShowAddAccount = () => {
       setError("Name and Phonenumber are required to create a connection");
       return;
     }
+
 
     // Upload the first image if it exists
     if (file) {
@@ -464,7 +488,7 @@ const ShowAddAccount = () => {
     const currentYear = new Date().getFullYear();
     return currentYear - enteredYear;
   };
-  
+
   const yearDifference = getYearDifference(personInfo.dob);
   console.log(`The difference in years is: ${yearDifference}`);
   personInfo.age = yearDifference;
@@ -478,9 +502,9 @@ const ShowAddAccount = () => {
   const handleRatingchange = (selectedOption) => {
     setPersonInfo((prevDetails_1) => ({
       ...prevDetails_1,
-      rating: selectedOption.value,  // Store the selected value
+      rating: selectedOption.value, // Store the selected value
     }));
-  }
+  };
 
   return (
     <div className="add-account-main">
@@ -746,7 +770,9 @@ const ShowAddAccount = () => {
               <Select
                 options={options}
                 onChange={handleRatingchange}
-                value={options.find(option => option.value === personInfo.rating)}
+                value={options.find(
+                  (option) => option.value === personInfo.rating
+                )}
                 name="rating"
               />
             </div>
@@ -771,6 +797,12 @@ const ShowAddAccount = () => {
               value={personInfo.hashtags}
               onChange={handleDetailsChange_1}
             />
+            <div style={{ display: "flex", alignItems: "center" }}>
+              If {personInfo.fullname} is Spoc, Please check this{" "}
+              <div onClick={handleSwitchChange}>
+                <CustomizedSwitches checked={checked} />
+              </div>{" "}
+            </div>
           </div>
           <p style={{ color: "green" }}>{error}</p>
           <div id="buttonContainer-flowchart-person">
