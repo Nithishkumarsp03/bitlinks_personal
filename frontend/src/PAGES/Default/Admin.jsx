@@ -7,6 +7,7 @@ import Networks from "../../Assets/Networks.svg";
 import Spoc from "../Spoc/Spoc";
 import Add from "../../Assets/add.svg";
 import info from "../../Assets/Information.svg";
+import Rankminus from "../../Assets/Rankof-1.svg";
 import Rank4 from "../../Assets/Rank-1.svg";
 import Rank3 from "../../Assets/Rank-2.svg";
 import Rank2 from "../../Assets/Rank-3.svg";
@@ -1004,7 +1005,13 @@ export default function Default(subPersonId) {
             <PieAnimation />
           </div>
         ) : (
-          <div className="ranks">
+          <div className="all-ranks">
+            <div className="rankof-1">
+              <img src={Rankminus} />
+              <p style={{ color: "#64696C",fontWeight: "500" }}>Rank -1</p>
+              <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>430 Networks</p>
+            </div>
+            <div className="ranks">
             {Connections ? (
               <>
                 <div className="rank1">
@@ -1220,6 +1227,7 @@ export default function Default(subPersonId) {
                 </div>
               </>
             )}
+            </div>
           </div>
         )}
         {/* <div className="tables-page" onClick={handletable}>
