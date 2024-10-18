@@ -127,7 +127,7 @@ export default function MainFlow({ subPersonId ,fetchPersonalInfo, fetchUserNetw
             Minutes of Meeting
           </p>
           {activeFlow === "minutes" && (
-            <div>
+            <div style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
               <Minutes />
             </div>
           )}
