@@ -9,15 +9,43 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import "./Minutes.css";
 import "../MainFlow/Flows.css";
 
 const SECRET_KEY = "your-secret-key";
 
 export default function Minutes() {
   const [minutesList, setMinutesList] = useState([
-    { id: 1, text: "Discuss project timeline", status: "Pending", date: "18/10/2024" },
-    { id: 2, text: "Review budget allocation", status: "Pending", date: "18/10/2024" },
-    { id: 3, text: "Finalize marketing strategy", status: "Pending", date: "18/10/2024" },
+    {
+      id: 1,
+      text: "Discuss project timeline",
+      status: "Pending",
+      date: "18/10/2024",
+    },
+    {
+      id: 2,
+      text: "Review budget allocation",
+      status: "Pending",
+      date: "18/10/2024",
+    },
+    {
+      id: 3,
+      text: "Finalize marketing strategy",
+      status: "Pending",
+      date: "18/10/2024",
+    },
+    {
+      id: 4,
+      text: "Finalize marketing strategy",
+      status: "Pending",
+      date: "18/10/2024",
+    },
+    {
+      id: 5,
+      text: "Finalize marketing strategy",
+      status: "Pending",
+      date: "18/10/2024",
+    },
   ]);
 
   const [isEditing, setIsEditing] = useState(null);
@@ -41,8 +69,8 @@ export default function Minutes() {
   const token = decrypt(Cookies.get("token"));
 
   const updateStatus = (id, newStatus) => {
-    setMinutesList(prevMinutes =>
-      prevMinutes.map(item =>
+    setMinutesList((prevMinutes) =>
+      prevMinutes.map((item) =>
         item.id === id ? { ...item, status: newStatus } : item
       )
     );
@@ -56,9 +84,11 @@ export default function Minutes() {
   };
 
   const handleSave = () => {
-    setMinutesList(prevMinutes =>
-      prevMinutes.map(item =>
-        item.id === isEditing ? { ...item, text: editData.text, date: editData.date } : item
+    setMinutesList((prevMinutes) =>
+      prevMinutes.map((item) =>
+        item.id === isEditing
+          ? { ...item, text: editData.text, date: editData.date }
+          : item
       )
     );
     setDialogOpen(false); // Close the dialog after saving
@@ -74,8 +104,10 @@ export default function Minutes() {
     <div className="minutes-container">
       {/* <h2 className="minutes-title">Meeting Minutes</h2> */}
       <ul className="minutes-list">
-        {minutesList.map(item => (
-          <li key={item.id} className={`minutes-item ${item.status.toLowerCase()}`}>
+        {minutesList.map((item) => (
+          <li
+            key={item.id}
+            className={`minutes-item ${item.status.toLowerCase()}`}>
             <div className="minutes-details">
               <span className="minutes-text">{item.text}</span>
               <span className="minutes-date">
@@ -86,20 +118,17 @@ export default function Minutes() {
             <div className="button-group">
               <button
                 className="status-button complete-button"
-                onClick={() => updateStatus(item.id, "Completed")}
-              >
+                onClick={() => updateStatus(item.id, "Complete")}>
                 Mark as Completed
               </button>
               <button
                 className="status-button impossible-button"
-                onClick={() => updateStatus(item.id, "Impossible")}
-              >
+                onClick={() => updateStatus(item.id, "Impossible")}>
                 Impossible
               </button>
               <button
                 className="status-button edit-button"
-                onClick={() => handleEdit(item.id)}
-              >
+                onClick={() => handleEdit(item.id)}>
                 <FiEdit /> Edit
               </button>
             </div>
@@ -108,7 +137,10 @@ export default function Minutes() {
       </ul>
 
       {/* MUI Dialog for Editing */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm">
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        maxWidth="sm">
         <DialogTitle>Edit Meeting Minute</DialogTitle>
         <DialogContent>
           <TextField
@@ -131,11 +163,30 @@ export default function Minutes() {
             onChange={handleInputChange}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSave} color="primary">
+        <DialogActions className="buttons-minutes">
+          <Button
+            onClick={handleSave}
+            color="primary"
+            sx={{
+              fontSize: "13px",
+              display: "flex",
+              gap: "0.3rem",
+              alignItems: "center",
+              backgroundColor: "#2867b2",
+              color: "white"
+            }}>
             <FiSave /> Save
           </Button>
-          <Button onClick={() => setDialogOpen(false)} color="secondary">
+          <Button onClick={() => setDialogOpen(false)} color="secondary" 
+            sx={{
+              fontSize: "13px",
+              display: "flex",
+              gap: "0.3rem",
+              alignItems: "center",
+              backgroundColor: "white",
+              border: "1px solid #8891aa",
+              color: "black"
+            }}>
             Cancel
           </Button>
         </DialogActions>
