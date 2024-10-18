@@ -30,7 +30,7 @@ router.get("/google/callback", passport.authenticate("google", { failureRedirect
 
 const generateToken = (user, expiresIn, NAME, ROLE, ID, EMAIL, PROFILE_PICTURE) => {
     const JWT_SECRET = process.env.JWT_SECRET;
-    return jwt.sign({ NAME: NAME, ROLE: ROLE, ID: ID, EMAIL: EMAIL, PROFILE_PICTURE: PROFILE_PICTURE }, JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ NAME: NAME, ROLE: ROLE, ID: ID, EMAIL: EMAIL, PROFILE_PICTURE: PROFILE_PICTURE }, JWT_SECRET, { expiresIn: '20d' });
 };
 
 module.exports = router;

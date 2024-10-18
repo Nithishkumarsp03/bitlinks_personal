@@ -1009,7 +1009,7 @@ export default function Default(subPersonId) {
             <div className="rankof-1">
               <img src={Rankminus} />
               <p style={{ color: "#64696C",fontWeight: "500" }}>Rank -1</p>
-              <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>430 Networks</p>
+              <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>420 Networks</p>
             </div>
             <div className="ranks">
             {Connections ? (
