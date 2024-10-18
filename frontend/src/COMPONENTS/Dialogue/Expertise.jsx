@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog } from '@mui/material';
 import Input from '@mui/joy/Input';
-import DomainDropdown from './DomainDropdown';
-import SkillsetDropdown from './SkillsetDropdown';
+import DomainDropdown from '../../Dropdown/DomainDropdown';
+import SkillsetDropdown from '../../Dropdown/SkillsetDropdown';
 
 const ExpertiseDialog = ({ open, onClose, ExpertiseInfo, handleDetailsChange4, error, handleExpertise, CalculateProgress_Expertise, CalculateTotal_Progress }) => {
   // Initialize state with props data

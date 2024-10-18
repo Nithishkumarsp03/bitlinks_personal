@@ -46,6 +46,7 @@ import Hollowtick from "../../../Assets/tick.svg";
 import Button from "@mui/material/Button";
 import { position } from "@chakra-ui/react";
 import BeatLoader from "../../../COMPONENTS/BeatLoader";
+import InteractionDropdown from "../../../Dropdown/InteractionDropdown";
 import Select from "react-select";
 import CryptoJS from 'crypto-js';
 
@@ -232,25 +233,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
 
   // console.log("path1: ",imagePath1);
   // console.log("path2: ",imagePath2);
-
-  const fetchInteractions = async() => {
-    try{
-      const res = await fetch(api+"/interactions",{
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
-        },
-      });
-      if(res.ok){
-        const data = await res.json();
-        console.log("interactions: ",data);
-      }
-    }
-    catch(error){
-      console.log('error fetching interactions');
-    }
-  }
   
   const pointsMapping = {
     Call: 3,
@@ -521,7 +503,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
     if (selectedPersonId) {
       fetchHistory(); // Fetch data initially when the component mounts or selectedPersonId changes
     }
-    fetchInteractions();
   }, [selectedPersonId]);
   
 
@@ -844,13 +825,14 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
                     }}>
                     Purpose of Interactions:
                   </label>
-                  <Select 
+                  <InteractionDropdown style={{marginTop: '20px'}} purpose={purpose} setPurpose={setPurpose} handleChange={handleChange}/>
+                  {/* <Select 
                     placeholder = 'Select type of Conversation'
                     style={{marginTop: '20px'}}
                     options={options}
                     onChange={handleChange}
                     isClearable
-                  />
+                  /> */}
                 </div>
 
                 {/* <div style={{ display: "flex", marginTop: "8%" }}>
