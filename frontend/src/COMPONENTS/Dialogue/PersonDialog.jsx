@@ -8,6 +8,7 @@ import { usePerson } from "../Context";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import Profile from "../../Assets/Profile.png";
+import CustomizedSwitches from "../../utils/Switch";
 
 const SECRET_KEY = "your-secret-key";
 
@@ -43,7 +44,9 @@ const PersonDialog = ({
     shortdescription: "",
     Completion: "",
     hashtags: "",
+    rank: "",
   });
+  // console.log("Rank is: ",personInfo.rank);
   const token = decrypt(Cookies.get("token"));
   const [Completion, setCompletion] = useState(0);
   const [Progress, setProgress] = useState(0);
@@ -58,6 +61,7 @@ const PersonDialog = ({
   const [previewUrl1, setPreviewUrl1] = useState(null);
   const [previewUrl2, setPreviewUrl2] = useState(null);
   const [cardAdded, setCardAdded] = useState(false);
+  const [checked, setChecked] = useState(false);
   const fileInputRef = useRef(null);
   const fileInputRef2 = useRef(null);
 
@@ -96,8 +100,25 @@ const PersonDialog = ({
       reader.readAsDataURL(selectedFile);
     }
   };
+
+  const handleSwitchChange = () => {
+    setChecked((prevChecked) => {
+      const newChecked = !prevChecked;
+  
+      // Update the 'spoc' field in personInfo based on new state
+      setPersoninfo((prevInfo) => ({
+        ...prevInfo,
+        rank: newChecked ? 0 : -1, // Set "yes" for true, "no" for false
+      }));
+  
+      console.log("rank will be:", newChecked ? 0 : -1);
+  
+      return newChecked;
+    });
+  };
+
   const handleClickOpen2 = () => {
-    console.log('clicked')
+    // console.log("clicked");
     if (fileInputRef2.current) {
       fileInputRef2.current.click();
     }
@@ -181,7 +202,7 @@ const PersonDialog = ({
           throw new Error(`HTTP error! status: ${personResponse.status}`);
         }
         const data = await personResponse.json();
-        // console.log(data);
+        console.log(data);
         setPersoninfo(data);
         setPerson_Progress(data.Completion);
         // setIfperson(data.ifperson);
@@ -303,9 +324,17 @@ const PersonDialog = ({
   };
 
   const CalculateTotal_Progress = () => {
-    const completion = Person_Progress + experienceFilledFields + companyFilledFields + placementFilledFields + consultancyFilledFields + internshipFilledFields + alumniFilledFields +  outcomeFilledFields;
+    const completion =
+      Person_Progress +
+      experienceFilledFields +
+      companyFilledFields +
+      placementFilledFields +
+      consultancyFilledFields +
+      internshipFilledFields +
+      alumniFilledFields +
+      outcomeFilledFields;
     setTotal_Progress(completion);
-  }
+  };
 
   useEffect(() => {
     CalculateProgress_Person();
@@ -544,6 +573,18 @@ const PersonDialog = ({
             value={personInfo.hashtags}
             onChange={handleDetailsChange1}
           />
+          {personInfo.rank === -1 ? 
+          <div id="spoc-input">
+          Still you didn't make any interactions with {personInfo.fullname}. Please turn on to start interaction
+          <div onClick={handleSwitchChange}>
+            <CustomizedSwitches checked={checked} />
+          </div>{" "}
+        </div> : personInfo.rank === 0 ? <div id="spoc-input">
+          Turn off to hold interactions with {personInfo.fullname}.   
+          <div onClick={handleSwitchChange}>
+            <CustomizedSwitches checked={checked} />
+          </div>{" "}
+        </div> :""}
         </div>
         <p style={{ color: "green" }}>{error}</p>
         <div id="buttonContainer-flowchart-person">

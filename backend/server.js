@@ -1,25 +1,25 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const mysql = require('mysql2');
+const mysql = require("mysql2");
 const multer = require("multer");
 const fs = require("fs"); // Make sure this line is included
 const path = require("path");
 const app = express();
-const cron = require('node-cron');
+const cron = require("node-cron");
 const cors = require("cors");
-const pool = require("./config.js")
-require('dotenv').config(); // Load environment variables
-const auth = require('./auth.js')
+const pool = require("./config.js");
+require("dotenv").config(); // Load environment variables
+const auth = require("./auth.js");
 const passport = require("passport");
 // const moment = require('moment');
 const session = require("express-session");
-const passportConfig = require("./passport.js")
-const nodemailer = require('nodemailer');
+const passportConfig = require("./passport.js");
+const nodemailer = require("nodemailer");
 const PORT = process.env.PORT;
 const api = process.env.API;
 const SECRET_KEY = process.env.JWT_SECRET;
-const jwt = require('jsonwebtoken');
-const authenticate = require('./Authenticate.js')
+const jwt = require("jsonwebtoken");
+const authenticate = require("./Authenticate.js");
 
 // Middleware function example
 const myMiddleware = (req, res, next) => {
@@ -44,7 +44,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(api , auth)
+app.use(api, auth);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -59,7 +59,7 @@ const storage = multer.diskStorage({
 });
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.APP_PASSWORD,
@@ -78,12 +78,12 @@ if (!fs.existsSync(uploadsDir)) {
 app.use(api + "/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Email sending endpoint
-app.post('/send-email', authenticate, (req, res) => {
+app.post("/send-email", authenticate, (req, res) => {
   const { toEmail, subject, message } = req.body;
 
   // Get the token from the Authorization header
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Extract token from 'Bearer <token>'
 
   // Log for debugging
   // console.log("Authorization Header:", authHeader);
@@ -110,11 +110,11 @@ app.post('/send-email', authenticate, (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error('Error sending email:', error);
-        return res.status(500).send('Error sending email');
+        console.error("Error sending email:", error);
+        return res.status(500).send("Error sending email");
       }
-      console.log('Email sent:', info.response);
-      res.status(200).send('Email sent successfully');
+      console.log("Email sent:", info.response);
+      res.status(200).send("Email sent successfully");
     });
   });
 });
@@ -148,7 +148,6 @@ app.post(api + "/google", (req, res) => {
     );
   });
 });
-
 
 app.post(api + "/check-connection", authenticate, (req, res) => {
   console.log("check connection");
@@ -184,25 +183,33 @@ app.post(api + "/check-connection", authenticate, (req, res) => {
 
 app.post(api + "/upload", upload.single("file"), (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ error: "No file uploaded" });x
+    return res.status(400).json({ error: "No file uploaded" });
+    x;
   }
   res.json({ path: `/uploads/${req.file.filename}` });
 });
 
-app.post(api + '/upload/history', upload.array('files', 2), (req, res) => {
+app.post(api + "/upload/history", upload.array("files", 2), (req, res) => {
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ error: "No files uploaded" });
   }
 
-  const paths = req.files.map(file => `/uploads/${file.filename}`);
+  const paths = req.files.map((file) => `/uploads/${file.filename}`);
   res.json({ paths });
 });
 
 app.post(api + "/person", authenticate, (req, res) => {
-  const { personInfo, imagePath1, imagePath2, email, Completion, TotalProgress } = req.body;
+  const {
+    personInfo,
+    imagePath1,
+    imagePath2,
+    email,
+    Completion,
+    TotalProgress,
+  } = req.body;
   console.log(req.body);
-  if (!personInfo.spoc || personInfo.spoc === '') {
-    personInfo.spoc = 'no'; // Default to 'no' if not provided
+  if (!personInfo.spoc || personInfo.spoc === "") {
+    personInfo.spoc = "no"; // Default to 'no' if not provided
   }
 
   pool.getConnection((err, connection) => {
@@ -401,7 +408,15 @@ app.post(api + "/person", authenticate, (req, res) => {
 });
 //////////////////////// Sub-Connections///////////////////////////////
 app.post(api + "/subconnections", authenticate, (req, res) => {
-  const { subemail, selectedPersonId, connectionInfo, imagePath1, imagePath2, Completion, TotalProgress } = req.body;
+  const {
+    subemail,
+    selectedPersonId,
+    connectionInfo,
+    imagePath1,
+    imagePath2,
+    Completion,
+    TotalProgress,
+  } = req.body;
   console.log(req.body);
 
   pool.getConnection((err, connection) => {
@@ -570,15 +585,19 @@ app.post(api + "/subconnections", authenticate, (req, res) => {
       );
 
       const pointsSummary = `
-        INSERT INTO person_points_summary (person_id, last_updated)
-        VALUES (?, NOW())
+        INSERT INTO person_points_summary (person_id, rank, last_updated)
+        VALUES (?,?, NOW())
       `;
       insertions.push(
         new Promise((resolve, reject) => {
-          connection.query(pointsSummary, [personId], (err) => {
-            if (err) reject(err);
-            resolve();
-          });
+          connection.query(
+            pointsSummary,
+            [personId, connectionInfo.rank],
+            (err) => {
+              if (err) reject(err);
+              resolve();
+            }
+          );
         })
       );
 
@@ -597,7 +616,7 @@ app.post(api + "/subconnections", authenticate, (req, res) => {
   });
 });
 
-app.get(api + "/personalinfo/main/:personId", authenticate,(req, res) => {
+app.get(api + "/personalinfo/main/:personId", authenticate, (req, res) => {
   const { personId } = req.params;
 
   const query = "SELECT * FROM personalinfo WHERE person_id = ?";
@@ -612,24 +631,27 @@ app.get(api + "/personalinfo/main/:personId", authenticate,(req, res) => {
 });
 
 // API to fetch sub-connections (entries where sub_id = selectedPersonId)
-app.get(api + "/personalinfo/subconnections/:personId", authenticate, (req, res) => {
-  const { personId } = req.params;
+app.get(
+  api + "/personalinfo/subconnections/:personId",
+  authenticate,
+  (req, res) => {
+    const { personId } = req.params;
 
-  const query = `SELECT personalinfo.*, person_points_summary.*
+    const query = `SELECT personalinfo.*, person_points_summary.*
                 FROM personalinfo
                 LEFT JOIN person_points_summary 
                 ON personalinfo.person_id = person_points_summary.person_id
                 WHERE personalinfo.sub_id = ?`;
 
-  pool.query(query, [personId], (error, results) => {
-    if (error) {
-      console.error("Error fetching sub-connections:", error);
-      return res.status(500).json({ message: "Database error" });
-    }
-    res.json(results); // Return all matching results
-  });
-});
-
+    pool.query(query, [personId], (error, results) => {
+      if (error) {
+        console.error("Error fetching sub-connections:", error);
+        return res.status(500).json({ message: "Database error" });
+      }
+      res.json(results); // Return all matching results
+    });
+  }
+);
 
 app.get(api + "/userNetworks", authenticate, (req, res) => {
   pool.getConnection((err, connection) => {
@@ -679,7 +701,7 @@ LEFT JOIN personalinfo p2 ON p2.person_id = p1.sub_id
 LEFT JOIN person_points_summary pps ON pps.person_id = p1.person_id
 ORDER BY p1.person_id DESC;
                   `;
-     // Adjust the SQL query based on your schema
+    // Adjust the SQL query based on your schema
     connection.query(sql, (err, results) => {
       connection.release();
 
@@ -695,7 +717,7 @@ ORDER BY p1.person_id DESC;
 
 app.post(api + "/userConnections", authenticate, (req, res) => {
   const { email } = req.body;
-  
+
   if (!email) {
     return res.status(400).json({ message: "Email is required" });
   }
@@ -768,23 +790,23 @@ ORDER BY p1.person_id DESC;
   });
 });
 
-app.post(api + '/personstatus', authenticate, (req, res) => {
-  const {person, reason, status} = req.body;
+app.post(api + "/personstatus", authenticate, (req, res) => {
+  const { person, reason, status } = req.body;
   // console.log(req.body);
   const query = `UPDATE personalinfo
                   SET status = ?, 
                       reason = ?
-                  WHERE person_id = ?;`
-  pool.query(query,[status, reason, person], (err, results) => {
+                  WHERE person_id = ?;`;
+  pool.query(query, [status, reason, person], (err, results) => {
     if (err) {
-      console.error('Database query error:', err);
-      return res.status(500).json({ message: 'Failed to update status' });
+      console.error("Database query error:", err);
+      return res.status(500).json({ message: "Failed to update status" });
     }
-    res.status(200)
+    res.status(200);
   });
 });
 
-app.post(api + '/userranks', (req, res) => {
+app.post(api + "/userranks", (req, res) => {
   const { email } = req.body; // Assuming email is passed as a query parameter
 
   const query = `
@@ -800,19 +822,20 @@ app.post(api + '/userranks', (req, res) => {
 
   pool.query(query, [email], (err, results) => {
     if (err) {
-      console.error('Database query error:', err);
-      return res.status(500).json({ message: 'Failed to fetch user ranks counts.' });
+      console.error("Database query error:", err);
+      return res
+        .status(500)
+        .json({ message: "Failed to fetch user ranks counts." });
     }
 
     // Extract counts from results
     const counts = results[0] || {};
-    
+
     res.status(200).json(counts);
   });
 });
 
-app.post(api + '/networkranks', authenticate, (req, res) => {
-
+app.post(api + "/networkranks", authenticate, (req, res) => {
   const query = `
     SELECT
       COUNT(CASE WHEN pps.rank = 3 THEN 1 END) AS count_rank_3,
@@ -825,20 +848,21 @@ app.post(api + '/networkranks', authenticate, (req, res) => {
 
   pool.query(query, (err, results) => {
     if (err) {
-      console.error('Database query error:', err);
-      return res.status(500).json({ message: 'Failed to fetch user ranks counts.' });
+      console.error("Database query error:", err);
+      return res
+        .status(500)
+        .json({ message: "Failed to fetch user ranks counts." });
     }
 
     // Extract counts from results
     const counts = results[0] || {};
-    
+
     res.status(200).json(counts);
   });
 });
 
-
 app.post(api + "/summary", authenticate, (req, res) => {
-  const {selectedPersonId} = req.body;
+  const { selectedPersonId } = req.body;
   // console.log("This is id:", person_id);
 
   pool.getConnection((err, connection) => {
@@ -878,35 +902,29 @@ GROUP BY
     p.fullname, p.phonenumber, p.age, p.email, p.linkedinurl, p.address, p.hashtags,
     c.companyname, c.position, c.experience, c.role, c.companyaddress,
     e.domain, e.specialistskills, e.skillset;
-`
+`;
     // Query to fetch person data based on ID
-    connection.query(
-      sql,
-      [selectedPersonId],
-      (error, results) => {
-        connection.release(); // Always release the connection after the query
+    connection.query(sql, [selectedPersonId], (error, results) => {
+      connection.release(); // Always release the connection after the query
 
-        if (error) {
-          console.error("Error fetching person data:", error);
-          res
-            .status(500)
-            .json({ error: "An error occurred while fetching the data." });
-          return;
-        }
-
-        // If no data is found
-        if (results.length === 0) {
-          res.status(404).json({ message: "Person not found." });
-          return;
-        }
-
-        res.json(results[0]);
+      if (error) {
+        console.error("Error fetching person data:", error);
+        res
+          .status(500)
+          .json({ error: "An error occurred while fetching the data." });
+        return;
       }
-    );
+
+      // If no data is found
+      if (results.length === 0) {
+        res.status(404).json({ message: "Person not found." });
+        return;
+      }
+
+      res.json(results[0]);
+    });
   });
 });
-
-
 
 app.get(api + "/persondata/:id", authenticate, (req, res) => {
   const person_id = req.params.id;
@@ -918,7 +936,11 @@ app.get(api + "/persondata/:id", authenticate, (req, res) => {
     }
 
     connection.query(
-      "SELECT * FROM personalinfo WHERE person_id = ?",
+      `SELECT * 
+      FROM personalinfo 
+      INNER JOIN person_points_summary 
+      ON personalinfo.person_id = person_points_summary.person_id
+      WHERE personalinfo.person_id = ?;`,
       [person_id],
       (error, results) => {
         connection.release(); // Always release the connection after the query
@@ -1055,9 +1077,8 @@ app.get(api + "/expertisedata/:id", authenticate, (req, res) => {
 });
 
 app.get(api + "/expertisedata/domains", authenticate, (req, res) => {
-
-  pool.getConnection((err,connection) => {
-    if(err) {
+  pool.getConnection((err, connection) => {
+    if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
@@ -1070,28 +1091,30 @@ app.get(api + "/expertisedata/domains", authenticate, (req, res) => {
     FROM expertise
   `;
 
-  connection.query(query, [person_id], (error, results) => {
-    connection.release(); // Always release the connection after the query
+    connection.query(query, [person_id], (error, results) => {
+      connection.release(); // Always release the connection after the query
 
-    if (error) {
-      console.error("Error fetching expertise data:", error);
-      return res.status(500).json({ error: "An error occurred while fetching the data." });
-    }
+      if (error) {
+        console.error("Error fetching expertise data:", error);
+        return res
+          .status(500)
+          .json({ error: "An error occurred while fetching the data." });
+      }
 
-    // If no data is found
-    if (results.length === 0) {
-      return res.status(404).json({ message: "Person not found." });
-    }
+      // If no data is found
+      if (results.length === 0) {
+        return res.status(404).json({ message: "Person not found." });
+      }
 
-    // Send the counts as a JSON response
-    res.json({
-      hardwareCount: results[0].hardwareCount || 0,
-      softwareCount: results[0].softwareCount || 0,
-      othersCount: results[0].othersCount || 0,
+      // Send the counts as a JSON response
+      res.json({
+        hardwareCount: results[0].hardwareCount || 0,
+        softwareCount: results[0].softwareCount || 0,
+        othersCount: results[0].othersCount || 0,
+      });
     });
   });
-  })
-})
+});
 
 app.get(api + "/placementdata/:id", authenticate, (req, res) => {
   const person_id = req.params.id;
@@ -1286,8 +1309,7 @@ app.put(api + "/personupload", authenticate, (req, res) => {
     Completion,
     TotalProgress,
   } = req.body;
-  console.log("here",req.body);
-  // console.log("BACKEND TOTAL VALUE = ", TotalProgress);
+
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
@@ -1295,7 +1317,7 @@ app.put(api + "/personupload", authenticate, (req, res) => {
     }
 
     let sql = `UPDATE personalinfo
-               SET fullname = ?, phonenumber = ?, age = ?, email = ?, dob = ?, rating = ?, visitingcard = ?, linkedinurl = ?, address = ?, shortdescription = ?, hashtags = ? ,Completion = ?, overall_completion = ? `;
+               SET fullname = ?, phonenumber = ?, age = ?, email = ?, dob = ?, rating = ?, visitingcard = ?, linkedinurl = ?, address = ?, shortdescription = ?, hashtags = ?, Completion = ?, overall_completion = ? `;
 
     let queryParams = [
       personInfo.fullname,
@@ -1322,20 +1344,32 @@ app.put(api + "/personupload", authenticate, (req, res) => {
     sql += ` WHERE person_id = ?`;
     queryParams.push(selectedPersonId);
 
+    // First query: Update personalinfo table
     connection.query(sql, queryParams, (err, results) => {
-      connection.release();
-
       if (err) {
+        connection.release();
         console.error("Error updating person data:", err);
-        return res
-          .status(500)
-          .json({ error: "An error occurred while updating the data." });
+        return res.status(500).json({ error: "An error occurred while updating the data." });
       }
 
-      res.status(200).json({ message: "Updated successfully!" });
+      // Second query: Update person_points_summary table with rank
+      let rankSql = `UPDATE person_points_summary SET rank = ? WHERE person_id = ?`;
+      let rankParams = [personInfo.rank, selectedPersonId];
+
+      connection.query(rankSql, rankParams, (err, rankResults) => {
+        connection.release(); // Release the connection after both queries are done
+
+        if (err) {
+          console.error("Error updating rank data:", err);
+          return res.status(500).json({ error: "An error occurred while updating the rank." });
+        }
+
+        res.status(200).json({ message: "Updated successfully!" });
+      });
     });
   });
 });
+
 
 app.put(api + "/companyupload", authenticate, (req, res) => {
   const { selectedPersonId, CompanyInfo, Company_Completion } = req.body;
@@ -1509,9 +1543,9 @@ app.put(api + "/placementupload", authenticate, (req, res) => {
   const { selectedPersonId, Ifplacement, Placementinfo, Placement_Completion } =
     req.body;
 
-    const skillsetString = (Placementinfo.skillset || []).join(',');
-    // console.log('Skillset: ',skillsetString);
-    // console.log('Domain: ',Placementinfo.domain);
+  const skillsetString = (Placementinfo.skillset || []).join(",");
+  // console.log('Skillset: ',skillsetString);
+  // console.log('Domain: ',Placementinfo.domain);
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -1558,7 +1592,7 @@ app.put(api + "/consultancyupload", authenticate, (req, res) => {
     Consultancy_Completion,
   } = req.body;
   // console.log("person_id", selectedPersonId);
-  const skillsetString = Consultancyinfo.skillset.join(',');
+  const skillsetString = Consultancyinfo.skillset.join(",");
   // console.log('Skillset: ',skillsetString);
   // console.log('Domain: ',Consultancyinfo.domain);
 
@@ -1608,7 +1642,7 @@ app.put(api + "/internshipupload", authenticate, (req, res) => {
     Internship_Completion,
   } = req.body;
 
-  const skillsetString = Internshipinfo.skillset.join(',');
+  const skillsetString = Internshipinfo.skillset.join(",");
   // console.log('Skillset: ',skillsetString);
   // console.log('Domain: ',Internshipinfo.domain);
 
@@ -1655,7 +1689,7 @@ app.put(api + "/expertiseupload", authenticate, (req, res) => {
   // console.log(req.body);
 
   // Concatenate skillset array into a comma-separated string
-  const skillsetString = ExpertiseInfo.skillset.join(',');
+  const skillsetString = ExpertiseInfo.skillset.join(",");
   // console.log('Skillset: ',skillsetString);
   // console.log('Domain: ',ExpertiseInfo.domain);
 
@@ -1680,7 +1714,7 @@ app.put(api + "/expertiseupload", authenticate, (req, res) => {
       [
         ExpertiseInfo.domain,
         ExpertiseInfo.specialistskills,
-        skillsetString,  // Use the concatenated string here
+        skillsetString, // Use the concatenated string here
         Expertise_Completion,
         selectedPersonId,
       ],
@@ -1700,13 +1734,12 @@ app.put(api + "/expertiseupload", authenticate, (req, res) => {
   });
 });
 
-
-const moment = require('moment-timezone');
+const moment = require("moment-timezone");
 
 // Example timezone you want to use, e.g., 'Asia/Kolkata'
-const timezone = 'Asia/Kolkata'; 
+const timezone = "Asia/Kolkata";
 
-app.post(api + '/addhistory', authenticate, (req, res) => {
+app.post(api + "/addhistory", authenticate, (req, res) => {
   const {
     selectedPersonId,
     username,
@@ -1718,13 +1751,13 @@ app.post(api + '/addhistory', authenticate, (req, res) => {
     scheduled_date,
     imagePath1,
     imagePath2,
-    status
+    status,
   } = req.body;
 
   // console.log('Original data received:', req.body);
 
   // Format the provided scheduled_date to MySQL datetime format with the correct timezone
-  const formattedDate = moment(scheduled_date).format('YYYY-MM-DD HH:mm:ss');
+  const formattedDate = moment(scheduled_date).format("YYYY-MM-DD HH:mm:ss");
 
   // console.log("Formatted date: ", formattedDate);
 
@@ -1735,18 +1768,38 @@ app.post(api + '/addhistory', authenticate, (req, res) => {
   `;
 
   // Execute the SQL query
-  pool.query(query, [selectedPersonId, username, email, type, note, purpose, formattedDate, imagePath1, imagePath2, points, status], (err, result) => {
-    if (err) {
-      console.error('Database insert error:', err);
-      return res.status(500).json({ message: 'Failed to insert record.' });
-    }
+  pool.query(
+    query,
+    [
+      selectedPersonId,
+      username,
+      email,
+      type,
+      note,
+      purpose,
+      formattedDate,
+      imagePath1,
+      imagePath2,
+      points,
+      status,
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("Database insert error:", err);
+        return res.status(500).json({ message: "Failed to insert record." });
+      }
 
-    res.status(200).json({ message: 'Record inserted successfully', newRecord: result.insertId });
-  });
+      res
+        .status(200)
+        .json({
+          message: "Record inserted successfully",
+          newRecord: result.insertId,
+        });
+    }
+  );
 });
 
-
-app.get(api + '/fetch-scheduled', authenticate, (req, res) => {
+app.get(api + "/fetch-scheduled", authenticate, (req, res) => {
   const query = `SELECT h.*, p.*
                 FROM history h
                 JOIN personalinfo p ON h.person_id = p.person_id
@@ -1755,19 +1808,19 @@ app.get(api + '/fetch-scheduled', authenticate, (req, res) => {
 
   pool.query(query, (err, results) => {
     if (err) {
-      console.error('Error fetching scheduled data:', err);
-      return res.status(500).send('Server error');
+      console.error("Error fetching scheduled data:", err);
+      return res.status(500).send("Server error");
     }
     res.json(results);
   });
 });
 
 // Route to fetch all schedule data
-app.post(api + '/schedule', authenticate, (req, res) => {
+app.post(api + "/schedule", authenticate, (req, res) => {
   const { email } = req.body;
 
   if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
+    return res.status(400).json({ error: "Email is required" });
   }
 
   const query = `
@@ -1780,69 +1833,75 @@ app.post(api + '/schedule', authenticate, (req, res) => {
 
   pool.query(query, [email], (err, results) => {
     if (err) {
-      console.error('Error fetching schedule data:', err);
-      res.status(500).send('Server error');
+      console.error("Error fetching schedule data:", err);
+      res.status(500).send("Server error");
       return;
     }
     res.json(results);
   });
 });
 
-
-app.post(api + '/history-status', authenticate, (req, res) => {
+app.post(api + "/history-status", authenticate, (req, res) => {
   const { history_id, status } = req.body;
 
-  if (!history_id || typeof status === 'undefined') {
-    return res.status(400).json({ error: 'Missing required fields: history_id and status' });
+  if (!history_id || typeof status === "undefined") {
+    return res
+      .status(400)
+      .json({ error: "Missing required fields: history_id and status" });
   }
 
-  const query = 'UPDATE history SET status = ? WHERE history_id = ?';
-  
+  const query = "UPDATE history SET status = ? WHERE history_id = ?";
+
   pool.query(query, [status, history_id], (err, result) => {
     if (err) {
-      console.error('Error updating history status:', err);
-      return res.status(500).json({ error: 'Failed to update history status' });
-    }
-    
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'No history record found with the given ID' });
+      console.error("Error updating history status:", err);
+      return res.status(500).json({ error: "Failed to update history status" });
     }
 
-    res.status(200).json({ message: 'History status updated successfully' });
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ message: "No history record found with the given ID" });
+    }
+
+    res.status(200).json({ message: "History status updated successfully" });
   });
 });
 
-app.post(api + '/history-status', authenticate, (req, res) => {
+app.post(api + "/history-status", authenticate, (req, res) => {
   const { history_id, status } = req.body;
 
-  if (!history_id || typeof status === 'undefined') {
-    return res.status(400).json({ error: 'Missing required fields: history_id and status' });
+  if (!history_id || typeof status === "undefined") {
+    return res
+      .status(400)
+      .json({ error: "Missing required fields: history_id and status" });
   }
 
-  const query = 'UPDATE history SET status = ? WHERE history_id = ?';
-  
+  const query = "UPDATE history SET status = ? WHERE history_id = ?";
+
   pool.query(query, [status, history_id], (err, result) => {
     if (err) {
-      console.error('Error updating history status:', err);
-      return res.status(500).json({ error: 'Failed to update history status' });
-    }
-    
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'No history record found with the given ID' });
+      console.error("Error updating history status:", err);
+      return res.status(500).json({ error: "Failed to update history status" });
     }
 
-    res.status(200).json({ message: 'History status updated successfully' });
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ message: "No history record found with the given ID" });
+    }
+
+    res.status(200).json({ message: "History status updated successfully" });
   });
 });
-
 
 app.post(api + "/history", authenticate, (req, res) => {
   const { selectedPersonId } = req.body;
 
   // Get the token from the Authorization header
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Extract token from 'Bearer <token>'
-  
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Extract token from 'Bearer <token>'
+
   // Log for debugging
   // console.log("Authorization Header:", authHeader);
   // console.log("Token:", token);
@@ -1870,7 +1929,8 @@ app.post(api + "/history", authenticate, (req, res) => {
       }
 
       // Fetch the history records
-      const sql = "SELECT * FROM history WHERE person_id = ? ORDER BY history_id DESC";
+      const sql =
+        "SELECT * FROM history WHERE person_id = ? ORDER BY history_id DESC";
       connection.query(sql, [selectedPersonId], async (err, results) => {
         if (err) {
           connection.release();
@@ -1885,21 +1945,26 @@ app.post(api + "/history", authenticate, (req, res) => {
         // }
 
         // Count the total number of records
-        const countSql = "SELECT COUNT(*) AS totalCount FROM history WHERE person_id = ?";
-        connection.query(countSql, [selectedPersonId], async (err, countResult) => {
-          connection.release();
+        const countSql =
+          "SELECT COUNT(*) AS totalCount FROM history WHERE person_id = ?";
+        connection.query(
+          countSql,
+          [selectedPersonId],
+          async (err, countResult) => {
+            connection.release();
 
-          if (err) {
-            console.error("Error executing count query:", err);
-            return res.status(500).json({ message: "Database error" });
+            if (err) {
+              console.error("Error executing count query:", err);
+              return res.status(500).json({ message: "Database error" });
+            }
+
+            const totalCount = countResult[0].totalCount;
+
+            // Send the records and the count in the response
+            res.json({ data: results, totalCount });
+            // console.log("Fetched Data:", results);
           }
-
-          const totalCount = countResult[0].totalCount;
-
-          // Send the records and the count in the response
-          res.json({ data: results, totalCount });
-          // console.log("Fetched Data:", results);
-        });
+        );
       });
     });
   });
@@ -1913,8 +1978,8 @@ const checkAndSendWishes = () => {
     }
 
     const today = new Date();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
-    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
+    const day = String(today.getDate()).padStart(2, "0");
 
     // Format today's month and day as MM-DD
     const formattedDate = `${month}-${day}`;
@@ -1959,10 +2024,9 @@ Bannari Amman Institute of Technology.
 
           try {
             await transporter.sendMail(mailOptions);
-            console.log('Email sent successfully for birthday wishes');
-
+            console.log("Email sent successfully for birthday wishes");
           } catch (error) {
-            console.error('Error sending email:', error);
+            console.error("Error sending email:", error);
           }
         }
       }
@@ -1971,8 +2035,6 @@ Bannari Amman Institute of Technology.
     });
   });
 };
-
-
 
 const checkAndSendEmails = () => {
   pool.getConnection((err, connection) => {
@@ -1994,7 +2056,7 @@ const checkAndSendEmails = () => {
       AND h.status = 1 
       AND h.emailSent = FALSE
     `;
-    
+
     connection.query(sql, [now, thirtyMinutesFromNow], async (err, results) => {
       if (err) {
         console.error("Error executing database query:", err);
@@ -2015,7 +2077,7 @@ const checkAndSendEmails = () => {
             to: email, // Recipient's email
             subject: "Upcoming Event Reminder",
             text: `
-Dear ${agent || 'Recipient'},
+Dear ${agent || "Recipient"},
 
 I hope this message finds you well. This is a kind reminder regarding the rescheduled call on ${formattedDate}, ensuring the smooth progress of collaboration with ${fullname}.
 Thank you for your attention to this matter, and we appreciate your time.
@@ -2028,18 +2090,18 @@ IECC
           try {
             // Send email using the transporter
             await transporter.sendMail(mailOptions);
-            console.log('Email sent successfully for reminder');
+            console.log("Email sent successfully for reminder");
 
             // Update records to set emailSent to TRUE
-            const updateSql = "UPDATE history SET emailSent = TRUE WHERE history_id = ?";
+            const updateSql =
+              "UPDATE history SET emailSent = TRUE WHERE history_id = ?";
             connection.query(updateSql, [record.history_id], (err) => {
               if (err) {
                 console.error("Error updating emailSent status:", err);
               }
             });
-
           } catch (error) {
-            console.error('Error sending email:', error);
+            console.error("Error sending email:", error);
           }
         }
       }
@@ -2049,14 +2111,13 @@ IECC
   });
 };
 
-
 // Schedule the task to run every minute
-cron.schedule('* * * * *', () => {
+cron.schedule("* * * * *", () => {
   // console.log('Checking for upcoming events...');
   checkAndSendEmails();
 });
 
-cron.schedule('0 9 * * *', () => {
+cron.schedule("0 9 * * *", () => {
   checkAndSendWishes();
 });
 
@@ -2064,16 +2125,14 @@ cron.schedule('0 9 * * *', () => {
 //   checkAndSendWishes();
 // });
 
-
-
-app.get(api + '/addressdata', authenticate, (req,res) => {
+app.get(api + "/addressdata", authenticate, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const sql = "SELECT * FROM address_table";
-    connection.query(sql, (err, results) =>{
+    connection.query(sql, (err, results) => {
       connection.release();
       if (err) {
         console.error("Error executing database query:", err);
@@ -2084,9 +2143,9 @@ app.get(api + '/addressdata', authenticate, (req,res) => {
   });
 });
 
-   app.put(api + '/updatestatusaddress', authenticate, (req, res) => {
+app.put(api + "/updatestatusaddress", authenticate, (req, res) => {
   const { id, status } = req.body;
-  const query = 'UPDATE address_table SET status = ? WHERE id = ?';
+  const query = "UPDATE address_table SET status = ? WHERE id = ?";
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -2097,47 +2156,47 @@ app.get(api + '/addressdata', authenticate, (req,res) => {
     connection.query(query, [status, id], (err, results) => {
       connection.release(); // Release the connection back to the pool
       if (err) {
-        console.error('Error updating status:', err);
-        return res.status(500).json({ message: 'Error updating status.' });
+        console.error("Error updating status:", err);
+        return res.status(500).json({ message: "Error updating status." });
       }
       if (results.affectedRows === 0) {
-        return res.status(404).json({ message: 'Address not found.' });
+        return res.status(404).json({ message: "Address not found." });
       } else {
-        res.json({ message: 'Status updated successfully.' });
+        res.json({ message: "Status updated successfully." });
       }
     });
   });
 });
 
-app.post(api + '/addresspost', authenticate, (req,res) => {
-  const {location} = req.body;
+app.post(api + "/addresspost", authenticate, (req, res) => {
+  const { location } = req.body;
   // console.log(req.body);
 
   pool.getConnection((err, connection) => {
-    if(err){
+    if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const query = "INSERT INTO address_table (address_column) VALUES (?)";
-    connection.query(query, [location],(err, results) => {
+    connection.query(query, [location], (err, results) => {
       connection.release();
       if (err) {
-        console.error('Error updating status:', err);
-        return res.status(500).json({ message: 'Error updating status.' });
+        console.error("Error updating status:", err);
+        return res.status(500).json({ message: "Error updating status." });
       }
       // results.json({ message: 'Status updated successfully.' });
     });
   });
 });
 
-app.get(api + '/companydata', authenticate, (req,res) => {
+app.get(api + "/companydata", authenticate, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const sql = "SELECT * FROM company_table";
-    connection.query(sql, (err, results) =>{
+    connection.query(sql, (err, results) => {
       connection.release();
       if (err) {
         console.error("Error executing database query:", err);
@@ -2148,9 +2207,9 @@ app.get(api + '/companydata', authenticate, (req,res) => {
   });
 });
 
-app.put(api + '/updatestatuscompany', authenticate, (req, res) => {
+app.put(api + "/updatestatuscompany", authenticate, (req, res) => {
   const { id, status } = req.body;
-  const query = 'UPDATE company_table SET status = ? WHERE id = ?';
+  const query = "UPDATE company_table SET status = ? WHERE id = ?";
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -2161,85 +2220,84 @@ app.put(api + '/updatestatuscompany', authenticate, (req, res) => {
     connection.query(query, [status, id], (err, results) => {
       connection.release(); // Release the connection back to the pool
       if (err) {
-        console.error('Error updating status:', err);
-        return res.status(500).json({ message: 'Error updating status.' });
+        console.error("Error updating status:", err);
+        return res.status(500).json({ message: "Error updating status." });
       }
       if (results.affectedRows === 0) {
-        return res.status(404).json({ message: 'Address not found.' });
+        return res.status(404).json({ message: "Address not found." });
       } else {
-        res.json({ message: 'Status updated successfully.' });
+        res.json({ message: "Status updated successfully." });
       }
     });
   });
 });
 
 // server.js
-app.post(api + '/update-status', authenticate, (req, res) => {
+app.post(api + "/update-status", authenticate, (req, res) => {
   const { history_id } = req.body; // Get the history_id from the request body
 
   if (!history_id) {
-    return res.status(400).json({ message: 'History ID is required' });
+    return res.status(400).json({ message: "History ID is required" });
   }
 
-  const query = 'UPDATE history SET status = 0 WHERE history_id = ?';
+  const query = "UPDATE history SET status = 0 WHERE history_id = ?";
 
   pool.query(query, [history_id], (err, result) => {
     if (err) {
-      console.error('Database update error:', err);
-      return res.status(500).json({ message: 'Failed to update status' });
+      console.error("Database update error:", err);
+      return res.status(500).json({ message: "Failed to update status" });
     }
 
-    res.status(200).json({ message: 'Status updated successfully' });
+    res.status(200).json({ message: "Status updated successfully" });
   });
 });
-app.post(api + '/update-status', authenticate, (req, res) => {
+app.post(api + "/update-status", authenticate, (req, res) => {
   const { history_id, status } = req.body;
 
   if (!history_id || status === undefined) {
-    return res.status(400).json({ error: 'Missing required fields' });
+    return res.status(400).json({ error: "Missing required fields" });
   }
 
-  const query = 'UPDATE history SET status = ? WHERE history_id = ?';
+  const query = "UPDATE history SET status = ? WHERE history_id = ?";
   pool.query(query, [status, history_id], (err, result) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Failed to update status' });
+      return res.status(500).json({ error: "Failed to update status" });
     }
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Record not found' });
+      return res.status(404).json({ error: "Record not found" });
     }
 
-    res.json({ message: 'Status updated successfully' });
+    res.json({ message: "Status updated successfully" });
   });
 });
 
-
-app.post(api + '/companypost', authenticate, (req,res) => {
-  const {company} = req.body;
+app.post(api + "/companypost", authenticate, (req, res) => {
+  const { company } = req.body;
   // console.log(req.body);
 
   pool.getConnection((err, connection) => {
-    if(err){
+    if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const query = "INSERT INTO company_table (company_column) VALUES (?)";
-    connection.query(query, [company],(err, results) => {
+    connection.query(query, [company], (err, results) => {
       connection.release();
       // results.json({ message: 'Status updated successfully.' });
     });
   });
 });
 
-app.get(api + '/domaindata', authenticate, (req,res) => {
+app.get(api + "/domaindata", authenticate, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const sql = "SELECT * FROM domain_table";
-    connection.query(sql, (err, results) =>{
+    connection.query(sql, (err, results) => {
       connection.release();
       if (err) {
         console.error("Error executing database query:", err);
@@ -2250,9 +2308,9 @@ app.get(api + '/domaindata', authenticate, (req,res) => {
   });
 });
 
-app.put(api + '/updatestatusdomain', authenticate, (req, res) => {
+app.put(api + "/updatestatusdomain", authenticate, (req, res) => {
   const { id, status } = req.body;
-  const query = 'UPDATE domain_table SET status = ? WHERE id = ?';
+  const query = "UPDATE domain_table SET status = ? WHERE id = ?";
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -2263,47 +2321,47 @@ app.put(api + '/updatestatusdomain', authenticate, (req, res) => {
     connection.query(query, [status, id], (err, results) => {
       connection.release(); // Release the connection back to the pool
       if (err) {
-        console.error('Error updating status:', err);
-        return res.status(500).json({ message: 'Error updating status.' });
+        console.error("Error updating status:", err);
+        return res.status(500).json({ message: "Error updating status." });
       }
       if (results.affectedRows === 0) {
-        return res.status(404).json({ message: 'Address not found.' });
+        return res.status(404).json({ message: "Address not found." });
       } else {
-        res.json({ message: 'Status updated successfully.' });
+        res.json({ message: "Status updated successfully." });
       }
     });
   });
 });
 
-app.post(api + '/domainpost', authenticate, (req,res) => {
-  const {domain} = req.body;
+app.post(api + "/domainpost", authenticate, (req, res) => {
+  const { domain } = req.body;
   // console.log(req.body);
 
   pool.getConnection((err, connection) => {
-    if(err){
+    if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const query = "INSERT INTO domain_table (domain_column) VALUES (?)";
-    connection.query(query, [domain],(err, results) => {
+    connection.query(query, [domain], (err, results) => {
       connection.release();
       if (err) {
-        console.error('Error updating status:', err);
-        return results.status(500).json({ message: 'Error updating status.' });
+        console.error("Error updating status:", err);
+        return results.status(500).json({ message: "Error updating status." });
       }
       // results.json({ message: 'Status updated successfully.' });
     });
   });
 });
 
-app.get(api + '/roledata', authenticate, (req,res) => {
+app.get(api + "/roledata", authenticate, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const sql = "SELECT * FROM role_table";
-    connection.query(sql, (err, results) =>{
+    connection.query(sql, (err, results) => {
       connection.release();
       if (err) {
         console.error("Error executing database query:", err);
@@ -2314,9 +2372,9 @@ app.get(api + '/roledata', authenticate, (req,res) => {
   });
 });
 
-app.put(api + '/updatestatusrole', authenticate, (req, res) => {
+app.put(api + "/updatestatusrole", authenticate, (req, res) => {
   const { id, status } = req.body;
-  const query = 'UPDATE role_table SET status = ? WHERE id = ?';
+  const query = "UPDATE role_table SET status = ? WHERE id = ?";
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -2327,19 +2385,19 @@ app.put(api + '/updatestatusrole', authenticate, (req, res) => {
     connection.query(query, [status, id], (err, results) => {
       connection.release(); // Release the connection back to the pool
       if (err) {
-        console.error('Error updating status:', err);
-        return res.status(500).json({ message: 'Error updating status.' });
+        console.error("Error updating status:", err);
+        return res.status(500).json({ message: "Error updating status." });
       }
       if (results.affectedRows === 0) {
-        return res.status(404).json({ message: 'Address not found.' });
+        return res.status(404).json({ message: "Address not found." });
       } else {
-        res.json({ message: 'Status updated successfully.' });
+        res.json({ message: "Status updated successfully." });
       }
     });
   });
 });
 
-app.post(api + '/rolepost', authenticate, (req, res) => {
+app.post(api + "/rolepost", authenticate, (req, res) => {
   const { role } = req.body;
 
   pool.getConnection((err, connection) => {
@@ -2353,23 +2411,26 @@ app.post(api + '/rolepost', authenticate, (req, res) => {
       connection.release();
 
       if (err) {
-        console.error('Error inserting role:', err);
-        return res.status(500).json({ message: 'Error inserting role.' });
+        console.error("Error inserting role:", err);
+        return res.status(500).json({ message: "Error inserting role." });
       }
 
-      return res.json({ message: 'Role inserted successfully.', id: results.insertId });
+      return res.json({
+        message: "Role inserted successfully.",
+        id: results.insertId,
+      });
     });
   });
 });
 
-app.get(api + '/skilldata', authenticate, (req,res) => {
+app.get(api + "/skilldata", authenticate, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const sql = "SELECT * FROM skillset_table";
-    connection.query(sql, (err, results) =>{
+    connection.query(sql, (err, results) => {
       connection.release();
       if (err) {
         console.error("Error executing database query:", err);
@@ -2380,9 +2441,9 @@ app.get(api + '/skilldata', authenticate, (req,res) => {
   });
 });
 
-app.put(api + '/updatestatusskill', authenticate, (req, res) => {
+app.put(api + "/updatestatusskill", authenticate, (req, res) => {
   const { id, status } = req.body;
-  const query = 'UPDATE skillset_table SET status = ? WHERE id = ?';
+  const query = "UPDATE skillset_table SET status = ? WHERE id = ?";
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -2393,19 +2454,19 @@ app.put(api + '/updatestatusskill', authenticate, (req, res) => {
     connection.query(query, [status, id], (err, results) => {
       connection.release(); // Release the connection back to the pool
       if (err) {
-        console.error('Error updating status:', err);
-        return res.status(500).json({ message: 'Error updating status.' });
+        console.error("Error updating status:", err);
+        return res.status(500).json({ message: "Error updating status." });
       }
       if (results.affectedRows === 0) {
-        return res.status(404).json({ message: 'Address not found.' });
+        return res.status(404).json({ message: "Address not found." });
       } else {
-        res.json({ message: 'Status updated successfully.' });
+        res.json({ message: "Status updated successfully." });
       }
     });
   });
 });
 
-app.post(api + '/skillpost', authenticate, (req, res) => {
+app.post(api + "/skillpost", authenticate, (req, res) => {
   const { skill } = req.body;
 
   pool.getConnection((err, connection) => {
@@ -2419,24 +2480,26 @@ app.post(api + '/skillpost', authenticate, (req, res) => {
       connection.release();
 
       if (err) {
-        console.error('Error inserting role:', err);
-        return res.status(500).json({ message: 'Error inserting role.' });
+        console.error("Error inserting role:", err);
+        return res.status(500).json({ message: "Error inserting role." });
       }
 
-      return res.json({ message: 'Role inserted successfully.', id: results.insertId });
+      return res.json({
+        message: "Role inserted successfully.",
+        id: results.insertId,
+      });
     });
   });
 });
 
-
-app.get(api + '/logindata', authenticate, (req,res) => {
+app.get(api + "/logindata", authenticate, (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);
       return res.status(500).json({ message: "Database error" });
     }
     const sql = "SELECT * FROM login";
-    connection.query(sql, (err, results) =>{
+    connection.query(sql, (err, results) => {
       connection.release();
       if (err) {
         console.error("Error executing database query:", err);
@@ -2447,10 +2510,10 @@ app.get(api + '/logindata', authenticate, (req,res) => {
   });
 });
 
-app.put(api + '/updatestatuslogin', authenticate, (req, res) => {
+app.put(api + "/updatestatuslogin", authenticate, (req, res) => {
   const { id, status } = req.body;
   // console.log("Update login",req.body);
-  const query = 'UPDATE login SET STATUS = ? WHERE ID = ?';
+  const query = "UPDATE login SET STATUS = ? WHERE ID = ?";
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -2461,19 +2524,19 @@ app.put(api + '/updatestatuslogin', authenticate, (req, res) => {
     connection.query(query, [status, id], (err, results) => {
       connection.release(); // Release the connection back to the pool
       if (err) {
-        console.error('Error updating status:', err);
-        return res.status(500).json({ message: 'Error updating status.' });
+        console.error("Error updating status:", err);
+        return res.status(500).json({ message: "Error updating status." });
       }
       if (results.affectedRows === 0) {
-        return res.status(404).json({ message: 'Address not found.' });
+        return res.status(404).json({ message: "Address not found." });
       } else {
-        res.json({ message: 'Status updated successfully.' });
+        res.json({ message: "Status updated successfully." });
       }
     });
   });
 });
 
-app.post(api + '/loginpost', authenticate, (req, res) => {
+app.post(api + "/loginpost", authenticate, (req, res) => {
   const { name, email } = req.body;
 
   pool.getConnection((err, connection) => {
@@ -2487,14 +2550,36 @@ app.post(api + '/loginpost', authenticate, (req, res) => {
       connection.release();
 
       if (err) {
-        console.error('Error inserting role:', err);
-        return res.status(500).json({ message: 'Error inserting role.' });
+        console.error("Error inserting role:", err);
+        return res.status(500).json({ message: "Error inserting role." });
       }
 
-      return res.json({ message: 'Login data inserted successfully.', id: results.insertId });
+      return res.json({
+        message: "Login data inserted successfully.",
+        id: results.insertId,
+      });
     });
   });
 });
+
+app.get(api + "/interactions", authenticate, (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error getting database connection:", err);
+      return res.status(500).json({ message: "Database error" });
+    }
+    const sql = "SELECT * FROM interactions";
+    connection.query(sql, (err, results) => {
+      connection.release();
+      if (err) {
+        console.error("Error executing database query:", err);
+        return res.status(500).json({ message: "Database error" });
+      }
+      res.json(results);
+    });
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

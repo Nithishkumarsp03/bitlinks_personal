@@ -82,6 +82,7 @@ const ShowAddAccount = () => {
     address: "",
     shortdescription: "",
     hashtags: "",
+    rank: "",
   });
   // console.log('add')
 
@@ -104,19 +105,19 @@ const ShowAddAccount = () => {
   useEffect(() => {
     console.log("spoc updated:", personInfo.spoc);
   }, [personInfo.spoc]);
-  
+
   const handleSwitchChange = () => {
     setChecked((prevChecked) => {
       const newChecked = !prevChecked;
-  
+
       // Update the 'spoc' field in personInfo based on new state
       setPersonInfo((prevInfo) => ({
         ...prevInfo,
         spoc: newChecked ? "yes" : "no", // Set "yes" for true, "no" for false
       }));
-  
+
       console.log("spoc will be:", newChecked ? "yes" : "no");
-  
+
       return newChecked;
     });
   };
@@ -246,11 +247,16 @@ const ShowAddAccount = () => {
     let imagePath2 = null;
 
     // Check if the required fields are filled
-    if (personInfo.fullname === "" || personInfo.phonenumber === "") {
-      setError("Name and Phonenumber are required to create a connection");
-      return;
+    if (personInfo.fullname === "") {
+      setError("Contact name cannot be null");
+      return; // Stop the function if fullname is empty
+    } else if (personInfo.phonenumber === "") {
+      setError("Phonenumber cannot be null");
+      return; // Stop the function if phonenumber is empty
+    } else if (personInfo.email === "") {
+      setError("Email cannot be null");
+      return; // Stop the function if email is empty
     }
-
 
     // Upload the first image if it exists
     if (file) {
@@ -589,10 +595,17 @@ const ShowAddAccount = () => {
           </a1>
         </div>
       </div>
-      <Dialog open={person_1} onClose={() => setPerson_1(false)} style={{height: "100%",display: "flex",justifyContent: "center",alignItems: "center"}}>
-        <div
-          className="dialogue-addaccount"
-        >
+      <Dialog
+        open={person_1}
+        onClose={() => setPerson_1(false)}
+        style={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div className="dialogue-addaccount">
           <h3
             style={{
               fontSize: "25px",
@@ -793,7 +806,7 @@ const ShowAddAccount = () => {
               onChange={handleDetailsChange_1}
             />
             <div id="spoc-input">
-              If {personInfo.fullname} is Spoc, Please check this{" "}
+              Do you want to push this contact to rank 0{" "}
               <div onClick={handleSwitchChange}>
                 <CustomizedSwitches checked={checked} />
               </div>{" "}

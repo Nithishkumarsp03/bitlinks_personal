@@ -146,7 +146,7 @@ const CustomStepIconWithLine = ({ src, className, showLine }) => (
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function History({fetchRescheduleData, fetchRescheduleDataNetworks}) {
+export default function History({fetchPersonalInfo, fetchUserNetworks, fetchRescheduleData, fetchRescheduleDataNetworks}) {
   const decrypt = (ciphertext) => {
     try {
       if (ciphertext) {
@@ -232,6 +232,25 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
 
   // console.log("path1: ",imagePath1);
   // console.log("path2: ",imagePath2);
+
+  const fetchInteractions = async() => {
+    try{
+      const res = await fetch(api+"/interactions",{
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      });
+      if(res.ok){
+        const data = await res.json();
+        console.log("interactions: ",data);
+      }
+    }
+    catch(error){
+      console.log('error fetching interactions');
+    }
+  }
   
   const pointsMapping = {
     Call: 3,
@@ -356,6 +375,8 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
         fetchHistory();
         fetchRescheduleData();
         fetchRescheduleDataNetworks();
+        fetchPersonalInfo();
+        fetchUserNetworks();
         setHistoryRecords((prevRecords) =>
           prevRecords.map((record) =>
             record.history_id === item.history_id
@@ -455,6 +476,8 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
         handleCloseAddHistory();
         fetchRescheduleData();
         fetchRescheduleDataNetworks();
+        fetchPersonalInfo();
+        fetchUserNetworks();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -498,6 +521,7 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
     if (selectedPersonId) {
       fetchHistory(); // Fetch data initially when the component mounts or selectedPersonId changes
     }
+    fetchInteractions();
   }, [selectedPersonId]);
   
 
@@ -597,6 +621,7 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
     {value: 'Internship Offer', label: 'Internship Offer'},
     {value: 'General Visit', label: 'General Visit'},
   ]
+
   const handleChange = (selectedOption) => {
     // `selectedOption` is an object, or `null` if no option is selected
     setPurpose(selectedOption ? selectedOption.value : null);

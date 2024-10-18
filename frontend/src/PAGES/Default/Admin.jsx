@@ -1966,6 +1966,8 @@ export default function Default(subPersonId) {
             view || viewconnection || ExpertiseConnection ? (
               view ? (
                 <MainFlow 
+                  fetchPersonalInfo={fetchPersonalInfo}
+                  fetchUserNetworks={fetchUserNetworks}
                   handlecancelflows={handlecancelflows} 
                   fetchRescheduleData={fetchRescheduleData}
                   fetchRescheduleDataNetworks={fetchRescheduleDataNetworks}

@@ -13,7 +13,7 @@ import Cookies from 'js-cookie';
 
 const SECRET_KEY = 'your-secret-key';
 
-export default function MainFlow({ subPersonId , handlecancelflows, fetchRescheduleData, fetchRescheduleDataNetworks}) {
+export default function MainFlow({ subPersonId ,fetchPersonalInfo, fetchUserNetworks, handlecancelflows, fetchRescheduleData, fetchRescheduleDataNetworks}) {
   const [activeFlow, setActiveFlow] = useState("history"); // Default to "graph"
   const [activeGraph, setActiveGraph] = useState("monthly");
   const { selectedPersonId, setSelectedPersonId } = usePerson();
@@ -131,7 +131,7 @@ export default function MainFlow({ subPersonId , handlecancelflows, fetchResched
             {/* <div className={`history-add-main ${activeFlow === "history" ? "expanded" : ""}`}> */}
           </div>
           {/* </div> */}
-          {activeFlow === "history" && <History fetchRescheduleData={fetchRescheduleData} fetchRescheduleDataNetworks={fetchRescheduleDataNetworks}/>}
+          {activeFlow === "history" && <History fetchPersonalInfo={fetchPersonalInfo} fetchUserNetworks={fetchUserNetworks} fetchRescheduleData={fetchRescheduleData} fetchRescheduleDataNetworks={fetchRescheduleDataNetworks}/>}
         </div>
         <div
           onClick={() => handleFlowClick("chart")}
