@@ -230,3 +230,152 @@
 .history-add-main.expanded{
   margin-top: 2%;
 }
+
+/* *****Minutes of Meeting********* */
+
+.minutes-container {
+  max-width: 800px;
+  /* padding: 30px; */
+  font-family: 'Inter', sans-serif;
+}
+
+/* Title styling */
+.minutes-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+/* List and Item styling */
+.minutes-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.minutes-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.3s ease;
+}
+
+.minutes-item:hover {
+  background-color: #f7f9fc;
+}
+
+/* Flex container for item details */
+.minutes-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Text and Status styling */
+.minutes-text {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.minutes-date {
+  font-size: 16px;
+  color: #777;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.minutes-status {
+  font-size: 16px;
+  font-weight: 600;
+  color: #888;
+}
+
+/* Edit form */
+.edit-form {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-input {
+  padding: 5px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Button styles */
+.button-group {
+  display: flex;
+  gap: 12px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.icon-button:hover {
+  color: #0056b3;
+}
+
+/* Status Buttons */
+.status-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Completed Button */
+.complete-button {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.complete-button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+/* Impossible Button */
+.impossible-button {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.impossible-button:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+/* Completed state */
+.completed .minutes-text {
+  text-decoration: line-through;
+  color: #28a745;
+}
+
+.completed .minutes-status {
+  color: #28a745;
+}
+
+/* Impossible state */
+.impossible .minutes-text {
+  color: #dc3545;
+}
+
+.impossible .minutes-status {
+  color: #dc3545;
+}
+
