@@ -103,6 +103,7 @@ const token = decrypt(Cookies.get("token"));
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ skill: skill }),
       });
@@ -112,6 +113,7 @@ const token = decrypt(Cookies.get("token"));
         // console.log('Data saved successfully:', data);
         setOpen(false); // Close the dialog
         fetchData(); // Refresh the table data
+        setSkill("");
       }
     } catch (error) {
       console.error('Error saving data:', error);
