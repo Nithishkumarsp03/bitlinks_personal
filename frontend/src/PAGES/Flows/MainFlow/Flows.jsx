@@ -6,6 +6,7 @@ import History from "../History/History";
 import ApexChartMonthlyGraph from "../Graph/MonthlyGraph";
 import ApexChartfiveYearlyGraph from "../Graph/FiveyearGraph";
 import ApexChartYearlyGraph from "../Graph/YearlyGraph";
+import Minutes from "../Minutes/Minutes";
 import { usePerson } from "../../../COMPONENTS/Context";
 import Cancel from "../../../Assets/cancel.png";
 import CryptoJS from 'crypto-js';
@@ -111,6 +112,28 @@ export default function MainFlow({ subPersonId ,fetchPersonalInfo, fetchUserNetw
             </div>
           )}
         </div>
+        {/* **************************** */}
+        <div
+          onClick={() => handleFlowClick("minutes")}
+          className={`flow-history ${activeFlow === "minutes" ? "expanded" : ""}`}>
+          <p className={`flow-titles1 ${activeFlow === "minutes" ? "expanded" : "" }`}>
+            
+            {activeFlow === "minutes" && (<i
+          class="fa-solid fa-arrow-left"
+              alt="cancel-img"
+              style={{ width: "3%", marginRight: "75%",cursor: "pointer" }}
+              onClick={handlecancelflows}
+            />)}
+            Minutes of Meeting
+          </p>
+          {activeFlow === "minutes" && (
+            <div style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+              <Minutes />
+            </div>
+          )}
+        </div>
+        {/* **************************** */}
+
         <div
           onClick={() => handleFlowClick("history")}
           className={`flow-history ${

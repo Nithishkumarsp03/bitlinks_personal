@@ -7,6 +7,7 @@ import Networks from "../../Assets/Networks.svg";
 import Spoc from "../Spoc/Spoc";
 import Add from "../../Assets/add.svg";
 import info from "../../Assets/Information.svg";
+import Rankminus from "../../Assets/Rankof-1.svg";
 import Rank4 from "../../Assets/Rank-1.svg";
 import Rank3 from "../../Assets/Rank-2.svg";
 import Rank2 from "../../Assets/Rank-3.svg";
@@ -1004,222 +1005,239 @@ export default function Default(subPersonId) {
             <PieAnimation />
           </div>
         ) : (
-          <div className="ranks">
+          <div className="all-ranks">
+            
+            <div >
             {Connections ? (
               <>
-                <div className="rank1">
-                  <div>
-                    <img src={Rank1} alt="" />
-                    <p style={{ color: "#6D2ED1" }}>Level 3</p>
-                  </div>
-                  <p style={{ fontSize: "17px", fontWeight: "500" }}>
-                    {rankloading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                          marginTop: "10px",
-                        }}>
-                        <BeatLoader
-                          loading={rankloading}
-                          color="#2867B2"
-                          size={10}
-                        />
-                      </div>
-                    ) : (
-                      <div>{userranks.count_rank_3} Networks</div>
-                    )}
-                  </p>
+                <div className="rankof-1">
+                  <img src={Rankminus} />
+                  <p style={{ color: "#64696C",fontWeight: "500" }}>Rank -1</p>
+                  <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>40 Networks</p>
                 </div>
-                <div className="rank2">
-                  <div>
-                    <img src={Rank2} alt="" />
-                    <p style={{ color: "#0E7C3A" }}>Level 2</p>
+                <div className="ranks">
+                  <div className="rank1">
+                    <div>
+                      <img src={Rank1} alt="" />
+                      <p style={{ color: "#6D2ED1" }}>Level 3</p>
+                    </div>
+                    <p style={{ fontSize: "17px", fontWeight: "500" }}>
+                      {rankloading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            marginTop: "10px",
+                          }}>
+                          <BeatLoader
+                            loading={rankloading}
+                            color="#2867B2"
+                            size={10}
+                          />
+                        </div>
+                      ) : (
+                        <div>{userranks.count_rank_3} Networks</div>
+                      )}
+                    </p>
                   </div>
-                  <p style={{ fontSize: "17px", fontWeight: "500" }}>
-                    {rankloading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                          marginTop: "10px",
-                        }}>
-                        <BeatLoader
-                          loading={rankloading}
-                          color="#2867B2"
-                          size={10}
-                        />
-                      </div>
-                    ) : (
-                      <div>{userranks.count_rank_2} Networks</div>
-                    )}
-                  </p>
-                </div>
-                <div className="rank3">
-                  <div>
-                    <img src={Rank3} alt="" />
-                    <p style={{ color: "#ED8F03" }}>Level 1</p>
+                  <div className="rank2">
+                    <div>
+                      <img src={Rank2} alt="" />
+                      <p style={{ color: "#0E7C3A" }}>Level 2</p>
+                    </div>
+                    <p style={{ fontSize: "17px", fontWeight: "500" }}>
+                      {rankloading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            marginTop: "10px",
+                          }}>
+                          <BeatLoader
+                            loading={rankloading}
+                            color="#2867B2"
+                            size={10}
+                          />
+                        </div>
+                      ) : (
+                        <div>{userranks.count_rank_2} Networks</div>
+                      )}
+                    </p>
                   </div>
-                  <p style={{ fontSize: "17px", fontWeight: "500" }}>
-                    {rankloading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                          marginTop: "10px",
-                        }}>
-                        <BeatLoader
-                          loading={rankloading}
-                          color="#2867B2"
-                          size={10}
-                        />
-                      </div>
-                    ) : (
-                      <div>{userranks.count_rank_1} Networks</div>
-                    )}
-                  </p>
-                </div>
-                <div className="rank4">
-                  <div>
-                    <img src={Rank4} alt="" />
-                    <p style={{ color: "#64696C" }}>Level 0</p>
+                  <div className="rank3">
+                    <div>
+                      <img src={Rank3} alt="" />
+                      <p style={{ color: "#ED8F03" }}>Level 1</p>
+                    </div>
+                    <p style={{ fontSize: "17px", fontWeight: "500" }}>
+                      {rankloading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            marginTop: "10px",
+                          }}>
+                          <BeatLoader
+                            loading={rankloading}
+                            color="#2867B2"
+                            size={10}
+                          />
+                        </div>
+                      ) : (
+                        <div>{userranks.count_rank_1} Networks</div>
+                      )}
+                    </p>
                   </div>
-                  <p style={{ fontSize: "17px", fontWeight: "500" }}>
-                    {rankloading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                          marginTop: "10px",
-                        }}>
-                        <BeatLoader
-                          loading={rankloading}
-                          color="#2867B2"
-                          size={10}
-                        />
-                      </div>
-                    ) : (
-                      <div>{userranks.count_rank_0} Networks</div>
-                    )}
-                  </p>
+                  <div className="rank4">
+                    <div>
+                      <img src={Rank4} alt="" />
+                      <p style={{ color: "#64696C" }}>Level 0</p>
+                    </div>
+                    <p style={{ fontSize: "17px", fontWeight: "500" }}>
+                      {rankloading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            marginTop: "10px",
+                          }}>
+                          <BeatLoader
+                            loading={rankloading}
+                            color="#2867B2"
+                            size={10}
+                          />
+                        </div>
+                      ) : (
+                        <div>{userranks.count_rank_0} Networks</div>
+                      )}
+                    </p>
+                  </div>
                 </div>
               </>
             ) : (
               <>
-                <div className="rank1">
-                  <div>
-                    <img src={Rank1} alt="" />
-                    <p style={{ color: "#6D2ED1" }}>Level 3</p>
-                  </div>
-                  <p style={{ fontSize: "17px", fontWeight: "500" }}>
-                    {rankloading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                          marginTop: "10px",
-                        }}>
-                        <BeatLoader
-                          loading={rankloading}
-                          color="#2867B2"
-                          size={10}
-                        />
-                      </div>
-                    ) : (
-                      <div>{networkranks.count_rank_3} Networks</div>
-                    )}
-                  </p>
+                <div className="rankof-1">
+                  <img src={Rankminus} />
+                  <p style={{ color: "#64696C",fontWeight: "500" }}>Rank -1</p>
+                  <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>430 Networks</p>
                 </div>
-                <div className="rank2">
-                  <div>
-                    <img src={Rank2} alt="" />
-                    <p style={{ color: "#0E7C3A" }}>Level 2</p>
+                <div className="ranks">
+                  <div className="rank1">
+                    <div>
+                      <img src={Rank1} alt="" />
+                      <p style={{ color: "#6D2ED1" }}>Level 3</p>
+                    </div>
+                    <p style={{ fontSize: "17px", fontWeight: "500" }}>
+                      {rankloading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            marginTop: "10px",
+                          }}>
+                          <BeatLoader
+                            loading={rankloading}
+                            color="#2867B2"
+                            size={10}
+                          />
+                        </div>
+                      ) : (
+                        <div>{networkranks.count_rank_3} Networks</div>
+                      )}
+                    </p>
                   </div>
-                  <p style={{ fontSize: "17px", fontWeight: "500" }}>
-                    {rankloading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                          marginTop: "10px",
-                        }}>
-                        <BeatLoader
-                          loading={rankloading}
-                          color="#2867B2"
-                          size={10}
-                        />
-                      </div>
-                    ) : (
-                      <div>{networkranks.count_rank_2} Networks</div>
-                    )}
-                  </p>
-                </div>
-                <div className="rank3">
-                  <div>
-                    <img src={Rank3} alt="" />
-                    <p style={{ color: "#ED8F03" }}>Level 1</p>
+                  <div className="rank2">
+                    <div>
+                      <img src={Rank2} alt="" />
+                      <p style={{ color: "#0E7C3A" }}>Level 2</p>
+                    </div>
+                    <p style={{ fontSize: "17px", fontWeight: "500" }}>
+                      {rankloading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            marginTop: "10px",
+                          }}>
+                          <BeatLoader
+                            loading={rankloading}
+                            color="#2867B2"
+                            size={10}
+                          />
+                        </div>
+                      ) : (
+                        <div>{networkranks.count_rank_2} Networks</div>
+                      )}
+                    </p>
                   </div>
-                  <p style={{ fontSize: "17px", fontWeight: "500" }}>
-                    {rankloading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                          marginTop: "10px",
-                        }}>
-                        <BeatLoader
-                          loading={rankloading}
-                          color="#2867B2"
-                          size={10}
-                        />
-                      </div>
-                    ) : (
-                      <div>{networkranks.count_rank_1} Networks</div>
-                    )}
-                  </p>
-                </div>
-                <div className="rank4">
-                  <div>
-                    <img src={Rank4} alt="" />
-                    <p style={{ color: "#64696C" }}>Level 0</p>
+                  <div className="rank3">
+                    <div>
+                      <img src={Rank3} alt="" />
+                      <p style={{ color: "#ED8F03" }}>Level 1</p>
+                    </div>
+                    <p style={{ fontSize: "17px", fontWeight: "500" }}>
+                      {rankloading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            marginTop: "10px",
+                          }}>
+                          <BeatLoader
+                            loading={rankloading}
+                            color="#2867B2"
+                            size={10}
+                          />
+                        </div>
+                      ) : (
+                        <div>{networkranks.count_rank_1} Networks</div>
+                      )}
+                    </p>
                   </div>
-                  <p style={{ fontSize: "17px", fontWeight: "500" }}>
-                    {rankloading ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: "100%",
-                          marginTop: "10px",
-                        }}>
-                        <BeatLoader
-                          loading={rankloading}
-                          color="#2867B2"
-                          size={10}
-                        />
-                      </div>
-                    ) : (
-                      <div>{networkranks.count_rank_0} Networks</div>
-                    )}
-                  </p>
+                  <div className="rank4">
+                    <div>
+                      <img src={Rank4} alt="" />
+                      <p style={{ color: "#64696C" }}>Level 0</p>
+                    </div>
+                    <p style={{ fontSize: "17px", fontWeight: "500" }}>
+                      {rankloading ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "100%",
+                            marginTop: "10px",
+                          }}>
+                          <BeatLoader
+                            loading={rankloading}
+                            color="#2867B2"
+                            size={10}
+                          />
+                        </div>
+                      ) : (
+                        <div>{networkranks.count_rank_0} Networks</div>
+                      )}
+                    </p>
+                  </div>
                 </div>
               </>
             )}
+            </div>
           </div>
         )}
         {/* <div className="tables-page" onClick={handletable}>
