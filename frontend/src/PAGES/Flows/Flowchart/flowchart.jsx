@@ -274,7 +274,7 @@ const Flowchart = () => {
   const CalculateProgress_Person = () => {
     const { fullname, phonenumber, age, email,dob, rating, visitingcard, linkedinurl, address, shortdescription, hashtags} = personInfo;
 
-    const totalFields = 8;
+    const totalFields = 10;
 
     // if (totalFields === 0)
 
@@ -298,6 +298,9 @@ const Flowchart = () => {
     setCompletion(Completion);
     setPerson_Progress(Completion);
     
+    console.log("filledFields : ",filledFields);
+    console.log("totalFields : ",totalFields);
+    console.log("Completion : ",Completion);
     // console.log("Completion : ",Completion);
   };
 
@@ -586,7 +589,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
       Outcomeinfo
     ]);
     
-  const handleDetailsChange1 = (e) => {
+  const handleDetailsChangeonly1 = (e) => {
     const { name, value } = e.target;
     setPersoninfo((prevDetails) => ({
       ...prevDetails,
@@ -760,7 +763,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -992,7 +995,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
     e.preventDefault();
 
     let imagePreview = "";
-    const personCompletion = CalculateProgress_Person(); // Calculate the progress before sending it to the server
+    CalculateProgress_Person(); // Calculate the progress before sending it to the server
 
     if (file) {
       const formData = new FormData();
@@ -2338,6 +2341,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         <PersonDialog
           open={person}
           onClose={() => setPerson(false)}
+          personFilledFields={personFilledFields}
           experienceFilledFields={experienceFilledFields}
           companyFilledFields={companyFilledFields}
           placementFilledFields={placementFilledFields}
@@ -2345,6 +2349,9 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           internshipFilledFields={internshipFilledFields}
           alumniFilledFields={alumniFilledFields}
           outcomeFilledFields={outcomeFilledFields}
+          handleDetailsChangeonly1={handleDetailsChangeonly1}
+          handleTotalValue={handlePerson}
+          CalculateProgress_Person={CalculateProgress_Person}
           CalculateTotal_Progress={CalculateTotal_Progress}
         />
         <PreviousExperienceDialog

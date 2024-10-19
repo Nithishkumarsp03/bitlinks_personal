@@ -11,7 +11,12 @@ router.put("/internshipupload", authenticate, (req, res) => {
     Internship_Completion,
   } = req.body;
 
-  const skillsetString = Internshipinfo.skillset.join(",");
+  // const skillsetString = Internshipinfo.skillset.join(",");
+
+  const skillsetArray = Array.isArray(Internshipinfo.skillset) 
+  ? Internshipinfo.skillset 
+  : [];
+  const skillsetString = skillsetArray.join(",");
   // console.log('Skillset: ',skillsetString);
   // console.log('Domain: ',Internshipinfo.domain);
 

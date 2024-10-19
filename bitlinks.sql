@@ -524,7 +524,7 @@ CREATE TABLE `previousexperience` (
   `experience_id` int(10) UNSIGNED NOT NULL,
   `person_id` int(11) NOT NULL,
   `ifexperience` enum('yes','no') DEFAULT NULL,
-  `companyname` varchar(255) NOT NULL,
+  `companyname` varchar(255) DEFAULT NULL,
   `position` varchar(255) DEFAULT NULL,
   `experience` int(11) DEFAULT NULL,
   `role` varchar(255) DEFAULT NULL,

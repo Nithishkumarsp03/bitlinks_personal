@@ -17,11 +17,21 @@ router.put("/outcomeupload", authenticate, (req, res) => {
         SET eventname = ?, date = ?, description = ?, Outcome_Completion = ?
         WHERE person_id = ?`;
 
+        const newdate = Outcomeinfo.date;
+
+        // Check if newdate is null or undefined
+        let dateFormatted = null; // Default to null
+        if (newdate) {
+          dateFormatted = newdate.split("T")[0]; // Format the date
+        } else {
+          return res.status(400).json({ error: "Date is required." }); // Return error if date is not provided
+        }
+
     connection.query(
       sql,
       [
         Outcomeinfo.eventname,
-        Outcomeinfo.date,
+        dateFormatted,
         Outcomeinfo.description,
         Outcome_Completion,
         selectedPersonId,

@@ -11,7 +11,11 @@ router.put("/consultancyupload", authenticate, (req, res) => {
     Consultancy_Completion,
   } = req.body;
   // console.log("person_id", selectedPersonId);
-  const skillsetString = Consultancyinfo.skillset.join(",");
+  // const skillsetString = Consultancyinfo.skillset.join(",");
+  const skillsetArray = Array.isArray(Consultancyinfo.skillset) 
+  ? Consultancyinfo.skillset 
+  : [];
+  const skillsetString = skillsetArray.join(",");
   // console.log('Skillset: ',skillsetString);
   // console.log('Domain: ',Consultancyinfo.domain);
 
@@ -52,4 +56,4 @@ router.put("/consultancyupload", authenticate, (req, res) => {
     );
   });
 });
-module.exports = router; 
+module.exports = router;
