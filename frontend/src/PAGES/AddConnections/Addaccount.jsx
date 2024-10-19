@@ -487,7 +487,7 @@ const ShowAddAccount = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const formattedDate = formatDateForInput(personInfo.dob);
+  const formattedDate = formatDateForInput(personInfo.dob.split("T")[0]);
 
   const getYearDifference = (isoString) => {
     const enteredYear = new Date(isoString).getFullYear();

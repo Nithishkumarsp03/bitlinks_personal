@@ -287,7 +287,7 @@ const Subconnections = ({
     return `${year}-${month}-${day}`;
   };
 
-  const formattedDate = formatDateForInput(connectionInfo.dob);
+  const formattedDate = formatDateForInput(connectionInfo.dob.split("T")[0]);
 
   const handleRatingchange = (selectedOption) => {
     setConnectionInfo((prevDetails_1) => ({
