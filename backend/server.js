@@ -52,9 +52,13 @@ const InternshipUploadRoutes = require('./UploadData/InternshipUpload.js');
 const ExpertiseUploadRoutes = require('./UploadData/ExpertiseUpload.js');
 const FetchScheduledRoutes = require('./Calls/FetchScheduled.js');
 const AddHistoryRoutes = require('./Calls/AddHistory.js');
+const AddMinutes = require('./Calls/AddMinutes.js')
 const ScheduleRoutes = require('./Calls/Schedule.js');
 const HistoryStatusRoutes = require('./Calls/HistoryStatus.js');
 const HistoryRoutes = require('./Calls/History.js');
+const Minutes = require('./Calls/Minutes.js');
+const UpdateMinutes = require('./PostRest/UpdateMinutesPost.js');
+const UpdateSaveMinutes = require('./PostRest/UpdateSaveMinutes.js');
 const AddressDataRoutes = require('./PostRest/AddressData.js');
 const UpdateStatusAddressRoutes = require('./PostRest/UpdateStatusAddress.js');
 const AddressPostRoutes = require('./PostRest/AddressPost.js');
@@ -247,6 +251,10 @@ app.use(api,FetchScheduledRoutes);
 app.use(api,ScheduleRoutes);
 app.use(api,HistoryStatusRoutes);
 app.use(api,HistoryRoutes);
+app.use(api,Minutes);
+app.use(api,AddMinutes);
+app.use(api,UpdateMinutes);
+app.use(api,UpdateSaveMinutes);
 //-------------------------------------Wishes-------------------------------------------
 const checkAndSendWishes = () => {
   pool.getConnection((err, connection) => {

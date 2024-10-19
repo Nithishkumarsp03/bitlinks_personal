@@ -15,6 +15,7 @@ const SECRET_KEY = "your-secret-key";
 const PersonDialog = ({
   open,
   onClose,
+  personFilledFields,
   experienceFilledFields,
   companyFilledFields,
   placementFilledFields,
@@ -22,6 +23,9 @@ const PersonDialog = ({
   internshipFilledFields,
   alumniFilledFields,
   outcomeFilledFields,
+  CalculateProgress_Person,
+  handleTotalValue,
+  handleDetailsChangeonly1
 }) => {
   const decrypt = (ciphertext) => {
     if (ciphertext) {
@@ -71,7 +75,7 @@ const PersonDialog = ({
       ...prevDetails,
       [name]: value,
     }));
-    CalculateProgress_Person();
+    handleDetailsChangeonly1(e); 
   };
 
   const handleFileChange = (e) => {
@@ -138,52 +142,66 @@ const PersonDialog = ({
     setImagePreview2(null);
   };
   const handleRatingchange = (selectedOption) => {
-    setPersoninfo((prevDetails_1) => ({
-      ...prevDetails_1,
-      rating: selectedOption.value, // Store the selected value
-    }));
+    if (selectedOption) {
+      // Update the personInfo state with the selected rating
+      setPersoninfo((prevDetails) => ({
+        ...prevDetails,
+        rating: selectedOption.value, // Set the rating value
+      }));
+  
+      // Call handleDetailsChange1 with an object mimicking an event
+      handleDetailsChange1({
+        target: {
+          name: 'rating', // Specify the name of the field
+          value: selectedOption.value, // Use the selected option's value
+        },
+      });
+    }
   };
-  const CalculateProgress_Person = () => {
-    const {
-      fullname,
-      phonenumber,
-      age,
-      email,
-      dob,
-      rating,
-      linkedinurl,
-      address,
-      shortdescription,
-      hashtags,
-    } = personInfo;
+  
+  // const CalculateProgress_Person = () => {
+  //   const {
+  //     fullname,
+  //     phonenumber,
+  //     age,
+  //     email,
+  //     dob,
+  //     rating,
+  //     linkedinurl,
+  //     address,
+  //     shortdescription,
+  //     hashtags,
+  //   } = personInfo;
 
-    const totalFields = 10;
+  //   const totalFields = 10;
 
-    // if (totalFields === 0)
+  //   // if (totalFields === 0)
 
-    const filledFields =
-      (typeof fullname === "string" && fullname.trim() !== "" ? 1 : 0) +
-      (typeof phonenumber === "string" && phonenumber.trim() !== "" ? 1 : 0) +
-      (age.trim() !== "" ? 1 : 0) +
-      (typeof email === "string" && email.trim() !== "" ? 1 : 0) +
-      (typeof dob === "string" && dob.trim() !== "" ? 1 : 0) +
-      (typeof rating === "string" && rating.trim() !== "" ? 1 : 0) +
-      (typeof linkedinurl === "string" && linkedinurl.trim() !== "" ? 1 : 0) +
-      (typeof address === "string" && address.trim() !== "" ? 1 : 0) +
-      (typeof shortdescription === "string" && shortdescription.trim() !== ""
-        ? 1
-        : 0) +
-      (typeof hashtags === "string" && hashtags.trim() !== "" ? 1 : 0);
+  //   const filledFields =
+  //     (typeof fullname === "string" && fullname.trim() !== "" ? 1 : 0) +
+  //     (typeof phonenumber === "string" && phonenumber.trim() !== "" ? 1 : 0) +
+  //     (age.trim() !== "" ? 1 : 0) +
+  //     (typeof email === "string" && email.trim() !== "" ? 1 : 0) +
+  //     (typeof dob === "string" && dob.trim() !== "" ? 1 : 0) +
+  //     (typeof rating === "string" && rating.trim() !== "" ? 1 : 0) +
+  //     (typeof linkedinurl === "string" && linkedinurl.trim() !== "" ? 1 : 0) +
+  //     (typeof address === "string" && address.trim() !== "" ? 1 : 0) +
+  //     (typeof shortdescription === "string" && shortdescription.trim() !== ""
+  //       ? 1
+  //       : 0) +
+  //     (typeof hashtags === "string" && hashtags.trim() !== "" ? 1 : 0);
 
-    // Object.values(personInfo).filter(
-    //   (value) => value !== ""
-    // ).length;
-    const Completion = (filledFields / totalFields) * 100;
-    setCompletion(Completion);
-    setPerson_Progress(Completion);
+  //   // Object.values(personInfo).filter(
+  //   //   (value) => value !== ""
+  //   // ).length;
+  //   const Completion = (filledFields / totalFields) * 100;
+  //   setCompletion(Completion);
+  //   setPerson_Progress(Completion);
 
-    // console.log("Completion : ",Completion);
-  };
+  //   // console.log("filledFields : ",filledFields);
+  //   // console.log("totalFields : ",totalFields);
+  //   // console.log("Completion : ",Completion);
+  // };
   useEffect(() => {
     if (!selectedPersonId) return;
     const fetchPerson = async () => {
@@ -227,7 +245,6 @@ const PersonDialog = ({
 
     let imagePath1 = null;
     let imagePath2 = null;
-    const personCompletion = CalculateProgress_Person(); // Calculate the progress before sending it to the server
 
     if (file) {
       const formData = new FormData();
@@ -293,7 +310,10 @@ const PersonDialog = ({
       // Construct the body of the request conditionally
       const requestBody = {
         selectedPersonId,
-        personInfo,
+        personInfo: {
+          ...personInfo,
+          rating: personInfo.rating,
+        },
         imagePath1,
         imagePath2,
         Completion,
@@ -325,7 +345,8 @@ const PersonDialog = ({
 
   const CalculateTotal_Progress = () => {
     const completion =
-      Person_Progress +
+      // Person_Progress +
+      personFilledFields +
       experienceFilledFields +
       companyFilledFields +
       placementFilledFields +
@@ -349,7 +370,9 @@ const PersonDialog = ({
     return `${year}-${month}-${day}`;
   };
 
-  const formattedDate = formatDateForInput(personInfo.dob);
+  const formattedDate = formatDateForInput(personInfo.dob.split("T")[0]);
+
+  // const formattedDate = formatDateForInput(personInfo.dob);
 
   const [showPopup, setShowPopup] = useState(false);
   const options = [
@@ -362,8 +385,18 @@ const PersonDialog = ({
     setShowPopup(false);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handlePerson(event);
+      handleTotalValue(event);
+      CalculateProgress_Person();
+      CalculateTotal_Progress();
+    }
+  };
+
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} onKeyDown={handleKeyPress}>
       <div
         className="dialogue-addaccount"
         style={{
@@ -391,7 +424,7 @@ const PersonDialog = ({
               borderStyle: "solid",
             }}
             value={personInfo.fullname || ""}
-            onChange={handleDetailsChange1}
+            onChange={(e) => handleDetailsChange1(e)}
           />
           <div>
             <input
@@ -601,7 +634,7 @@ const PersonDialog = ({
             onClick={(event) => {
               event.preventDefault(); // Prevent default behavior if necessary
               handlePerson(event);
-              // handleTotalValue(event);
+              handleTotalValue(event);
               CalculateProgress_Person();
               CalculateTotal_Progress();
             }}

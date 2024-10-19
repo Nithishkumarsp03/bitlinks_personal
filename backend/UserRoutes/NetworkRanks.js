@@ -8,7 +8,8 @@ router.post("/networkranks", authenticate, (req, res) => {
       COUNT(CASE WHEN pps.rank = 3 THEN 1 END) AS count_rank_3,
       COUNT(CASE WHEN pps.rank = 2 THEN 1 END) AS count_rank_2,
       COUNT(CASE WHEN pps.rank = 1 THEN 1 END) AS count_rank_1,
-      COUNT(CASE WHEN pps.rank = 0 THEN 1 END) AS count_rank_0
+      COUNT(CASE WHEN pps.rank = 0 THEN 1 END) AS count_rank_0,
+      COUNT(CASE WHEN pps.rank = -1 THEN 1 END) AS count_rank_minus
     FROM person_points_summary pps
     JOIN personalinfo p ON pps.person_id = p.person_id
   `;

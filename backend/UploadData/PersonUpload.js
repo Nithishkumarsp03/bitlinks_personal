@@ -27,7 +27,8 @@ router.put("/personupload", authenticate, (req, res) => {
       personInfo.phonenumber,
       personInfo.age,
       personInfo.email,
-      personInfo.dob,
+      // personInfo.dob,
+      personInfo.dob ? new Date(personInfo.dob).toISOString().split('T')[0] : null,
       personInfo.rating,
       imagePath2,
       personInfo.linkedinurl,
@@ -56,7 +57,8 @@ router.put("/personupload", authenticate, (req, res) => {
       }
 
       // Second query: Update person_points_summary table with rank
-      let rankSql = `UPDATE person_points_summary SET rank = ? WHERE person_id = ?`;
+      // let rankSql = `UPDATE person_points_summary SET rank = ? WHERE person_id = ?`;
+      let rankSql = `UPDATE person_points_summary SET \`rank\` = ? WHERE person_id = ?`;
       let rankParams = [personInfo.rank, selectedPersonId];
 
       connection.query(rankSql, rankParams, (err, rankResults) => {

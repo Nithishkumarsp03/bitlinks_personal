@@ -3,7 +3,7 @@ const router = express.Router();
 const pool = require("../config.js"); 
 const authenticate = require("../Authenticate.js"); 
 
-router.post("/userranks", (req, res) => {
+router.post("/userranks", authenticate,(req, res) => {
   const { email } = req.body; // Assuming email is passed as a query parameter
 
   const query = `
@@ -11,7 +11,8 @@ router.post("/userranks", (req, res) => {
       COUNT(CASE WHEN pps.rank = 3 THEN 1 END) AS count_rank_3,
       COUNT(CASE WHEN pps.rank = 2 THEN 1 END) AS count_rank_2,
       COUNT(CASE WHEN pps.rank = 1 THEN 1 END) AS count_rank_1,
-      COUNT(CASE WHEN pps.rank = 0 THEN 1 END) AS count_rank_0
+      COUNT(CASE WHEN pps.rank = 0 THEN 1 END) AS count_rank_0,
+      COUNT(CASE WHEN pps.rank = -1 THEN 1 END) AS count_rank_minus
     FROM person_points_summary pps
     LEFT JOIN personalinfo p ON pps.person_id = p.person_id
     WHERE p.useremail = ?;
