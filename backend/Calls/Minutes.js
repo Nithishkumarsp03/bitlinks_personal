@@ -5,8 +5,7 @@ const authenticate = require("../Authenticate.js");
 
 router.post("/minutes",authenticate, (req, res) => {
   const { selectedPersonId } = req.body;
-  const query = `SELECT * from minutes WHERE person_id = ?`
-  ;
+  const query = `SELECT * from minutes WHERE person_id = ? ORDER BY id DESC`;
 
   pool.query(query, [selectedPersonId], (err, results) => {
     if (err) {

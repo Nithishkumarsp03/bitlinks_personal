@@ -1,10 +1,11 @@
 .minutes-container{ 
   width: 90%;
-  height: 56vh;
+  height: 52vh;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
   font-family: 'Inter', sans-serif;
+  /* background-color: #218838; */
 }
 
 .minutes-container::-webkit-scrollbar {
@@ -161,4 +162,20 @@
   width: 92%;
   gap: 1rem;
   margin-bottom: 3%;
+}
+
+.add-button-minutes{
+  width: 20%;
+  display: contents;
+  justify-self: center;
+  align-self: center;
+}
+.add-button-minutes:hover{
+  background-color: rgb(62, 83, 152);
+}
+
+.edit-button{
+  border: none;
+  background-color: white;
+  font-size: 15px;
 }

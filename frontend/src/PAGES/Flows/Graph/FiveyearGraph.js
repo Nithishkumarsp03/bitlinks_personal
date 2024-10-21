@@ -172,7 +172,7 @@ const token = decrypt(Cookies.get("token"));
         </div>
       </div>
       {seriesData.length > 0 ? (
-        <ReactApexChart options={options} series={seriesData} type="bar" height={350} />
+        <ReactApexChart options={options} series={seriesData} type="bar" height={300} />
       ) : (
         // Check CSS in Home.css
         <div className='empty-error'>
