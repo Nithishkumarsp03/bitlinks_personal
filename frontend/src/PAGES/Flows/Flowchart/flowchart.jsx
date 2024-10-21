@@ -281,7 +281,7 @@ const Flowchart = () => {
     const filledFields = 
     (typeof fullname === 'string' && fullname.trim() !== "" ? 1 : 0) +
     (typeof phonenumber === 'string' && phonenumber.trim() !== "" ? 1 : 0) +
-    (age.trim() !== "" ? 1 : 0) + 
+    // (age.trim() !== "" ? 1 : 0) + 
     (typeof email === 'string' && email.trim() !== "" ? 1 : 0) +
     (typeof dob === 'string' && dob.trim() !== "" ? 1 : 0) +
     (typeof rating === 'string' && rating.trim() !== "" ? 1 : 0) +

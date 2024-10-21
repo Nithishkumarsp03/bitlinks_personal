@@ -5,14 +5,14 @@ const authenticate = require("../Authenticate.js");
 
 
 router.post( "/addminutes", authenticate, (req, res) => {
-  const {selectedPersonId, username, minutes, deadline} = req.body;
+  const {selectedPersonId, username, minutes, deadline, handler} = req.body;
 
 //   console.log('Original data received:', req.body);
     let status = "pending"
 
   const query = `
-    INSERT INTO minutes (person_id, agent, minutes, status, deadline)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO minutes (person_id, agent, minutes, status, handler, deadline)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
 
   // Execute the SQL query
@@ -23,6 +23,7 @@ router.post( "/addminutes", authenticate, (req, res) => {
       username,
       minutes,
       status,
+      handler,
       deadline
     ],
     (err, result) => {

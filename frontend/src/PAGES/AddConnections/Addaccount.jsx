@@ -805,12 +805,12 @@ const ShowAddAccount = () => {
               value={personInfo.hashtags}
               onChange={handleDetailsChange_1}
             />
-            <div id="spoc-input">
+            {/* <div id="spoc-input">
               Do you want to push this contact to rank 0{" "}
               <div onClick={handleSwitchChange}>
                 <CustomizedSwitches checked={checked} />
               </div>{" "}
-            </div>
+            </div> */}
           </div>
           <p style={{ color: "green" }}>{error}</p>
           <div id="buttonContainer-flowchart-person">

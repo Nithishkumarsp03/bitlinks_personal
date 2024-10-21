@@ -176,12 +176,12 @@
 
 .add-button-minutes{
   width: 20%;
-  display: contents;
-  /* justify-self: center; */
-  align-self: end;
-}
-.add-button-minutes:hover{
-  background-color: rgb(62, 83, 152);
+  /* display: contents; */
+  background-color: #2867b2;
+  color: white;
+  margin-left: auto;
+  margin-right: 0;
+  /* align-self: end; */
 }
 
 .edit-button{

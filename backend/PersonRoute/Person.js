@@ -184,12 +184,12 @@ router.post( "/person", authenticate, (req, res) => {
       );
 
       const pointsSummary = `
-        INSERT INTO person_points_summary (person_id, last_updated)
-        VALUES (?, NOW())
+        INSERT INTO person_points_summary (person_id, rank, last_updated)
+        VALUES (?, ?, NOW())
       `;
       insertions.push(
         new Promise((resolve, reject) => {
-          connection.query(pointsSummary, [personId], (err) => {
+          connection.query(pointsSummary, [personId, 0], (err) => {
             if (err) reject(err);
             resolve();
           });

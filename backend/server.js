@@ -79,6 +79,7 @@ const LoginDataRoutes = require('./TableData/LoginData.js');
 const UpdateStatusLoginRoutes = require('./PostRest/UpdateStatusLogin.js');
 const LoginPostRoutes = require('./PostRest/LoginPost.js');
 const InteractionsRoutes = require('./PostRest/Interactions.js');
+const Spoc = require('./UserRoutes/Spoc.js')
 // Middleware function example
 const myMiddleware = (req, res, next) => {
   next(); // Pass control to the next middleware function
@@ -433,6 +434,7 @@ app.use(api,LoginDataRoutes);
 app.use(api,UpdateStatusLoginRoutes);
 app.use(api,LoginPostRoutes);
 app.use(api,InteractionsRoutes);
+app.use(api,Spoc);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

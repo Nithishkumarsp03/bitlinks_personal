@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { usePerson } from "../../../COMPONENTS/Context";
 import BeatLoader from "../../../COMPONENTS/BeatLoader";
+import MinutesDropdown from "../../../Dropdown/MinutesDropdown";
 import "./Minutes.css";
 import "../MainFlow/Flows.css";
 
@@ -23,6 +24,7 @@ export default function Minutes() {
   const [editData, setEditData] = useState({
     minutes: "",
     deadline: "",
+    person: "",
   });
   const [dialogOpen, setDialogOpen] = useState(false); // For managing the dialog state
   const [commentDialogOpen, setCommentDialogOpen] = useState(false); // For managing comment dialog
@@ -31,6 +33,7 @@ export default function Minutes() {
   const [addopen, setAddopen] = useState(false);
   const [minutes, setMinutes] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [handler, setHandler] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [statusloading, setStatusloading] = useState(false);
@@ -53,6 +56,11 @@ export default function Minutes() {
   const api = process.env.REACT_APP_API;
   const token = decrypt(Cookies.get("token"));
   const username = decrypt(Cookies.get("name"));
+
+  const handleChange = (selectedOption) => {
+    setHandler(selectedOption ? selectedOption.value : null);
+  };
+
 
   const fetchMinutes = async () => {
     setLoading(true);
@@ -121,6 +129,7 @@ export default function Minutes() {
     setEditData({
       minutes: currentMinute.minutes,
       deadline: formattedDate, // Date with one day added
+      person: currentMinute.handler,
     });
 
     setIsEditing(id);
@@ -140,6 +149,7 @@ export default function Minutes() {
           id: isEditing,
           minutes: editData.minutes,
           deadline: editData.deadline,
+          handler: editData.person,
         }),
       });
       if (res.ok) {
@@ -172,16 +182,26 @@ export default function Minutes() {
 
   const handleCommentSave = () => {
     if (comment.trim()) {
-      updateStatus(isEditing, "Impossible", comment); // Pass comment while updating status
+      updateStatus(isEditing, "Requested", comment); // Pass comment while updating status
     } else {
       alert("Please enter a comment before submitting.");
     }
   };
 
   const handleaddminutes = async () => {
+
+    console.log(handler);
     setAddloading(true);
-    if (minutes === "" && deadline === "") {
-      setError("Please enter minutes and deadline before submitting.");
+    if (minutes === "") {
+      setError("Please enter minutes before submitting.");
+      return;
+    }
+    else if(deadline === ""){
+      setError("Please select the date before Submitting");
+      return;
+    }
+    else if(handler === ""){
+      setError("Please select the person for the Minute")
       return;
     }
     try {
@@ -191,13 +211,14 @@ export default function Minutes() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ selectedPersonId, username, minutes, deadline }),
+        body: JSON.stringify({ selectedPersonId, username, minutes, deadline, handler }),
       });
       if (res.ok) {
         setAddloading(false);
         fetchMinutes();
         setMinutes("");
         setDeadline("");
+        setHandler("")
         setError("");
         setAddopen(false);
       }
@@ -206,6 +227,7 @@ export default function Minutes() {
       console.error("Error adding minutes");
     }
   };
+
 
   const sortedMinutesList = minutesList.sort((a, b) => {
     const statusOrder = {
@@ -230,7 +252,9 @@ export default function Minutes() {
         </div>
       ) : (
         <div className="minutes-container">
-          <Button onClick={() => setAddopen(true)} className="add-button-minutes" sx={{backgroundColor: "#0056b3  ",color: "white",marginRight: "8%"}}>Add</Button>
+          <div style={{display: "flex", justifyContent: "end", marginRight: "20px"}}>
+            <Button onClick={() => setAddopen(true)} className="add-button-minutes">Add</Button>
+          </div>
           <ul className="minutes-list">
             {sortedMinutesList.map((item) => (
               <li
@@ -264,7 +288,7 @@ export default function Minutes() {
                     <>
                       <button
                         className="status-button complete-button"
-                        onClick={() => updateStatus(item.id, "Completed")}
+                        onClick={() => updateStatus(item.id, "Requested")}
                         disabled={item.status !== "pending"} // Disable if status is not "pending"
                       >
                         Mark as Completed
@@ -294,17 +318,21 @@ export default function Minutes() {
       <Dialog open={addopen} onClose={() => setAddopen(false)}>
         <DialogTitle>Add Minutes</DialogTitle>
         <DialogContent>
+
           <TextField
             margin="dense"
             label="Minutes"
             fullWidth
             value={minutes}
+            autoComplete="off"
             onChange={(e) => setMinutes(e.target.value)}
           />
           <TextField
             margin="dense"
             label="Deadline"
+            autoComplete="off"
             type="date"
+            required
             fullWidth
             InputLabelProps={{
               shrink: true,
@@ -312,16 +340,15 @@ export default function Minutes() {
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
           />
-          <TextField
-            margin="dense"
-            label="Target Person"
-            fullWidth
-          />
+          <MinutesDropdown handleChange={handleChange} />
+          
         </DialogContent>
+        <p style={{textAlign: "center", fontWeight: "500", color: "red"}}>{error}</p>
         <DialogActions>
           <Button onClick={() => setAddopen(false)}>Cancel</Button>
           <Button onClick={handleaddminutes}>Submit</Button>
         </DialogActions>
+        
       </Dialog>
 
       {/* Edit minutes dialog */}
@@ -332,6 +359,7 @@ export default function Minutes() {
             margin="dense"
             label="Minutes"
             fullWidth
+            autoComplete="off"
             name="minutes"
             value={editData.minutes}
             onChange={handleInputChange}
@@ -351,7 +379,11 @@ export default function Minutes() {
           <TextField
             margin="dense"
             label="Target Person"
+            name="person"
+            value={editData.person}
+            autoComplete="off"
             fullWidth
+            onChange={handleInputChange}
           />
         </DialogContent>
         <DialogActions>
@@ -363,7 +395,9 @@ export default function Minutes() {
       {/* Comment dialog for Impossible button */}
       <Dialog
         open={commentDialogOpen}
-        onClose={() => setCommentDialogOpen(false)}>
+        onClose={() => setCommentDialogOpen(false)}
+        maxWidth="lg"
+        >
         <DialogTitle>Enter Comment</DialogTitle>
         <DialogContent>
           <TextField

@@ -4,9 +4,9 @@ const pool = require("../config.js");
 const authenticate = require("../Authenticate.js"); 
 
 router.put( "/updatesaveminutes", authenticate, (req, res) => {
-  const { id, minutes, deadline } = req.body;
+  const { id, minutes, deadline, handler } = req.body;
 //   console.log(req.body)
-  const query = "UPDATE minutes SET minutes = ?, deadline = ? WHERE id = ?";
+  const query = "UPDATE minutes SET minutes = ?, deadline = ?, handler = ? WHERE id = ?";
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -14,7 +14,7 @@ router.put( "/updatesaveminutes", authenticate, (req, res) => {
       return res.status(500).json({ message: "Database error" });
     }
 
-    connection.query(query, [minutes, deadline, id], (err, results) => {
+    connection.query(query, [minutes, deadline, handler, id], (err, results) => {
       connection.release(); // Release the connection back to the pool
       if (err) {
         console.error("Error updating status:", err);

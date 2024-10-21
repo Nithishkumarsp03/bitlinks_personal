@@ -136,10 +136,10 @@ const Subconnections = ({
       // Update the 'spoc' field in personInfo based on new state
       setConnectionInfo((prevInfo) => ({
         ...prevInfo,
-        rank: newChecked ? -1 : 0, // Set "yes" for true, "no" for false
+        rank: newChecked ? 0 : -1, // Set "yes" for true, "no" for false
       }));
   
-      console.log("rank will be:", newChecked ? -1 : 0);
+      console.log("rank will be:", newChecked ? 0 : -1);
   
       return newChecked;
     });

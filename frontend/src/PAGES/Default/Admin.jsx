@@ -1425,7 +1425,7 @@ export default function Default(subPersonId) {
                                                     ? Rank2
                                                   : connection.rank === 1
                                                     ? Rank3
-                                                  :connection.rank === 4
+                                                  :connection.rank === 0
                                                     ? Rank4
                                                   : Rankminus
                                                 }
@@ -1762,7 +1762,7 @@ export default function Default(subPersonId) {
                                                     ? Rank2
                                                   : connection.rank === 1
                                                     ? Rank3
-                                                  :connection.rank === 4
+                                                  :connection.rank === 0
                                                     ? Rank4
                                                   : Rankminus
                                                 }
