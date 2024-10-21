@@ -9,12 +9,39 @@ import "./Login.css";
 import { useGoogleLogin } from '@react-oauth/google';
 import axios from "axios";
 import PreLoader from "../../COMPONENTS/PreLoader";
+import CryptoJS from "crypto-js";
+
+const SECRET_KEY = "your-secret-key";
 
 export default function Login({ onLogin }) {
+
+  const decrypt = (ciphertext) => {
+    try {
+      if (ciphertext) {
+        const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      }
+      return "";
+    } catch (error) {
+      console.error("Decryption error:", error.message);
+      return "";
+    }
+  };
+  const token = decrypt(Cookies.get("token"));
+  const role = decrypt(Cookies.get("role"));
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // State for preloader
+
+  useEffect(()=>{
+    if(token && role === 'admin'){
+      navigate('/bitcontacts/dashboard/admin');
+    }
+    else if(token && role === 'user'){
+      navigate('/bitcontacts/dashboard');
+    }
+  })
 
   const login = () => {
     window.location.href = `${process.env.REACT_APP_API}/google`;

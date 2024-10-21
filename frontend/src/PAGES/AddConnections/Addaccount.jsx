@@ -9,6 +9,7 @@ import Textarea from "@mui/joy/Textarea";
 import Profile from "../../Assets/Profile.png";
 import "react-circular-progressbar/dist/styles.css";
 import Subconnections from "../../COMPONENTS/Dialogue/Subconnections";
+import CustomizedSwitches from "../../utils/Switch";
 import { usePerson } from "../../COMPONENTS/Context";
 import { easeQuadInOut } from "d3-ease";
 import {
@@ -51,6 +52,7 @@ const ShowAddAccount = () => {
   const [SubCompletion, setSubCompletion] = useState(0);
   const [SubTotal_Progress, setSubTotal_Progress] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [checked, setChecked] = useState(false);
   // const [SubConnections, setsubconnections] = useState();
 
   const [personInfo, setPersonInfo] = useState({
@@ -65,6 +67,7 @@ const ShowAddAccount = () => {
     address: "",
     shortdescription: "",
     hashtags: "",
+    spoc: "",
   });
 
   const [connectionInfo, setConnectionInfo] = useState({
@@ -72,13 +75,14 @@ const ShowAddAccount = () => {
     phonenumber: "",
     age: "",
     email: "",
-    dob: "",  
+    dob: "",
     rating: "",
     visitingcard: "",
     linkedinurl: "",
     address: "",
     shortdescription: "",
     hashtags: "",
+    rank: "",
   });
   // console.log('add')
 
@@ -98,13 +102,33 @@ const ShowAddAccount = () => {
     }));
   };
 
+  useEffect(() => {
+    console.log("spoc updated:", personInfo.spoc);
+  }, [personInfo.spoc]);
+
+  const handleSwitchChange = () => {
+    setChecked((prevChecked) => {
+      const newChecked = !prevChecked;
+
+      // Update the 'spoc' field in personInfo based on new state
+      setPersonInfo((prevInfo) => ({
+        ...prevInfo,
+        spoc: newChecked ? "yes" : "no", // Set "yes" for true, "no" for false
+      }));
+
+      console.log("spoc will be:", newChecked ? "yes" : "no");
+
+      return newChecked;
+    });
+  };
+
   const location = useLocation();
   const subConnections = location.state?.subConnections;
 
   // console.log('SubConnections:', subConnections);
 
   const handlePersonInput = () => {
-    console.log('inside')
+    console.log("inside");
     if (subConnections === 1) {
       setPerson_1(true);
     } else if (subConnections === 2) {
@@ -223,9 +247,15 @@ const ShowAddAccount = () => {
     let imagePath2 = null;
 
     // Check if the required fields are filled
-    if (personInfo.fullname === "" || personInfo.phonenumber === "") {
-      setError("Name and Phonenumber are required to create a connection");
-      return;
+    if (personInfo.fullname === "") {
+      setError("Contact name cannot be null");
+      return; // Stop the function if fullname is empty
+    } else if (personInfo.phonenumber === "") {
+      setError("Phonenumber cannot be null");
+      return; // Stop the function if phonenumber is empty
+    } else if (personInfo.email === "") {
+      setError("Email cannot be null");
+      return; // Stop the function if email is empty
     }
 
     // Upload the first image if it exists
@@ -457,14 +487,14 @@ const ShowAddAccount = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const formattedDate = formatDateForInput(personInfo.dob);
+  const formattedDate = formatDateForInput(personInfo.dob.split("T")[0]);
 
   const getYearDifference = (isoString) => {
     const enteredYear = new Date(isoString).getFullYear();
     const currentYear = new Date().getFullYear();
     return currentYear - enteredYear;
   };
-  
+
   const yearDifference = getYearDifference(personInfo.dob);
   console.log(`The difference in years is: ${yearDifference}`);
   personInfo.age = yearDifference;
@@ -478,9 +508,9 @@ const ShowAddAccount = () => {
   const handleRatingchange = (selectedOption) => {
     setPersonInfo((prevDetails_1) => ({
       ...prevDetails_1,
-      rating: selectedOption.value,  // Store the selected value
+      rating: selectedOption.value, // Store the selected value
     }));
-  }
+  };
 
   return (
     <div className="add-account-main">
@@ -565,15 +595,17 @@ const ShowAddAccount = () => {
           </a1>
         </div>
       </div>
-      <Dialog open={person_1} onClose={() => setPerson_1(false)}>
-        <div
-          className="dialogue"
-          style={{
-            gap: "15px",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+      <Dialog
+        open={person_1}
+        onClose={() => setPerson_1(false)}
+        style={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div className="dialogue-addaccount">
           <h3
             style={{
               fontSize: "25px",
@@ -746,7 +778,9 @@ const ShowAddAccount = () => {
               <Select
                 options={options}
                 onChange={handleRatingchange}
-                value={options.find(option => option.value === personInfo.rating)}
+                value={options.find(
+                  (option) => option.value === personInfo.rating
+                )}
                 name="rating"
               />
             </div>
@@ -771,19 +805,25 @@ const ShowAddAccount = () => {
               value={personInfo.hashtags}
               onChange={handleDetailsChange_1}
             />
+            <div id="spoc-input">
+              Do you want to push this contact to rank 0{" "}
+              <div onClick={handleSwitchChange}>
+                <CustomizedSwitches checked={checked} />
+              </div>{" "}
+            </div>
           </div>
           <p style={{ color: "green" }}>{error}</p>
           <div id="buttonContainer-flowchart-person">
             <button
               onClick={() => setPerson_1(false)}
               color="primary"
-              id="discard-flowchart-person-new"
+              className="addconnection-discard-but"
             >
               Discard
             </button>
             <button
               color="primary"
-              id="save-flowchart-person-new"
+              className="addconnection-create-but"
               onClick={(event) => {
                 event.preventDefault();
                 handleSubmit(event);

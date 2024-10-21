@@ -34,19 +34,19 @@
 }
 
 .flow-graph.expanded {
-  height: 66vh;
+  height: 60vh;
   /* height: 390; */
   border-radius: 10px;
   /* display: flex; */
 }
 
 .flow-history.expanded {
-  height: 66vh;
+  height: 60vh;
   border-radius: 10px;
 }
 
 .flow-chart.expanded {
-  height: 66vh;
+  height: 60.9vh;
   border-radius: 10px;
   /* background-color: aquamarine; */
 }

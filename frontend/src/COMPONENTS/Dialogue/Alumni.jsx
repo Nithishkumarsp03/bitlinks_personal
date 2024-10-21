@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, Box } from '@mui/material';
 import Textarea from "@mui/joy/Textarea";
 import Input from '@mui/joy/Input';
-import AddressDropdown from './AddressDropdown';
+import AddressDropdown from '../../Dropdown/AddressDropdown';
 
 const AlumniDialog = ({ open, onClose, Alumniinfo, handleDetailsChange5, error, handleAlumni,handleTotalValue, CalculateProgress_Alumni, CalculateTotal_Progress }) => {
   

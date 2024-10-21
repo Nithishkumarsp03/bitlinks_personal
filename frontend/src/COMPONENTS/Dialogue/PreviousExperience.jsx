@@ -1,9 +1,9 @@
 import React from 'react';
 import { Dialog, Box } from '@mui/material';
 import Input from '@mui/joy/Input';
-import RoleDropdown from './RoleDropdown';
-import CompanyDropdown from './CompanyDropdown';
-import AddressDropdown from './AddressDropdown';
+import RoleDropdown from '../../Dropdown/RoleDropdown';
+import CompanyDropdown from '../../Dropdown/CompanyDropdown';
+import AddressDropdown from '../../Dropdown/AddressDropdown';
 
 const PreviousExperienceDialog = ({
   open,

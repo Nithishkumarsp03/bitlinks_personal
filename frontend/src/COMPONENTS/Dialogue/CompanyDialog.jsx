@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, Box } from '@mui/material';
 import Textarea from "@mui/joy/Textarea";
 import Input from '@mui/joy/Input';
-import CompanyDropdown from './CompanyDropdown';
-import RoleDropdown from './RoleDropdown';
-import AddressDropdown from './AddressDropdown';
+import CompanyDropdown from '../../Dropdown/CompanyDropdown';
+import RoleDropdown from '../../Dropdown/RoleDropdown';
+import AddressDropdown from '../../Dropdown/AddressDropdown';
 import Select from 'react-select';
 
 const CompanyDialog = ({ open, onClose, CompanyInfo, handleDetailsChange3, error, handleCompany, handleTotalValue, CalculateProgress_Company, CalculateTotal_Progress }) => {

@@ -6,6 +6,7 @@ import History from "../History/History";
 import ApexChartMonthlyGraph from "../Graph/MonthlyGraph";
 import ApexChartfiveYearlyGraph from "../Graph/FiveyearGraph";
 import ApexChartYearlyGraph from "../Graph/YearlyGraph";
+import Minutes from "../Minutes/Minutes";
 import { usePerson } from "../../../COMPONENTS/Context";
 import Cancel from "../../../Assets/cancel.png";
 import CryptoJS from 'crypto-js';
@@ -13,7 +14,7 @@ import Cookies from 'js-cookie';
 
 const SECRET_KEY = 'your-secret-key';
 
-export default function MainFlow({ subPersonId , handlecancelflows, fetchRescheduleData, fetchRescheduleDataNetworks}) {
+export default function MainFlow({ subPersonId ,fetchPersonalInfo, fetchUserNetworks, handlecancelflows, fetchRescheduleData, fetchRescheduleDataNetworks}) {
   const [activeFlow, setActiveFlow] = useState("history"); // Default to "graph"
   const [activeGraph, setActiveGraph] = useState("monthly");
   const { selectedPersonId, setSelectedPersonId } = usePerson();
@@ -111,6 +112,28 @@ export default function MainFlow({ subPersonId , handlecancelflows, fetchResched
             </div>
           )}
         </div>
+        {/* **************************** */}
+        <div
+          onClick={() => handleFlowClick("minutes")}
+          className={`flow-history ${activeFlow === "minutes" ? "expanded" : ""}`}>
+          <p className={`flow-titles1 ${activeFlow === "minutes" ? "expanded" : "" }`}>
+            
+            {activeFlow === "minutes" && (<i
+          class="fa-solid fa-arrow-left"
+              alt="cancel-img"
+              style={{ width: "3%", marginRight: "75%",cursor: "pointer" }}
+              onClick={handlecancelflows}
+            />)}
+            Minutes of Meeting
+          </p>
+          {activeFlow === "minutes" && (
+            <div style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+              <Minutes />
+            </div>
+          )}
+        </div>
+        {/* **************************** */}
+
         <div
           onClick={() => handleFlowClick("history")}
           className={`flow-history ${
@@ -131,7 +154,7 @@ export default function MainFlow({ subPersonId , handlecancelflows, fetchResched
             {/* <div className={`history-add-main ${activeFlow === "history" ? "expanded" : ""}`}> */}
           </div>
           {/* </div> */}
-          {activeFlow === "history" && <History fetchRescheduleData={fetchRescheduleData} fetchRescheduleDataNetworks={fetchRescheduleDataNetworks}/>}
+          {activeFlow === "history" && <History fetchPersonalInfo={fetchPersonalInfo} fetchUserNetworks={fetchUserNetworks} fetchRescheduleData={fetchRescheduleData} fetchRescheduleDataNetworks={fetchRescheduleDataNetworks}/>}
         </div>
         <div
           onClick={() => handleFlowClick("chart")}

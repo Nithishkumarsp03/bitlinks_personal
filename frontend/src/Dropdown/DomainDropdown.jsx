@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
 import { FormControl } from '@mui/material';
 
-const SECRET_KEY = 'your-secret-key';
+const SECRET_KEY = 'your-secret-key'; 
 
 const DomainDropdown = ({ value, onChange, onTextChange = () => {} }) => {
     const [domains, setDomains] = useState([]);

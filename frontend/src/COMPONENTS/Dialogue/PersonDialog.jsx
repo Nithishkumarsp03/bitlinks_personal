@@ -8,12 +8,14 @@ import { usePerson } from "../Context";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 import Profile from "../../Assets/Profile.png";
+import CustomizedSwitches from "../../utils/Switch";
 
 const SECRET_KEY = "your-secret-key";
 
 const PersonDialog = ({
   open,
   onClose,
+  personFilledFields,
   experienceFilledFields,
   companyFilledFields,
   placementFilledFields,
@@ -21,6 +23,9 @@ const PersonDialog = ({
   internshipFilledFields,
   alumniFilledFields,
   outcomeFilledFields,
+  CalculateProgress_Person,
+  handleTotalValue,
+  handleDetailsChangeonly1
 }) => {
   const decrypt = (ciphertext) => {
     if (ciphertext) {
@@ -43,7 +48,9 @@ const PersonDialog = ({
     shortdescription: "",
     Completion: "",
     hashtags: "",
+    rank: "",
   });
+  // console.log("Rank is: ",personInfo.rank);
   const token = decrypt(Cookies.get("token"));
   const [Completion, setCompletion] = useState(0);
   const [Progress, setProgress] = useState(0);
@@ -58,6 +65,7 @@ const PersonDialog = ({
   const [previewUrl1, setPreviewUrl1] = useState(null);
   const [previewUrl2, setPreviewUrl2] = useState(null);
   const [cardAdded, setCardAdded] = useState(false);
+  const [checked, setChecked] = useState(false);
   const fileInputRef = useRef(null);
   const fileInputRef2 = useRef(null);
 
@@ -67,7 +75,7 @@ const PersonDialog = ({
       ...prevDetails,
       [name]: value,
     }));
-    CalculateProgress_Person();
+    handleDetailsChangeonly1(e); 
   };
 
   const handleFileChange = (e) => {
@@ -96,8 +104,25 @@ const PersonDialog = ({
       reader.readAsDataURL(selectedFile);
     }
   };
+
+  const handleSwitchChange = () => {
+    setChecked((prevChecked) => {
+      const newChecked = !prevChecked;
+  
+      // Update the 'spoc' field in personInfo based on new state
+      setPersoninfo((prevInfo) => ({
+        ...prevInfo,
+        rank: newChecked ? 0 : -1, // Set "yes" for true, "no" for false
+      }));
+  
+      console.log("rank will be:", newChecked ? 0 : -1);
+  
+      return newChecked;
+    });
+  };
+
   const handleClickOpen2 = () => {
-    console.log('clicked')
+    // console.log("clicked");
     if (fileInputRef2.current) {
       fileInputRef2.current.click();
     }
@@ -117,52 +142,66 @@ const PersonDialog = ({
     setImagePreview2(null);
   };
   const handleRatingchange = (selectedOption) => {
-    setPersoninfo((prevDetails_1) => ({
-      ...prevDetails_1,
-      rating: selectedOption.value, // Store the selected value
-    }));
+    if (selectedOption) {
+      // Update the personInfo state with the selected rating
+      setPersoninfo((prevDetails) => ({
+        ...prevDetails,
+        rating: selectedOption.value, // Set the rating value
+      }));
+  
+      // Call handleDetailsChange1 with an object mimicking an event
+      handleDetailsChange1({
+        target: {
+          name: 'rating', // Specify the name of the field
+          value: selectedOption.value, // Use the selected option's value
+        },
+      });
+    }
   };
-  const CalculateProgress_Person = () => {
-    const {
-      fullname,
-      phonenumber,
-      age,
-      email,
-      dob,
-      rating,
-      linkedinurl,
-      address,
-      shortdescription,
-      hashtags,
-    } = personInfo;
+  
+  // const CalculateProgress_Person = () => {
+  //   const {
+  //     fullname,
+  //     phonenumber,
+  //     age,
+  //     email,
+  //     dob,
+  //     rating,
+  //     linkedinurl,
+  //     address,
+  //     shortdescription,
+  //     hashtags,
+  //   } = personInfo;
 
-    const totalFields = 10;
+  //   const totalFields = 10;
 
-    // if (totalFields === 0)
+  //   // if (totalFields === 0)
 
-    const filledFields =
-      (typeof fullname === "string" && fullname.trim() !== "" ? 1 : 0) +
-      (typeof phonenumber === "string" && phonenumber.trim() !== "" ? 1 : 0) +
-      (age.trim() !== "" ? 1 : 0) +
-      (typeof email === "string" && email.trim() !== "" ? 1 : 0) +
-      (typeof dob === "string" && dob.trim() !== "" ? 1 : 0) +
-      (typeof rating === "string" && rating.trim() !== "" ? 1 : 0) +
-      (typeof linkedinurl === "string" && linkedinurl.trim() !== "" ? 1 : 0) +
-      (typeof address === "string" && address.trim() !== "" ? 1 : 0) +
-      (typeof shortdescription === "string" && shortdescription.trim() !== ""
-        ? 1
-        : 0) +
-      (typeof hashtags === "string" && hashtags.trim() !== "" ? 1 : 0);
+  //   const filledFields =
+  //     (typeof fullname === "string" && fullname.trim() !== "" ? 1 : 0) +
+  //     (typeof phonenumber === "string" && phonenumber.trim() !== "" ? 1 : 0) +
+  //     (age.trim() !== "" ? 1 : 0) +
+  //     (typeof email === "string" && email.trim() !== "" ? 1 : 0) +
+  //     (typeof dob === "string" && dob.trim() !== "" ? 1 : 0) +
+  //     (typeof rating === "string" && rating.trim() !== "" ? 1 : 0) +
+  //     (typeof linkedinurl === "string" && linkedinurl.trim() !== "" ? 1 : 0) +
+  //     (typeof address === "string" && address.trim() !== "" ? 1 : 0) +
+  //     (typeof shortdescription === "string" && shortdescription.trim() !== ""
+  //       ? 1
+  //       : 0) +
+  //     (typeof hashtags === "string" && hashtags.trim() !== "" ? 1 : 0);
 
-    // Object.values(personInfo).filter(
-    //   (value) => value !== ""
-    // ).length;
-    const Completion = (filledFields / totalFields) * 100;
-    setCompletion(Completion);
-    setPerson_Progress(Completion);
+  //   // Object.values(personInfo).filter(
+  //   //   (value) => value !== ""
+  //   // ).length;
+  //   const Completion = (filledFields / totalFields) * 100;
+  //   setCompletion(Completion);
+  //   setPerson_Progress(Completion);
 
-    // console.log("Completion : ",Completion);
-  };
+  //   // console.log("filledFields : ",filledFields);
+  //   // console.log("totalFields : ",totalFields);
+  //   // console.log("Completion : ",Completion);
+  // };
   useEffect(() => {
     if (!selectedPersonId) return;
     const fetchPerson = async () => {
@@ -181,7 +220,7 @@ const PersonDialog = ({
           throw new Error(`HTTP error! status: ${personResponse.status}`);
         }
         const data = await personResponse.json();
-        // console.log(data);
+        console.log(data);
         setPersoninfo(data);
         setPerson_Progress(data.Completion);
         // setIfperson(data.ifperson);
@@ -206,7 +245,6 @@ const PersonDialog = ({
 
     let imagePath1 = null;
     let imagePath2 = null;
-    const personCompletion = CalculateProgress_Person(); // Calculate the progress before sending it to the server
 
     if (file) {
       const formData = new FormData();
@@ -272,7 +310,10 @@ const PersonDialog = ({
       // Construct the body of the request conditionally
       const requestBody = {
         selectedPersonId,
-        personInfo,
+        personInfo: {
+          ...personInfo,
+          rating: personInfo.rating,
+        },
         imagePath1,
         imagePath2,
         Completion,
@@ -303,9 +344,18 @@ const PersonDialog = ({
   };
 
   const CalculateTotal_Progress = () => {
-    const completion = Person_Progress + experienceFilledFields + companyFilledFields + placementFilledFields + consultancyFilledFields + internshipFilledFields + alumniFilledFields +  outcomeFilledFields;
+    const completion =
+      // Person_Progress +
+      personFilledFields +
+      experienceFilledFields +
+      companyFilledFields +
+      placementFilledFields +
+      consultancyFilledFields +
+      internshipFilledFields +
+      alumniFilledFields +
+      outcomeFilledFields;
     setTotal_Progress(completion);
-  }
+  };
 
   useEffect(() => {
     CalculateProgress_Person();
@@ -320,7 +370,9 @@ const PersonDialog = ({
     return `${year}-${month}-${day}`;
   };
 
-  const formattedDate = formatDateForInput(personInfo.dob);
+  const formattedDate = formatDateForInput(personInfo.dob.split("T")[0]);
+
+  // const formattedDate = formatDateForInput(personInfo.dob);
 
   const [showPopup, setShowPopup] = useState(false);
   const options = [
@@ -333,10 +385,20 @@ const PersonDialog = ({
     setShowPopup(false);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handlePerson(event);
+      handleTotalValue(event);
+      CalculateProgress_Person();
+      CalculateTotal_Progress();
+    }
+  };
+
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} onKeyDown={handleKeyPress}>
       <div
-        className="dialogue"
+        className="dialogue-addaccount"
         style={{
           gap: "15px",
           display: "flex",
@@ -362,7 +424,7 @@ const PersonDialog = ({
               borderStyle: "solid",
             }}
             value={personInfo.fullname || ""}
-            onChange={handleDetailsChange1}
+            onChange={(e) => handleDetailsChange1(e)}
           />
           <div>
             <input
@@ -544,6 +606,18 @@ const PersonDialog = ({
             value={personInfo.hashtags}
             onChange={handleDetailsChange1}
           />
+          {personInfo.rank === -1 ? 
+          <div id="spoc-input">
+          Still you didn't make any interactions with {personInfo.fullname}. Please turn on to start interaction
+          <div onClick={handleSwitchChange}>
+            <CustomizedSwitches checked={checked} />
+          </div>{" "}
+        </div> : personInfo.rank === 0 ? <div id="spoc-input">
+          Turn off to hold interactions with {personInfo.fullname}.   
+          <div onClick={handleSwitchChange}>
+            <CustomizedSwitches checked={checked} />
+          </div>{" "}
+        </div> :""}
         </div>
         <p style={{ color: "green" }}>{error}</p>
         <div id="buttonContainer-flowchart-person">
@@ -560,7 +634,7 @@ const PersonDialog = ({
             onClick={(event) => {
               event.preventDefault(); // Prevent default behavior if necessary
               handlePerson(event);
-              // handleTotalValue(event);
+              handleTotalValue(event);
               CalculateProgress_Person();
               CalculateTotal_Progress();
             }}

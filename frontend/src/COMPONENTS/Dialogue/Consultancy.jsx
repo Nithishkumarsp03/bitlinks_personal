@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog } from '@mui/material';
 import Input from '@mui/joy/Input';
-import DomainDropdown from './DomainDropdown';
-import RoleDropdown from './RoleDropdown';
-import SkillsetDropdown from './SkillsetDropdown';
+import DomainDropdown from '../../Dropdown/DomainDropdown';
+import RoleDropdown from '../../Dropdown/RoleDropdown';
+import SkillsetDropdown from '../../Dropdown/SkillsetDropdown';
 
 const ConsultancyDialog = ({
   open, 

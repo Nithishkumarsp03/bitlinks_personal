@@ -1,9 +1,9 @@
 import React from 'react';
 import { Dialog, Box } from '@mui/material';
 import Input from '@mui/joy/Input';
-import RoleDropdown from './RoleDropdown';
-import DomainDropdown from './DomainDropdown';
-import SkillsetDropdown from './SkillsetDropdown';
+import RoleDropdown from '../../Dropdown/RoleDropdown';
+import DomainDropdown from '../../Dropdown/DomainDropdown';
+import SkillsetDropdown from '../../Dropdown/SkillsetDropdown';
 
 const InternshipDialog = ({
   open, 

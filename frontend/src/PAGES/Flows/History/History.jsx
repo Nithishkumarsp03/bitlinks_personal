@@ -46,6 +46,7 @@ import Hollowtick from "../../../Assets/tick.svg";
 import Button from "@mui/material/Button";
 import { position } from "@chakra-ui/react";
 import BeatLoader from "../../../COMPONENTS/BeatLoader";
+import InteractionDropdown from "../../../Dropdown/InteractionDropdown";
 import Select from "react-select";
 import CryptoJS from 'crypto-js';
 
@@ -146,7 +147,7 @@ const CustomStepIconWithLine = ({ src, className, showLine }) => (
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function History({fetchRescheduleData, fetchRescheduleDataNetworks}) {
+export default function History({fetchPersonalInfo, fetchUserNetworks, fetchRescheduleData, fetchRescheduleDataNetworks}) {
   const decrypt = (ciphertext) => {
     try {
       if (ciphertext) {
@@ -356,6 +357,8 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
         fetchHistory();
         fetchRescheduleData();
         fetchRescheduleDataNetworks();
+        fetchPersonalInfo();
+        fetchUserNetworks();
         setHistoryRecords((prevRecords) =>
           prevRecords.map((record) =>
             record.history_id === item.history_id
@@ -455,6 +458,8 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
         handleCloseAddHistory();
         fetchRescheduleData();
         fetchRescheduleDataNetworks();
+        fetchPersonalInfo();
+        fetchUserNetworks();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -597,6 +602,7 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
     {value: 'Internship Offer', label: 'Internship Offer'},
     {value: 'General Visit', label: 'General Visit'},
   ]
+
   const handleChange = (selectedOption) => {
     // `selectedOption` is an object, or `null` if no option is selected
     setPurpose(selectedOption ? selectedOption.value : null);
@@ -819,13 +825,14 @@ export default function History({fetchRescheduleData, fetchRescheduleDataNetwork
                     }}>
                     Purpose of Interactions:
                   </label>
-                  <Select 
+                  <InteractionDropdown style={{marginTop: '20px'}} purpose={purpose} setPurpose={setPurpose} handleChange={handleChange}/>
+                  {/* <Select 
                     placeholder = 'Select type of Conversation'
                     style={{marginTop: '20px'}}
                     options={options}
                     onChange={handleChange}
                     isClearable
-                  />
+                  /> */}
                 </div>
 
                 {/* <div style={{ display: "flex", marginTop: "8%" }}>

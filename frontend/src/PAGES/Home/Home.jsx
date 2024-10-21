@@ -11,6 +11,7 @@ import './Home.css'
 import Settings from '../Settings/Settings';
 // import { decrypt } from '../../COMPONENTS/cookieUtils';
 import CryptoJS from 'crypto-js';
+import Swal from 'sweetalert2';
 
 const SECRET_KEY = 'your-secret-key';
 export default function Home() {
@@ -31,6 +32,7 @@ export default function Home() {
     const [activeStartup, setActiveStartup] = useState(false);
     const [showSettings, setShowSettings] = useState(false); // State for showing settings
     const[showHome,setShowHome] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
     const Search01Icon = (props: React.SVGProps<SVGSVGElement>) => (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={16} height={16} color={"#2867b2"} fill={"none"} {...props}>
           <path d="M17.5 17.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -166,19 +168,56 @@ export default function Home() {
         setActiveSchool(false);
         setActiveStudents(false);
     }
-    const handleLogout = () => {
-      // Clear the user cookie
-      Cookies.remove('email');
-      Cookies.remove('name');
-      Cookies.remove('picture');
-      Cookies.remove('role');
-      Cookies.remove('token');
-      Cookies.remove('id');
-      Cookies.remove('userProfile');
+
+    const handleLogoutClick = () => {
+      setShowAlert(true);
+    }
   
-      // Redirect to login page
-      navigate('/bitcontacts');
+    const handleLogout = () => {
+      try {
+        // Clear all relevant cookies
+        ['email', 'name', 'picture', 'role', 'token', 'id', 'userProfile'].forEach(cookieName => {
+          Cookies.remove(cookieName);
+        });
+  
+        // Redirect to login page
+        navigate('/bitcontacts');
+  
+        // Show success message
+        Swal.fire({
+          title: "Logged Out!",
+          text: "You have successfully logged out.",
+          icon: "success"
+        });
+      } catch (error) {
+        console.error('Logout failed:', error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to log out. Please try again.",
+          icon: "error"
+        });
+      }
     };
+  
+    useEffect(() => {
+      if (showAlert) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "Logging out will end your session.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, log out!"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            handleLogout();
+          }
+          setShowAlert(false);
+        });
+      }
+    }, [showAlert]);
+
   return (
     <div className='bitlinks'>
 
@@ -196,8 +235,8 @@ export default function Home() {
             <div style={{display: "flex", flexDirection: "column", textAlign: "center", gap:"2px"}}>
                 <p style={{marginRight: "50px", maxWidth: "500px", fontWeight: "500"}}>{username}</p>
                 <div 
-                  style={{display: 'flex', gap:'5px', color:'red', marginLeft: '18px', cursor: 'pointer'}}  
-                  onClick={handleLogout}>
+                  style={{display: 'flex', gap:'5px', color:'red', cursor: 'pointer'}}  
+                  onClick={handleLogoutClick}>
                   <i class="fa-solid fa-right-from-bracket" style={{marginTop:'1px',fontSize: "14px"}}></i>
                   <p style={{marginTop:'-3px',fontSize: "14px"}}>Logout</p>
                 </div>
@@ -313,7 +352,7 @@ export default function Home() {
     </div>
     )}
         
-     
+
     </body>
 </div>
 

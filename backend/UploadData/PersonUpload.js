@@ -1,0 +1,79 @@
+const express = require("express");
+const router = express.Router();
+const pool = require("../config.js"); 
+const authenticate = require("../Authenticate.js"); 
+
+router.put("/personupload", authenticate, (req, res) => {
+  const {
+    selectedPersonId,
+    personInfo,
+    imagePath1,
+    imagePath2,
+    Completion,
+    TotalProgress,
+  } = req.body;
+
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error getting database connection:", err);
+      return res.status(500).json({ message: "Database error" });
+    }
+
+    let sql = `UPDATE personalinfo
+               SET fullname = ?, phonenumber = ?, age = ?, email = ?, dob = ?, rating = ?, visitingcard = ?, linkedinurl = ?, address = ?, shortdescription = ?, hashtags = ?, Completion = ?, overall_completion = ? `;
+
+    let queryParams = [
+      personInfo.fullname,
+      personInfo.phonenumber,
+      personInfo.age,
+      personInfo.email,
+      // personInfo.dob,
+      personInfo.dob ? new Date(personInfo.dob).toISOString().split('T')[0] : null,
+      personInfo.rating,
+      imagePath2,
+      personInfo.linkedinurl,
+      personInfo.address,
+      personInfo.shortdescription,
+      personInfo.hashtags,
+      Completion,
+      TotalProgress,
+    ];
+
+    // Add profile column update only if imagePreview is not null or empty
+    if (imagePath1) {
+      sql += `, profile = ?`;
+      queryParams.push(imagePath1);
+    }
+
+    sql += ` WHERE person_id = ?`;
+    queryParams.push(selectedPersonId);
+
+    // First query: Update personalinfo table
+    connection.query(sql, queryParams, (err, results) => {
+      if (err) {
+        connection.release();
+        console.error("Error updating person data:", err);
+        return res.status(500).json({ error: "An error occurred while updating the data." });
+      }
+
+      // Second query: Update person_points_summary table with rank
+      // let rankSql = `UPDATE person_points_summary SET rank = ? WHERE person_id = ?`;
+      let rankSql = `UPDATE person_points_summary SET \`rank\` = ? WHERE person_id = ?`;
+      let rankParams = [personInfo.rank, selectedPersonId];
+
+      connection.query(rankSql, rankParams, (err, rankResults) => {
+        connection.release(); // Release the connection after both queries are done
+
+        if (err) {
+          console.error("Error updating rank data:", err);
+          return res.status(500).json({ error: "An error occurred while updating the rank." });
+        }
+
+        res.status(200).json({ message: "Updated successfully!" });
+      });
+    });
+  });
+});
+
+
+module.exports = router; 

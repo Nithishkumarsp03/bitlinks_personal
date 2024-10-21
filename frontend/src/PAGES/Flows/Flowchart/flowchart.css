@@ -5,12 +5,47 @@
 
 
 .flowchart {
-  margin-top: 0px;
+  margin-top: -20px;
   margin-left: 5%;
   /* background-color: #ffffff; */
   width: 100%;
   height: 100%;
 }
+/* 
+.dialogue {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 100%;
+  max-width: 640px;
+  padding: 30px;
+  justify-content: center;
+  text-align: center;
+} */
+
+.dialogue-addaccount {
+  overflow-x: hidden;
+  /* height: 10vh; */
+  justify-self: flex-start;
+  align-self: flex-start;
+  /* margin-top: -10%; */
+  /* justify-self: center; */
+  align-self: center;
+  /* justify-content: center; */
+  text-align: center;
+  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 2% 6% 0% 6%;
+  /* height: 10vh; */
+  width: 100%;
+  max-width: 600px; 
+  /* margin: auto; */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: scroll;
+}
+
 
 .dialogue {
   max-width: 640px;
@@ -41,17 +76,17 @@
   margin-left: 7%;
 }
 
-.dialogue::-webkit-scrollbar {
+.dialogue::-webkit-scrollbar,.dialogue-addaccount::-webkit-scrollbar {
   width: 7px; /* Width of the scrollbar */
   height: 0px; /* Height of the scrollbar (for horizontal scrollbars) */
 }
 
-.dialogue::-webkit-scrollbar-thumb {
+.dialogue::-webkit-scrollbar-thumb,.dialogue-addaccount::-webkit-scrollbar-thumb {
   background-color: #003eaa; /* Color of the scrollbar thumb */
   /* border-radius: 10px; */
 }
 
-.dialogue::-webkit-scrollbar-track {
+.dialogue::-webkit-scrollbar-track,.dialogue-addaccount::-webkit-scrollbar-track {
   background-color: #bec9ff; /* Background of the scrollbar track */
 }
 
@@ -71,35 +106,35 @@
 
 @media only screen and (max-width: 700px) and (max-height: 600px) {
   .dialogue {
-    padding-top: 25%;
+    /* padding-top: 25%; */
     overflow-x: hidden;
   }
 }
 
 @media only screen and (max-height: 660px){
   .dialogue{
-    padding-top: 25%;
+    /* padding-top: 25%; */
     overflow-x: hidden;
   }
 }
 
 @media only screen and (max-height: 560px){
   .dialogue{
-    padding-top: 40%;
+    /* padding-top: 40%; */
     overflow-x: hidden;
   }
 }
 
 @media only screen and (max-height: 480px){
   .dialogue{
-    padding-top: 50%;
+    /* padding-top: 50%; */
     overflow-x: hidden;
   }
 }
 
 @media only screen and (max-height: 430px){
   .dialogue{
-    padding-top: 60%;
+    /* padding-top: 60%; */
     height: 100%;
     overflow-x: hidden;
   }
@@ -107,7 +142,7 @@
 
 @media only screen and (max-height: 350px){
   .dialogue{
-    padding-top: 60%;
+    /* padding-top: 60%; */
     height: 100%;
     overflow-x: hidden;
   }

@@ -7,6 +7,7 @@ import Select from 'react-select';
 import Profile from "../../Assets/Profile.png";
 import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
+import CustomizedSwitches from '../../utils/Switch';
 import { usePerson } from '../Context';
 
 const SECRET_KEY = "your-secret-key";
@@ -44,6 +45,7 @@ const Subconnections = ({
     address: "",
     shortdescription: "",
     hashtags: "",
+    rank: "",
   });
   const email = decrypt(Cookies.get("email"));
   const token = decrypt(Cookies.get("token"));
@@ -59,7 +61,8 @@ const Subconnections = ({
   const [SubCompletion, setSubCompletion] = useState(0);
   const [SubTotal_Progress, setSubTotal_Progress] = useState(0);
   const [error, setError] = useState('')
-  const {selectedPersonId, subemail} = usePerson()
+  const {selectedPersonId, subemail} = usePerson();
+  const [checked, setChecked] = useState(false);
   // console.log("subemail: ",subemail);
 
   const handleSubconnectionsvalue = (e) => {
@@ -125,6 +128,22 @@ const Subconnections = ({
   useEffect(() => {
     CalculateProgress_Subconnections();
   }, [connectionInfo]);
+
+  const handleSwitchChange = () => {
+    setChecked((prevChecked) => {
+      const newChecked = !prevChecked;
+  
+      // Update the 'spoc' field in personInfo based on new state
+      setConnectionInfo((prevInfo) => ({
+        ...prevInfo,
+        rank: newChecked ? -1 : 0, // Set "yes" for true, "no" for false
+      }));
+  
+      console.log("rank will be:", newChecked ? -1 : 0);
+  
+      return newChecked;
+    });
+  };
 
   const handleSubconnections = async (e) => {
     e.preventDefault();
@@ -268,7 +287,7 @@ const Subconnections = ({
     return `${year}-${month}-${day}`;
   };
 
-  const formattedDate = formatDateForInput(connectionInfo.dob);
+  const formattedDate = formatDateForInput(connectionInfo.dob.split("T")[0]);
 
   const handleRatingchange = (selectedOption) => {
     setConnectionInfo((prevDetails_1) => ({
@@ -488,7 +507,14 @@ const Subconnections = ({
                 value={connectionInfo.hashtags}
                 onChange={handleSubconnectionsvalue}
             />
+            <div id="spoc-input">
+              Do you want to push this contact to rank 0{" "}
+              <div onClick={handleSwitchChange}>
+                <CustomizedSwitches checked={checked} />
+              </div>{" "}
+            </div>
           </div>
+
         <p style={{color: 'green'}}>{error}</p>
         <div id="buttonContainer-flowchart-person">
           <button

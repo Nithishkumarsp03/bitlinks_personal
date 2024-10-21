@@ -5,12 +5,11 @@
 }
 
 .history-container {
-  height: 320px;
+  height: 290px;
   overflow-y: auto; /* Enable vertical scrolling */
   /* padding: 20px; */
   /* border: 1px solid #ccc; */
-  /* /* background-color: #f9f9f9; */
-  
+  /* /*  */
   /* padding: 3%; */
   background-color: #fefeff;
   /* height: 100%; */
