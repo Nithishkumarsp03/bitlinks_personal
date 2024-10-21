@@ -25,8 +25,18 @@ router.post( "/addhistory", authenticate, (req, res) => {
 
   // console.log('Original data received:', req.body);
 
+  let formattedDate;
+
   // Format the provided scheduled_date to MySQL datetime format with the correct timezone
-  const formattedDate = moment(scheduled_date).format("YYYY-MM-DD HH:mm:ss");
+  if (type === "Visited") {
+    const currentDate = moment();  // Get the current date
+    formattedDate = currentDate.add(2, 'days').format("YYYY-MM-DD HH:mm:ss");  // Add 2 days and format it
+    // console.log("Scheduled Date (2 days later):", formattedDate);
+  } else {
+    formattedDate = moment(scheduled_date).format("YYYY-MM-DD HH:mm:ss");
+    // console.log("Scheduled Date:", formattedDate);
+  }
+  
 
   // console.log("Formatted date: ", formattedDate);
 
@@ -36,7 +46,6 @@ router.post( "/addhistory", authenticate, (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
-  // Execute the SQL query
   pool.query(
     query,
     [

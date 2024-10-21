@@ -409,12 +409,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
     }
   
     // Clear form fields after validation
-    setNote("");
-    setCreatedDate(null);
-    setScheduledDate(null);
-    setType("");
-    setImagePath1(null);
-    setImagePath2(null);
   
     const data = {
       selectedPersonId,
@@ -428,7 +422,7 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
       // ? scheduled_date.tz("America/New_York").format() : "",
       imagePath1,
       imagePath2,
-      status: type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : 0,
+      status: type === "Reschedule Call" || type === "Rescheduled Visit" || type === "Visited" ? 1 : 0,
     };
   
     // console.log("Data being sent:", JSON.stringify(data));
@@ -460,6 +454,12 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
         fetchRescheduleDataNetworks();
         fetchPersonalInfo();
         fetchUserNetworks();
+        setNote("");
+        setCreatedDate(null);
+        setScheduledDate(null);
+        setType("");
+        setImagePath1(null);
+        setImagePath2(null);
       })
       .catch((error) => {
         console.error("Error:", error);

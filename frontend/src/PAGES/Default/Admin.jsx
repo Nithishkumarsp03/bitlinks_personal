@@ -2119,7 +2119,11 @@ export default function Default(subPersonId) {
                                         fontSize: "12px",
                                         width: "10vw",
                                       }}>
-                                      {item.note}
+                                        {item.type === 'Visited'?(
+                                          <div>Gentle Reminder to send a Thanks giving note</div>
+                                        ):(
+                                          <div>{item.note}</div>
+                                        )}
                                     </div>
                                   </div>
                                 </div>
@@ -2270,7 +2274,11 @@ export default function Default(subPersonId) {
                                 </div>
                                 <div
                                   style={{ fontSize: "12px", width: "10vw" }}>
-                                  {item.note}
+                                  {item.type === 'Visited'?(
+                                          <div>Gentle Reminder to send a Thanks giving note</div>
+                                        ):(
+                                          <div>{item.note}</div>
+                                        )}
                                 </div>
                               </div>
                             </div>
