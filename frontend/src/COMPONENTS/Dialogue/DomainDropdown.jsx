@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import Input from '@mui/joy/Input';
 import Select from 'react-select';
 import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
+import { FormControl } from '@mui/material';
 
 const SECRET_KEY = 'your-secret-key';
 
-const DomainDropdown = ({ value, onChange, onTextChange }) => {
+const DomainDropdown = ({ value, onChange, onTextChange = () => {} }) => {
     const [domains, setDomains] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [customInput, setCustomInput] = useState('');
     const api = process.env.REACT_APP_API;
 
     const decrypt = (ciphertext) => {
@@ -30,47 +34,100 @@ const DomainDropdown = ({ value, onChange, onTextChange }) => {
                 const response = await fetch(api + '/domaindata', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Include token in the headers
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                
+
                 const data = await response.json();
                 const activeDomains = data.filter(domain => domain.status === 1);
                 setDomains(activeDomains);
+
+                // Check if the initial value is in the options
+                const foundDomain = activeDomains.find(domain => domain.domain_column === value);
+                if (foundDomain) {
+                    setSelectedOption({ value: foundDomain.domain_column, label: foundDomain.domain_column });
+                } else if (value) {
+                    setSelectedOption({ value: 'Others', label: 'Others' });
+                    setCustomInput(value);
+                }
             } catch (error) {
                 console.error('Error fetching domains:', error);
             }
         };
 
         fetchDomains();
-    }, [token, api]);
-
-    const options = domains.map(domain => ({
-        value: domain.domain_column,
-        label: domain.domain_column,
-    }));
+    }, [token, api, value]);
 
     const handleSelectChange = (selectedOption) => {
+        setSelectedOption(selectedOption);
         const newValue = selectedOption ? selectedOption.value : '';
-        console.log('Selected Option:', newValue); // Debugging
-        onChange(newValue);
+        if (newValue !== 'Others') {
+            setCustomInput('');
+            onChange(newValue);
+        } else {
+            onChange('');
+        }
     };
 
-    const selectedOption = options.find(option => option.value === value) || null;
+    const handleTextChange = (event) => {
+        const newValue = event.target.value;
+        setCustomInput(newValue);
+        if (selectedOption && selectedOption.value === 'Others') {
+            onChange(newValue);
+        }
+        onTextChange(newValue);
+    };
+
+    const customStyles = {
+        menuList: (provided) => ({
+            ...provided,
+            maxHeight: '200px',
+            overflowY: 'auto',
+            '&:hover': {
+                overflowY: 'auto',
+            },
+        }),
+    };
+
+    const options = [
+        ...domains.map(domain => ({
+            value: domain.domain_column,
+            label: domain.domain_column,
+        })),
+        { value: 'Others', label: 'Others' }
+    ];
 
     return (
-        <Select
-            placeholder="Select a domain"
-            value={selectedOption}
-            onChange={handleSelectChange}
-            options={options}
-            isClearable
-        />
+        <div style={{display: "flex"}}>
+            <FormControl fullWidth>
+            <Select
+                placeholder="Select a domain"
+                value={selectedOption}
+                onChange={handleSelectChange}
+                options={options}
+                isClearable
+                styles={customStyles} 
+            />
+            </FormControl>
+            <div>
+            {selectedOption && selectedOption.value === 'Others' && (
+                <div style={{ display: "flex", width: "170px", marginLeft: "15%",marginRight: "30px", gap: "0.5rem" }}>
+                    <Input
+                        fullWidth
+                        placeholder='Specify the Domain'
+                        margin="normal"
+                        value={customInput}
+                        onChange={handleTextChange}
+                    />
+                </div>
+            )}
+            </div>
+        </div>
     );
 };
 

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { MenuItem, FormControl, InputLabel } from '@mui/material';
+import { FormControl, InputLabel } from '@mui/material';
+import Input from '@mui/joy/Input';
 import Select from 'react-select';
 import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
 
 const SECRET_KEY = 'your-secret-key';
 
-const AddressDropdown = ({ value, onChange, onTextChange }) => {
+const AddressDropdown = ({ value, onChange, onTextChange = () => {} }) => {
     const [addresses, setAddresses] = useState([]);
-    const [textValue, setTextValue] = useState(value || '');
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [customInput, setCustomInput] = useState('');
 
     const decrypt = (ciphertext) => {
         try {
@@ -31,65 +33,104 @@ const AddressDropdown = ({ value, onChange, onTextChange }) => {
                 const response = await fetch(process.env.REACT_APP_API + '/addressdata', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Include token in the headers
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                
+
                 const data = await response.json();
-                const activeaddress = data.filter(address => address.status === 1);
-                setAddresses(activeaddress);
+                const activeAddresses = data.filter(address => address.status === 1);
+                setAddresses(activeAddresses);
+
+                // Check if the initial value is in the options
+                const foundAddress = activeAddresses.find(address => address.address_column === value);
+                if (foundAddress) {
+                    setSelectedOption({ value: foundAddress.address_column, label: foundAddress.address_column });
+                } else if (value) {
+                    setSelectedOption({ value: 'Others', label: 'Others' });
+                    setCustomInput(value);
+                }
             } catch (error) {
                 console.error('Error fetching addresses:', error);
             }
         };
 
         fetchAddresses();
-    }, [token]);
+    }, [token, value]);
 
     const handleSelectChange = (selectedOption) => {
+        setSelectedOption(selectedOption);
         const newValue = selectedOption ? selectedOption.value : '';
-        setTextValue(newValue);
-        onChange(newValue);
+        if (newValue !== 'Others') {
+            setCustomInput('');
+            onChange(newValue);
+        } else {
+            onChange('');
+        }
     };
 
     const handleTextChange = (event) => {
         const newValue = event.target.value;
-        setTextValue(newValue);
-        onTextChange(newValue); // Notify parent component about the text input change
+        setCustomInput(newValue);
+        if (selectedOption && selectedOption.value === 'Others') {
+            onChange(newValue);
+        }
+        onTextChange(newValue);
     };
 
-    const options = addresses.map(address => ({
-        value: address.address_column,
-        label: address.address_column, 
-    }));
+    const customStyles = {
+        menuList: (provided) => ({
+            ...provided,
+            maxHeight: '100px',
+            overflowY: 'auto',
+            '&:hover': {
+                overflowY: 'auto',
+            },
+        }),
+    };
+
+    const options = [
+        ...addresses.map(address => ({
+            value: address.address_column,
+            label: address.address_column,
+        })),
+        { value: 'Others', label: 'Others' }
+    ];
 
     return (
+        <div style={{display: "flex"}}>
         <FormControl fullWidth>
             <InputLabel id="address-select-label" style={{ display: 'none' }}>Address</InputLabel>
             <Select
-                placeholder={textValue ? options.find(option => option.value === textValue)?.label : 'Select Location'}
-                isClearable
+                placeholder="Select Location"
                 labelId="address-select-label"
-                value={options.find(option => option.value === textValue) || ''}
+                value={selectedOption}
                 onChange={handleSelectChange}
                 options={options}
+                isClearable
                 inputProps={{ 'aria-label': 'Without label' }}
-            >
-                <MenuItem value="" disabled>
-                    {/* <p>Company Address</p> */}
-                </MenuItem>
-                {addresses.map((address, index) => (
-                    <MenuItem key={index} value={address.address_column}>
-                        {address.address_column}
-                    </MenuItem>
-                ))}
-            </Select>
+                styles={customStyles}
+            />
+            
         </FormControl>
+        <div>
+        {selectedOption && selectedOption.value === 'Others' && (
+                <div style={{ display: "flex", width: "170px", marginLeft: "15%",marginRight: "30px", gap: "0.5rem" }}>
+                    <Input
+                        fullWidth
+                        placeholder='Specify the Location'
+                        margin="normal"
+                        value={customInput}
+                        onChange={handleTextChange}
+                    />
+                </div>
+            )}
+        </div>
+        </div>
     );
 };
 

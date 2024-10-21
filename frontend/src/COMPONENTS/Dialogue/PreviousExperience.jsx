@@ -88,31 +88,36 @@ const PreviousExperienceDialog = ({
               gap: "15px",
             }}
           >
-            <div style={{ display: "flex", gap: "15px" }}>
+            <div style={{ display: "flex",flexDirection: "column", gap: "15px" ,width: "100%"}}>
               <CompanyDropdown
                 value={PreviousExperienceinfo.companyname}
                 onChange={(newCompany) => handleDetailsChange2({ target: { name: 'companyname', value: newCompany } })}
               />
+               <div style={{ display: "flex", gap: "7%" ,width: "100%"}}>
               <Input
+              style={{width: "100%  "}}
                 placeholder="Position"
                 onChange={handleDetailsChange2}
                 value={PreviousExperienceinfo.position}
                 name="position"
               />
-            </div>
-
-            <div style={{ display: "flex", gap: "15px" }}>
-              <Input
+               <Input
+              style={{width: "100%  "}}
                 placeholder="Experience in (Yrs)"
                 onChange={handleDetailsChange2}
                 value={PreviousExperienceinfo.experience}
                 type='number'
                 name="experience"
               />
+            </div>
+
+           
+             <div style={{width: "100%"}}>
               <RoleDropdown
                 value={PreviousExperienceinfo.role}
                 onChange={handleRoleChange}
               />
+              </div>
             </div>
 
             <div>

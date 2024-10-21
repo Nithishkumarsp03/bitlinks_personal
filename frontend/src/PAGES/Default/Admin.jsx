@@ -126,6 +126,7 @@ export default function Default(subPersonId) {
   const [connectionloading, setConnectionloading] = useState(true);
   const [scheduleloading, setScheduleloading] = useState(true);
   const [rankloading, setRankloading] = useState(true);
+  const [cancelflows, setcancelflows] = useState(false);
 
   const handleConnections = () => {
     setSidebarOpen1(true);
@@ -183,7 +184,6 @@ export default function Default(subPersonId) {
     setConnections(false);
     setNetworks(false);
     setSpoc(true)
-    setSpoc(true)
     setFilter(false);
     setView(false);
     setMyconnectionshr(false);
@@ -208,6 +208,7 @@ export default function Default(subPersonId) {
   };
 
   const handlecancelflows = () => {
+    
     setView(false);
     setViewConnection(false);
     setExpertiseConnection(false);
@@ -220,9 +221,11 @@ export default function Default(subPersonId) {
     setSelectedLevel(null);
     setFilterMyNetworks(null);
     setFilterScheduledNetworks(null);
-  };
+  };  
 
   const handlecancelviewconnections = () => {
+    console.log("Parent setCancelflows called, cancelflows set to true");
+    setcancelflows(true);
     setView(false);
     setViewConnection(false);
     setExpertiseConnection(false);
@@ -238,6 +241,10 @@ export default function Default(subPersonId) {
   };
 
   const handlecanceltable = () => {
+    setConnections(true);
+    setSidebarOpen1(true);
+    setSidebarOpen2(false);
+    setSidebarOpen3(false);
     setTableOpen(false);
     setView(false);
     setViewConnection(false);
@@ -545,6 +552,10 @@ export default function Default(subPersonId) {
     setCardActive(false); // Lock card view
     // console.log("VIEW CONNECTION CLICKED");
   };
+
+  const handleViewConnectionSpoc = () => {
+    setViewConnection(true);
+  }
 
   const handleExpertiseConnection = () => {
     setExpertiseConnection(!ExpertiseConnection);
@@ -973,11 +984,13 @@ export default function Default(subPersonId) {
             </h4>
           </div>
 
-          <div
+         {/*<div
             className={`buttons-networks ${sidebarOpen3 ? "open" : ""}`}
             onClick={handleSpoc}>
             <h4 style={{ display: "flex", width: "100%" }}>
-              <img src={Networks} alt="" className="nav-icons" />
+            <div className="nav-icons" >
+              <i class="fa-regular fa-user"></i>
+              </div>
               <p
                 style={{
                   fontSize: "110%",
@@ -986,9 +999,10 @@ export default function Default(subPersonId) {
                 }}>
                 SPOC
               </p>
-              <p style={{ marginLeft: "47%" }}>Spoc len</p>
+              <p style={{ marginLeft: "auto",marginRight: "5%" }}>{userNetworks.length}</p>
             </h4>
-          </div>
+          </div>*/}
+          
 
           <div className="add-new" onClick={handleaddConnections}>
             <img src={Add} alt="" />
@@ -1273,7 +1287,7 @@ export default function Default(subPersonId) {
           ) : (
             ""
           )
-        ) : (
+        ) : (Connections || networks ) ? (
           <div style={{height: "100%", width: "100%"}}>
             {Connections ? (
               <div
@@ -1945,13 +1959,14 @@ export default function Default(subPersonId) {
                 </div>
                 {/* {filter && <Popup />} */}
               </div>
-            ):(
-              <>
-                <Spoc />
-              </>
-            )}
+            ): ""}
           </div>
-        )}
+        ) : spoc ? 
+        <Spoc 
+        cancelflows={cancelflows} 
+        handleViewConnectionSpoc={handleViewConnectionSpoc} 
+      />
+         : "" }
       </div>
       {!AddConnections || !TableOpen ? (
         <div
@@ -2528,5 +2543,5 @@ export default function Default(subPersonId) {
       ))}
     </Dialog>
     </div>
-  );
+  )
 }

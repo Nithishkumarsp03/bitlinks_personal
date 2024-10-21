@@ -104,7 +104,7 @@ app.post('/send-email', authenticate, (req, res) => {
     const mailOptions = {
       from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
       to: toEmail,
-      subject: subject,
+      subject: subject, 
       text: message,
     };
 

@@ -143,38 +143,37 @@ const ConsultancyDialog = ({
                 flexDirection: "column",
                 gap: "15px",
               }}>
-              <div style={{ display: "flex", gap: "15px" }}>
-                <div style={{width:'50%'}}>
+                <div style={{width:'100%'}}>
                 <RoleDropdown
                   value={consultancyInfo.role}
                   onChange={handleRoleChange}
                   onTextChange={handleRoleTextChange}
                 />
                 </div>
-                <div style={{width:'50%'}}>
+                <div style={{width:'100%'}}>
                 <DomainDropdown
                     value={consultancyInfo.domain}
                     onChange={handleDomainChange}
                     onTextChange={handleDomainTextChange}
                 />
-                </div>
               </div>
-              <div style={{ display: "flex", gap: "15px" }}>
+              <div >
                 <SkillsetDropdown
                   style={{ flexGrow: '2' }}
                   value={consultancyInfo.skillset}
                   onChange={handleSkillsetChange}
                   onTextChange={handleSkillsetTextChange}
                 />
-                <Input
+                
+              </div>
+              <div style={{ display: "flex", gap: "15px" }}>
+              <Input
                   placeholder="Eligibility"
                   style={{ flexGrow: "1" }}
                   onChange={(e) => handleDetailsChange9(e)}
                   value={consultancyInfo.eligibility}
                   name="eligibility"
                 />
-              </div>
-              <div>
                 <Input
                   placeholder="Project Type - Eg: Freelance, Project, MiniProject"
                   style={{ flexGrow: "1" }}
