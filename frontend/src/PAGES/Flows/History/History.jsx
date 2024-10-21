@@ -534,7 +534,7 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
   ];
 
   const shouldShowScheduledDate =
-    type === "Reschedule Call" || type === "Rescheduled Visit";
+    type === "Reschedule Call" || type === "Rescheduled Visit" || type === 'Visited' ;
 
   const showvisitimage = type === "Visited";
 
@@ -650,7 +650,7 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
                       <div className="call-title">{item.type}</div>
                       <div className="date" style={{ display: 'flex', width: '100%' }}>
                         {new Date(item.datetime).toLocaleString()}
-                        {(item.type === 'Reschedule Call' || item.type === 'Rescheduled Visit') && (
+                        {(item.type === 'Reschedule Call' || item.type === 'Rescheduled Visit' || item.type === 'Visited' ) && (
                           <div className="schedule-progress-container">
                             {item.status === 1 && (
                               <div
@@ -940,10 +940,9 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
 
       {selectedItem && (
         <Dialog
-          className="modal"
           open={modalIsOpen}
           onClose={closeModal}
-          PaperProps={{ style: { width: "400px" } }}>
+          PaperProps={{ style: { width: "500px" } }}>
           <div className="modal-content">
             <div style={{ display: "flex" }}>
               <p
@@ -1032,7 +1031,8 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
               {/* {(selectedItem.type == "Reschedule Call" || "Rescheduled visit" ) && ( */}
             </div>
             {(selectedItem.type == "Reschedule Call" ||
-              selectedItem.type == "Rescheduled Visit") && (
+              selectedItem.type == "Rescheduled Visit" || 
+              selectedItem.type === 'Visited' ) && (
               <Typography
                 variant="body2"
                 style={{ marginTop: "5%", display: "flex" }}>

@@ -1025,13 +1025,13 @@ export default function Default(subPersonId) {
             <div >
             {Connections ? (
               <>
-                <div className="rankof-1">
+                <div className="rankof-1" onClick={() => handleRankSelection(-1)}>
                   <img src={Rankminus} />
                   <p style={{ color: "#64696C",fontWeight: "500" }}>Level -1</p>
                   <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>{userranks.count_rank_minus} Networks</p>
                 </div>
                 <div className="ranks">
-                  <div className="rank1">
+                  <div className="rank1" onClick={() => handleRankSelection(3)}>
                     <div>
                       <img src={Rank1} alt="" />
                       <p style={{ color: "#6D2ED1" }}>Level 3</p>
@@ -1057,7 +1057,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank2">
+                  <div className="rank2" onClick={() => handleRankSelection(2)}>
                     <div>
                       <img src={Rank2} alt="" />
                       <p style={{ color: "#0E7C3A" }}>Level 2</p>
@@ -1083,7 +1083,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank3">
+                  <div className="rank3" onClick={() => handleRankSelection(1)}>
                     <div>
                       <img src={Rank3} alt="" />
                       <p style={{ color: "#ED8F03" }}>Level 1</p>
@@ -1109,7 +1109,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank4">
+                  <div className="rank4" onClick={() => handleRankSelection(0)}>
                     <div>
                       <img src={Rank4} alt="" />
                       <p style={{ color: "#64696C" }}>Level 0</p>
@@ -1139,13 +1139,13 @@ export default function Default(subPersonId) {
               </>
             ) : (
               <>
-                <div className="rankof-1">
+                <div className="rankof-1" onClick={() => handleRankSelection(-1)}>
                   <img src={Rankminus} />
                   <p style={{ color: "#64696C",fontWeight: "500" }}>Level -1</p>
                   <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>{networkranks.count_rank_minus} Networks</p>
                 </div>
                 <div className="ranks">
-                  <div className="rank1">
+                  <div className="rank1" onClick={() => handleRankSelection(3)}>
                     <div>
                       <img src={Rank1} alt="" />
                       <p style={{ color: "#6D2ED1" }}>Level 3</p>
@@ -1171,7 +1171,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank2">
+                  <div className="rank2" onClick={() => handleRankSelection(2)}>
                     <div>
                       <img src={Rank2} alt="" />
                       <p style={{ color: "#0E7C3A" }}>Level 2</p>
@@ -1197,7 +1197,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank3">
+                  <div className="rank3" onClick={() => handleRankSelection(1)}>
                     <div>
                       <img src={Rank3} alt="" />
                       <p style={{ color: "#ED8F03" }}>Level 1</p>
@@ -1223,7 +1223,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank4">
+                  <div className="rank4" onClick={() => handleRankSelection(0)}>
                     <div>
                       <img src={Rank4} alt="" />
                       <p style={{ color: "#64696C" }}>Level 0</p>
