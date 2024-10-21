@@ -597,7 +597,12 @@ export default function Default(subPersonId) {
       const locationMatch = connection.companyaddress
         ? connection.companyaddress.toLowerCase().includes(term)
         : false;
-  
+      const skillsetMatch = connection.skillset
+        ? connection.skillset.toLowerCase().includes(term)
+        : false;
+      const ratingMatch = connection.rating
+      ? connection.rating.toLowerCase().includes(term)
+      : false;
       // Check if any hashtag contains the search term
       const hashtagsArray = connection.hashtags
         ? connection.hashtags.split(" ").map((tag) => tag.trim().toLowerCase())
@@ -611,7 +616,9 @@ export default function Default(subPersonId) {
         roleMatch ||
         companyMatch ||
         domainMatch ||
-        locationMatch
+        locationMatch ||
+        skillsetMatch ||
+        ratingMatch
       );
     };
   
@@ -646,6 +653,12 @@ export default function Default(subPersonId) {
       const locationMatch = connection.companyaddress
         ? connection.companyaddress.toLowerCase().includes(term)
         : false;
+      const skillsetMatch = connection.skillset
+        ? connection.skillset.toLowerCase().includes(term)
+        : false;
+      const ratingMatch = connection.rating
+        ? connection.rating.toLowerCase().includes(term)
+        : false;
   
       // Check if any hashtag contains the search term
       const hashtagsArray = connection.hashtags
@@ -660,7 +673,9 @@ export default function Default(subPersonId) {
         roleMatch ||
         companyMatch ||
         domainMatch ||
-        locationMatch
+        locationMatch ||
+        skillsetMatch ||
+        ratingMatch
       );
     };
     const searchMatch = searchTerms.every((term) => isMatch(term));
@@ -1012,7 +1027,7 @@ export default function Default(subPersonId) {
               <>
                 <div className="rankof-1">
                   <img src={Rankminus} />
-                  <p style={{ color: "#64696C",fontWeight: "500" }}>Rank -1</p>
+                  <p style={{ color: "#64696C",fontWeight: "500" }}>Level -1</p>
                   <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>{userranks.count_rank_minus} Networks</p>
                 </div>
                 <div className="ranks">
@@ -1126,7 +1141,7 @@ export default function Default(subPersonId) {
               <>
                 <div className="rankof-1">
                   <img src={Rankminus} />
-                  <p style={{ color: "#64696C",fontWeight: "500" }}>Rank -1</p>
+                  <p style={{ color: "#64696C",fontWeight: "500" }}>Level -1</p>
                   <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>{networkranks.count_rank_minus} Networks</p>
                 </div>
                 <div className="ranks">
@@ -1406,11 +1421,13 @@ export default function Default(subPersonId) {
                                                 src={
                                                   connection.rank === 3
                                                     ? Rank1
-                                                    : connection.rank === 2
+                                                  : connection.rank === 2
                                                     ? Rank2
-                                                    : connection.rank === 1
+                                                  : connection.rank === 1
                                                     ? Rank3
-                                                    : Rank4
+                                                  :connection.rank === 4
+                                                    ? Rank4
+                                                  : Rankminus
                                                 }
                                                 alt="rank-img"
                                                 style={{
@@ -1741,11 +1758,13 @@ export default function Default(subPersonId) {
                                                 src={
                                                   connection.rank === 3
                                                     ? Rank1
-                                                    : connection.rank === 2
+                                                  : connection.rank === 2
                                                     ? Rank2
-                                                    : connection.rank === 1
+                                                  : connection.rank === 1
                                                     ? Rank3
-                                                    : Rank4
+                                                  :connection.rank === 4
+                                                    ? Rank4
+                                                  : Rankminus
                                                 }
                                                 alt="rank-img"
                                                 style={{
@@ -2516,7 +2535,7 @@ export default function Default(subPersonId) {
         <p>Show All</p>
       </div>
       <hr color="#dfdfdf" />
-      {[0, 1, 2, 3].map((level, index) => (
+      {[-1, 0, 1, 2, 3].map((level, index) => (
         <React.Fragment key={level}>
           <div
             style={{
@@ -2536,7 +2555,9 @@ export default function Default(subPersonId) {
                   ? Rank3
                   : level === 2
                   ? Rank2
-                  : Rank1
+                  : level === 3
+                  ? Rank1
+                  : Rankminus
               }
               alt=""
               width="20px"

@@ -17,6 +17,7 @@ router.get("/userNetworks", authenticate, (req, res) => {
     p1.phonenumber, 
     p1.age, 
     p1.email, 
+    p1.rating,
     p1.linkedinurl, 
     p1.address, 
     p1.shortdescription, 

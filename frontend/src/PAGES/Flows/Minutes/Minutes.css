@@ -115,6 +115,16 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.edit-button{
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
 /* Completed Button */
 .complete-button {
   background-color: #28a745;
@@ -167,8 +177,8 @@
 .add-button-minutes{
   width: 20%;
   display: contents;
-  justify-self: center;
-  align-self: center;
+  /* justify-self: center; */
+  align-self: end;
 }
 .add-button-minutes:hover{
   background-color: rgb(62, 83, 152);

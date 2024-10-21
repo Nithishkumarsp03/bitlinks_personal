@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import Input from '@mui/joy/Input';
 import Select from 'react-select';
 import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
+import { FormControl } from '@mui/material';
 
 const SECRET_KEY = 'your-secret-key';
 
-const RoleDropdown = ({ value, onChange }) => {
+const RoleDropdown = ({ value, onChange, onTextChange = () => {} }) => {
     const [roles, setRoles] = useState([]);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [customInput, setCustomInput] = useState('');
     const api = process.env.REACT_APP_API;
 
     const decrypt = (ciphertext) => {
@@ -34,40 +38,96 @@ const RoleDropdown = ({ value, onChange }) => {
                         'Content-Type': 'application/json'
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                
+
                 const data = await response.json();
                 const activeRoles = data.filter(role => role.status === 1);
                 setRoles(activeRoles);
+
+                // Check if the initial value is in the options
+                const foundRole = activeRoles.find(role => role.role_column === value);
+                if (foundRole) {
+                    setSelectedOption({ value: foundRole.role_column, label: foundRole.role_column });
+                } else if (value) {
+                    setSelectedOption({ value: 'Others', label: 'Others' });
+                    setCustomInput(value);
+                }
             } catch (error) {
                 console.error('Error fetching roles:', error);
             }
         };
 
         fetchRoles();
-    }, [token, api]);
-
-    const options = roles.map(role => ({
-        value: role.role_column,
-        label: role.role_column,
-    }));
+    }, [token, api, value]);
 
     const handleSelectChange = (selectedOption) => {
-        console.log('Selected Option:', selectedOption);
-        onChange(selectedOption ? selectedOption.value : ''); // Notify parent component
+        setSelectedOption(selectedOption);
+        const newValue = selectedOption ? selectedOption.value : '';
+        if (newValue !== 'Others') {
+            setCustomInput('');
+            onChange(newValue);
+        } else {
+            onChange('');
+        }
     };
 
+    const handleTextChange = (event) => {
+        const newValue = event.target.value;
+        setCustomInput(newValue);
+        if (selectedOption && selectedOption.value === 'Others') {
+            onChange(newValue);
+        }
+        onTextChange(newValue);
+    };
+
+    const customStyles = {
+        menuList: (provided) => ({
+            ...provided,
+            maxHeight: '150px',
+            overflowY: 'auto',
+            '&:hover': {
+                overflowY: 'auto',
+            },
+        }),
+    };
+
+    const options = [
+        ...roles.map(role => ({
+            value: role.role_column,
+            label: role.role_column,
+        })),
+        { value: 'Others', label: 'Others' }
+    ];
+
     return (
-        <Select
-            placeholder="Select a role"
-            value={options.find(option => option.value === value) || null}
-            onChange={handleSelectChange}
-            options={options}
-            isClearable
-        />
+        <div style={{display: "flex",width: "100%"}}>
+            <FormControl fullWidth>
+            <Select
+                placeholder="Select a role"
+                value={selectedOption}
+                onChange={handleSelectChange}
+                options={options}
+                isClearable
+                styles={customStyles}
+            />
+            </FormControl>
+            <div>
+            {selectedOption && selectedOption.value === 'Others' && (
+                <div style={{ display: "flex", width: "170px", marginLeft: "15%",marginRight: "30px", gap: "0.5rem" }}>
+                    <Input
+                        fullWidth
+                        placeholder='Specify the Role'
+                        margin="normal"
+                        value={customInput}
+                        onChange={handleTextChange}
+                    />
+                </div>
+            )}
+            </div>
+        </div>
     );
 };
 

@@ -230,7 +230,7 @@ export default function Minutes() {
         </div>
       ) : (
         <div className="minutes-container">
-          <Button onClick={() => setAddopen(true)} className="add-button-minutes" sx={{backgroundColor: "#0056b3  ",color: "white"}}>Add</Button>
+          <Button onClick={() => setAddopen(true)} className="add-button-minutes" sx={{backgroundColor: "#0056b3  ",color: "white",marginRight: "8%"}}>Add</Button>
           <ul className="minutes-list">
             {sortedMinutesList.map((item) => (
               <li
@@ -312,6 +312,11 @@ export default function Minutes() {
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
           />
+          <TextField
+            margin="dense"
+            label="Target Person"
+            fullWidth
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setAddopen(false)}>Cancel</Button>
@@ -342,6 +347,11 @@ export default function Minutes() {
             }}
             value={editData.deadline}
             onChange={handleInputChange}
+          />
+          <TextField
+            margin="dense"
+            label="Target Person"
+            fullWidth
           />
         </DialogContent>
         <DialogActions>
