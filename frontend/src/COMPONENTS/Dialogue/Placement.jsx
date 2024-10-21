@@ -153,26 +153,30 @@ const PlacementDialog = ({
                   onChange={handleRoleChange}
                   onTextChange={handleRoleTextChange}
                 />
-                <DomainDropdown
+                
+              </div>
+              <div>
+              <DomainDropdown
                     value={placementInfo.domain}
                     onChange={handleDomainChange}
                     onTextChange={handleDomainTextChange}
                   />
               </div>
-              <div style={{ display: "flex", gap: "15px" }}>
               <SkillsetDropdown
                 value={placementInfo.skillset || ""}
                 onChange={handleSkillsetChange}
                 onTextChange={handleSkillsetTextChange}
               />
-                <Input
+                
+              <div>
+              <Input
                   placeholder="Eligibility"
                   style={{ flexGrow: "1" }}
                   onChange={(e) => handleDetailsChange8(e)}
                   value={placementInfo.eligibility}
                   name="eligibility"
                 />
-              </div>
+                </div>
             </div>
           )}
         </div>

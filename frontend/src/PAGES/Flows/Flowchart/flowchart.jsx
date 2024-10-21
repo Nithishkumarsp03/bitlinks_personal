@@ -695,7 +695,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           }
         );
         if (!personResponse.ok) {
-          throw new Error(`HTTP error! status: ${personResponse.status}`);
+          // throw new Error(`HTTP error! status: ${personResponse.status}`);
         }
         const data = await personResponse.json();
         setPersoninfo(data);
@@ -725,7 +725,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           }
         );
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          // throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         setPreviousExperienceinfo(data);
@@ -1044,7 +1044,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -1106,7 +1106,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -1140,7 +1140,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();

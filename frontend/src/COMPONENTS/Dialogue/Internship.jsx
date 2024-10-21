@@ -96,7 +96,6 @@ const InternshipDialog = ({
         </Box>
         {Ifinternship === "yes" && (
           <Box sx={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-            <Box sx={{ display: "flex", gap: "15px" }}>
               <RoleDropdown
                 value={Internshipinfo.role || ''} // Ensure default value
                 onChange={handleRoleChange}
@@ -107,23 +106,23 @@ const InternshipDialog = ({
                 onChange={handleDomainChange}
                 onTextChange={handleDomainTextChange}
               />
-            </Box>
-            <Box sx={{ display: "flex", gap: "15px" }}>
+            <Box >
               <SkillsetDropdown
                 sx={{ flexGrow: '2' }}
                 value={Internshipinfo.skillset || ''} // Ensure default value
                 onChange={handleSkillsetChange}
                 onTextChange={handleSkillsetTextChange}
               />
-              <Input
+              
+            </Box>
+            <Box sx={{ display: "flex", gap: "15px" }}>
+            <Input
                 placeholder="Eligibility"
                 sx={{ flexGrow: "1" }}
                 onChange={handleDetailsChange10}
                 value={Internshipinfo.eligibility || ''} // Ensure default value
                 name="eligibility"
               />
-            </Box>
-            <Box>
               <Input
                 placeholder="Project Type - Eg: Freelance, Project, MiniProject"
                 sx={{ flexGrow: "1" }}
