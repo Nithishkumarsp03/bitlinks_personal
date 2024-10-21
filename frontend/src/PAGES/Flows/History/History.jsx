@@ -534,7 +534,7 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
   ];
 
   const shouldShowScheduledDate =
-    type === "Reschedule Call" || type === "Rescheduled Visit" || type === 'Visited' ;
+    type === "Reschedule Call" || type === "Rescheduled Visit" ;
 
   const showvisitimage = type === "Visited";
 
@@ -585,23 +585,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
     "Completed Task": "#EDF3F7",
     "Incompleted Task": "#FEECEC",
   };
-
-  const options = [
-    {value: 'Guest Lecture/Seminar', label: 'Guest Lecture/Seminar'},
-    {value: 'Handson Workshop', label: 'Handson Workshop'},
-    {value: 'One Credit Course', label: 'One Credit Course'},
-    {value: 'Conference/Symposium Guest', label: 'Conference/Symposium Guest'},
-    {value: 'Industrial Advisor/Reviewer', label: 'Industrial Advisor/Reviewer'},
-    {value: 'Board of studies', label: 'Board of studies'},
-    {value: 'Alumni Interaction', label: 'Alumni Interaction'},
-    {value: 'Consultancy', label: 'Consultancy'},
-    {value: 'MoU', label: 'MoU'},
-    {value: 'Laboratory Establishment/Center of Excellence', label: 'Laboratory Establishment/Center of Excellence'},
-    {value: 'R&D', label: 'R&D'},
-    {value: 'Placement Drive', label: 'Placement Drive'},
-    {value: 'Internship Offer', label: 'Internship Offer'},
-    {value: 'General Visit', label: 'General Visit'},
-  ]
 
   const handleChange = (selectedOption) => {
     // `selectedOption` is an object, or `null` if no option is selected
@@ -1031,8 +1014,7 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
               {/* {(selectedItem.type == "Reschedule Call" || "Rescheduled visit" ) && ( */}
             </div>
             {(selectedItem.type == "Reschedule Call" ||
-              selectedItem.type == "Rescheduled Visit" || 
-              selectedItem.type === 'Visited' ) && (
+              selectedItem.type == "Rescheduled Visit") && (
               <Typography
                 variant="body2"
                 style={{ marginTop: "5%", display: "flex" }}>
