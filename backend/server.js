@@ -355,42 +355,65 @@ const checkAndSendEmails = () => {
 
       if (results.length > 0) {
         for (const record of results) {
-          const { agent, fullname, scheduleddate, email } = record; // Extract relevant fields
+          const { agent, fullname, scheduleddate, email, type } = record; // Extract relevant fields
 
           // Format the scheduled date
           const formattedDate = new Date(scheduleddate).toLocaleString();
 
-          // Construct the email options with dynamic content
-          const mailOptions = {
-            from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
-            to: email, // Recipient's email
-            subject: "Upcoming Event Reminder",
-            text: `
+          // Prepare different email content based on the type
+          let subject = "";
+          let emailText = "";
+
+          if (type === "Reschedule Call" || type === "Rescheduled Visit") {
+            subject = "Upcoming Event Reminder";
+            emailText = `
 Dear ${agent || "Recipient"},
 
-I hope this message finds you well. This is a kind reminder regarding the rescheduled call on ${formattedDate}, ensuring the smooth progress of collaboration with ${fullname}.
+I hope this message finds you well. This is a kind reminder regarding the rescheduled call/visit on ${formattedDate}, ensuring the smooth progress of collaboration with ${fullname}.
 Thank you for your attention to this matter, and we appreciate your time.
 
 Regards,
 IECC
-            `,
-          };
+            `;
+          } else if (type === "Visited") {
+            subject = "Gentle Reminder: Please Send Thank You Note";
+            emailText = `
+Dear ${agent || "Recipient"},
 
-          try {
-            // Send email using the transporter
-            await transporter.sendMail(mailOptions);
-            // console.log("Email sent successfully for reminder");
+I hope this message finds you well. We noticed that your visit with ${fullname} has been completed. We kindly remind you to send a thank you note for the successful meeting.
 
-            // Update records to set emailSent to TRUE
-            const updateSql =
-              "UPDATE history SET emailSent = TRUE WHERE history_id = ?";
-            connection.query(updateSql, [record.history_id], (err) => {
-              if (err) {
-                console.error("Error updating emailSent status:", err);
-              }
-            });
-          } catch (error) {
-            console.error("Error sending email:", error);
+Thank you for your cooperation.
+
+Best regards,
+IECC
+            `;
+          }
+
+          if (subject && emailText) {
+            // Construct the email options with dynamic content
+            const mailOptions = {
+              from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
+              to: email, // Recipient's email
+              subject: subject,
+              text: emailText,
+            };
+
+            try {
+              // Send email using the transporter
+              await transporter.sendMail(mailOptions);
+              // console.log("Email sent successfully for reminder");
+
+              // Update records to set emailSent to TRUE
+              const updateSql =
+                "UPDATE history SET emailSent = TRUE WHERE history_id = ?";
+              connection.query(updateSql, [record.history_id], (err) => {
+                if (err) {
+                  console.error("Error updating emailSent status:", err);
+                }
+              });
+            } catch (error) {
+              console.error("Error sending email:", error);
+            }
           }
         }
       }
@@ -399,6 +422,7 @@ IECC
     });
   });
 };
+
 //------------------------------Mails--------------------------------------------
 // Schedule the task to run every minute
 cron.schedule("* * * * *", () => {
@@ -406,9 +430,9 @@ cron.schedule("* * * * *", () => {
   checkAndSendEmails();
 });
 
-cron.schedule("0 9 * * *", () => {
-  checkAndSendWishes();
-});
+// cron.schedule("0 9 * * *", () => {
+//   checkAndSendWishes();
+// });
 
 // cron.schedule('* * * * *', () => {
 //   checkAndSendWishes();
