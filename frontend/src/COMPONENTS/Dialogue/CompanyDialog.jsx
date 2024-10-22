@@ -81,21 +81,14 @@ const CompanyDialog = ({ open, onClose, CompanyInfo, handleDetailsChange3, error
             <div className="dialogue" style={{ gap: "15px", display: "flex", flexDirection: "column", overflow: "auto" }}>
                 <h3 style={{ fontSize: "25px", fontFamily: "Open Sans, sans-serif" }}>Company</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                    <div style={{ display: "flex", gap: "15px" }}>
-                        <div  style={{width:"50%",flexGrow:"2"}}>
+                    <div style={{ gap: "15px" }}>
+                        <div  style={{width:"100%",flexGrow:"2"}}>
                         <CompanyDropdown
                             value={CompanyInfo.companyname}
                             onChange={(newCompany) => handleDetailsChange3({ target: { name: 'companyname', value: newCompany } })}
                         />
                         </div>
-                        <div  style={{width:"30%",flexGrow:"1"}}>
-                        <Input
-                            placeholder="Position"
-                            onChange={handleDetailsChange3}
-                            value={CompanyInfo.position}
-                            name="position"
-                        />
-                        </div>
+                        
                     </div>
                     <div style={{ display: "flex", gap: "15px" }}>
                         <div style={{width:"100%", flexGrow:"1"}}>
@@ -107,14 +100,23 @@ const CompanyDialog = ({ open, onClose, CompanyInfo, handleDetailsChange3, error
                             name="experience"
                         />
                         </div>
-                        <div style={{width:"100%",flexGrow:"5"}}>
+                        <div  style={{width:"100%",flexGrow:"10"}}>
+                        <Input
+                            placeholder="Position"
+                            onChange={handleDetailsChange3}
+                            value={CompanyInfo.position}
+                            name="position"
+                        />
+                        </div>
+                        
+                    </div>
+                    <div style={{width:"100%",flexGrow:"5"}}>
                         <RoleDropdown
                             value={CompanyInfo.role}
                             onChange={handleRoleChange}
                             onTextChange={handleRoleTextChange}
                         />
                         </div>
-                    </div>
                     <div style={{width: '100%'}}>
                         <Input
                             placeholder="WebsiteUrl"

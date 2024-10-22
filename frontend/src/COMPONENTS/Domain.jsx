@@ -110,7 +110,7 @@ const token = decrypt(Cookies.get("token"));
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Data saved successfully:', data);
+        // console.log('Data saved successfully:', data);
         setError('Saved Successfully! You may now close this Dialog');
         fetchData(); // Refresh the table data
       } else {

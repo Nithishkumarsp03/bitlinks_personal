@@ -17,8 +17,7 @@ import User from "./PAGES/Home/User";
 import Welcome from "./COMPONENTS/Welcome";
 import Cookies from "js-cookie";
 import { decrypt } from "./COMPONENTS/cookieUtils";
-import InteractionDropdown from "./Dropdown/InteractionDropdown";
-import CustomizedSwitches from "./utils/Switch";
+import MinutesDropdown from "./Dropdown/MinutesDropdown";
 
 function Protected({ children }) {
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ function Protected({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       const decryptedRole = decrypt(Cookies.get("role"));
-      console.log('Decrypted Role:', decryptedRole);
+      // console.log('Decrypted Role:', decryptedRole);
       if (decryptedRole) {
         setAuth(true);
         setRole(decryptedRole);
@@ -68,7 +67,7 @@ export default function App() {
           <Route path="/bitcontacts/settings" element={<Settings />} />
           <Route path="/bitcontacts/welcome" element={<Welcome />} />
           <Route path="/404" element={<ErrorPage />} />
-          <Route path="/bitcontacts/switch" element={<InteractionDropdown />} />
+          <Route path="/bitcontacts/switch" element={<MinutesDropdown />} />
           <Route
             path="/bitcontacts/dashboard/admin"
             element={

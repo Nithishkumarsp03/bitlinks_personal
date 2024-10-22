@@ -597,7 +597,12 @@ export default function Default(subPersonId) {
       const locationMatch = connection.companyaddress
         ? connection.companyaddress.toLowerCase().includes(term)
         : false;
-  
+      const skillsetMatch = connection.skillset
+        ? connection.skillset.toLowerCase().includes(term)
+        : false;
+      const ratingMatch = connection.rating
+      ? connection.rating.toLowerCase().includes(term)
+      : false;
       // Check if any hashtag contains the search term
       const hashtagsArray = connection.hashtags
         ? connection.hashtags.split(" ").map((tag) => tag.trim().toLowerCase())
@@ -611,7 +616,9 @@ export default function Default(subPersonId) {
         roleMatch ||
         companyMatch ||
         domainMatch ||
-        locationMatch
+        locationMatch ||
+        skillsetMatch ||
+        ratingMatch
       );
     };
   
@@ -646,6 +653,12 @@ export default function Default(subPersonId) {
       const locationMatch = connection.companyaddress
         ? connection.companyaddress.toLowerCase().includes(term)
         : false;
+      const skillsetMatch = connection.skillset
+        ? connection.skillset.toLowerCase().includes(term)
+        : false;
+      const ratingMatch = connection.rating
+        ? connection.rating.toLowerCase().includes(term)
+        : false;
   
       // Check if any hashtag contains the search term
       const hashtagsArray = connection.hashtags
@@ -660,7 +673,9 @@ export default function Default(subPersonId) {
         roleMatch ||
         companyMatch ||
         domainMatch ||
-        locationMatch
+        locationMatch ||
+        skillsetMatch ||
+        ratingMatch
       );
     };
     const searchMatch = searchTerms.every((term) => isMatch(term));
@@ -1010,13 +1025,13 @@ export default function Default(subPersonId) {
             <div >
             {Connections ? (
               <>
-                <div className="rankof-1">
+                <div className="rankof-1" onClick={() => handleRankSelection(-1)}>
                   <img src={Rankminus} />
-                  <p style={{ color: "#64696C",fontWeight: "500" }}>Rank -1</p>
+                  <p style={{ color: "#64696C",fontWeight: "500" }}>Level -1</p>
                   <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>{userranks.count_rank_minus} Networks</p>
                 </div>
                 <div className="ranks">
-                  <div className="rank1">
+                  <div className="rank1" onClick={() => handleRankSelection(3)}>
                     <div>
                       <img src={Rank1} alt="" />
                       <p style={{ color: "#6D2ED1" }}>Level 3</p>
@@ -1042,7 +1057,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank2">
+                  <div className="rank2" onClick={() => handleRankSelection(2)}>
                     <div>
                       <img src={Rank2} alt="" />
                       <p style={{ color: "#0E7C3A" }}>Level 2</p>
@@ -1068,7 +1083,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank3">
+                  <div className="rank3" onClick={() => handleRankSelection(1)}>
                     <div>
                       <img src={Rank3} alt="" />
                       <p style={{ color: "#ED8F03" }}>Level 1</p>
@@ -1094,7 +1109,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank4">
+                  <div className="rank4" onClick={() => handleRankSelection(0)}>
                     <div>
                       <img src={Rank4} alt="" />
                       <p style={{ color: "#64696C" }}>Level 0</p>
@@ -1124,13 +1139,13 @@ export default function Default(subPersonId) {
               </>
             ) : (
               <>
-                <div className="rankof-1">
+                <div className="rankof-1" onClick={() => handleRankSelection(-1)}>
                   <img src={Rankminus} />
-                  <p style={{ color: "#64696C",fontWeight: "500" }}>Rank -1</p>
+                  <p style={{ color: "#64696C",fontWeight: "500" }}>Level -1</p>
                   <p style={{ fontSize: "17px", fontWeight: "500",color: "#2867B2"}}>{networkranks.count_rank_minus} Networks</p>
                 </div>
                 <div className="ranks">
-                  <div className="rank1">
+                  <div className="rank1" onClick={() => handleRankSelection(3)}>
                     <div>
                       <img src={Rank1} alt="" />
                       <p style={{ color: "#6D2ED1" }}>Level 3</p>
@@ -1156,7 +1171,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank2">
+                  <div className="rank2" onClick={() => handleRankSelection(2)}>
                     <div>
                       <img src={Rank2} alt="" />
                       <p style={{ color: "#0E7C3A" }}>Level 2</p>
@@ -1182,7 +1197,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank3">
+                  <div className="rank3" onClick={() => handleRankSelection(1)}>
                     <div>
                       <img src={Rank3} alt="" />
                       <p style={{ color: "#ED8F03" }}>Level 1</p>
@@ -1208,7 +1223,7 @@ export default function Default(subPersonId) {
                       )}
                     </p>
                   </div>
-                  <div className="rank4">
+                  <div className="rank4" onClick={() => handleRankSelection(0)}>
                     <div>
                       <img src={Rank4} alt="" />
                       <p style={{ color: "#64696C" }}>Level 0</p>
@@ -1406,11 +1421,13 @@ export default function Default(subPersonId) {
                                                 src={
                                                   connection.rank === 3
                                                     ? Rank1
-                                                    : connection.rank === 2
+                                                  : connection.rank === 2
                                                     ? Rank2
-                                                    : connection.rank === 1
+                                                  : connection.rank === 1
                                                     ? Rank3
-                                                    : Rank4
+                                                  :connection.rank === 0
+                                                    ? Rank4
+                                                  : Rankminus
                                                 }
                                                 alt="rank-img"
                                                 style={{
@@ -1741,11 +1758,13 @@ export default function Default(subPersonId) {
                                                 src={
                                                   connection.rank === 3
                                                     ? Rank1
-                                                    : connection.rank === 2
+                                                  : connection.rank === 2
                                                     ? Rank2
-                                                    : connection.rank === 1
+                                                  : connection.rank === 1
                                                     ? Rank3
-                                                    : Rank4
+                                                  :connection.rank === 0
+                                                    ? Rank4
+                                                  : Rankminus
                                                 }
                                                 alt="rank-img"
                                                 style={{
@@ -2100,7 +2119,11 @@ export default function Default(subPersonId) {
                                         fontSize: "12px",
                                         width: "10vw",
                                       }}>
-                                      {item.note}
+                                        {item.type === 'Visited'?(
+                                          <div>Gentle Reminder to send a Thanks giving note</div>
+                                        ):(
+                                          <div>{item.note}</div>
+                                        )}
                                     </div>
                                   </div>
                                 </div>
@@ -2251,7 +2274,11 @@ export default function Default(subPersonId) {
                                 </div>
                                 <div
                                   style={{ fontSize: "12px", width: "10vw" }}>
-                                  {item.note}
+                                  {item.type === 'Visited'?(
+                                          <div>Gentle Reminder to send a Thanks giving note</div>
+                                        ):(
+                                          <div>{item.note}</div>
+                                        )}
                                 </div>
                               </div>
                             </div>
@@ -2516,7 +2543,7 @@ export default function Default(subPersonId) {
         <p>Show All</p>
       </div>
       <hr color="#dfdfdf" />
-      {[0, 1, 2, 3].map((level, index) => (
+      {[-1, 0, 1, 2, 3].map((level, index) => (
         <React.Fragment key={level}>
           <div
             style={{
@@ -2536,7 +2563,9 @@ export default function Default(subPersonId) {
                   ? Rank3
                   : level === 2
                   ? Rank2
-                  : Rank1
+                  : level === 3
+                  ? Rank1
+                  : Rankminus
               }
               alt=""
               width="20px"

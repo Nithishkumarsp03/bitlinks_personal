@@ -149,9 +149,9 @@ export default function ApexChartYearlyGraph() {
             <p>{totalPoints}</p> {/* Display total points here */}
           </button>
         </div>
-      </div>
+      </div> 
       {seriesData.length > 0 ? (
-        <ReactApexChart options={options} series={seriesData} type="bar" height={350} />
+        <ReactApexChart options={options} series={seriesData} type="bar" height={300} />
       ) : (
         <div className='empty-error'>
           <div>

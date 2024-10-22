@@ -103,13 +103,14 @@ const token = decrypt(Cookies.get("token"));
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ role: role }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Data saved successfully:', data);
+        // console.log('Data saved successfully:', data);
         setOpen(false); // Close the dialog
         fetchData(); // Refresh the table data
       }

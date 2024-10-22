@@ -12,6 +12,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { usePerson } from "../../../COMPONENTS/Context";
 import BeatLoader from "../../../COMPONENTS/BeatLoader";
+import MinutesDropdown from "../../../Dropdown/MinutesDropdown";
 import "./Minutes.css";
 import "../MainFlow/Flows.css";
 
@@ -23,6 +24,7 @@ export default function Minutes() {
   const [editData, setEditData] = useState({
     minutes: "",
     deadline: "",
+    person: "",
   });
   const [dialogOpen, setDialogOpen] = useState(false); // For managing the dialog state
   const [commentDialogOpen, setCommentDialogOpen] = useState(false); // For managing comment dialog
@@ -31,10 +33,12 @@ export default function Minutes() {
   const [addopen, setAddopen] = useState(false);
   const [minutes, setMinutes] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [handler, setHandler] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [statusloading, setStatusloading] = useState(false);
   const [addloading, setAddloading] = useState(true);
+  const [loadingId, setLoadingId] = useState(null); // Track the item being updated
 
   const decrypt = (ciphertext) => {
     try {
@@ -52,6 +56,11 @@ export default function Minutes() {
   const api = process.env.REACT_APP_API;
   const token = decrypt(Cookies.get("token"));
   const username = decrypt(Cookies.get("name"));
+
+  const handleChange = (selectedOption) => {
+    setHandler(selectedOption ? selectedOption.value : null);
+  };
+
 
   const fetchMinutes = async () => {
     setLoading(true);
@@ -80,6 +89,7 @@ export default function Minutes() {
   }, []);
 
   const updateStatus = async (id, newStatus, comment = "") => {
+    setLoadingId(id); // Set loadingId when update starts
     setStatusloading(true);
     try {
       const res = await fetch(api + "/updateminutes", {
@@ -100,6 +110,7 @@ export default function Minutes() {
       console.error("Error updating status");
       setStatusloading(false);
     }
+    setLoadingId(null); // Reset loadingId after update
   };
 
   const handleEdit = (id) => {
@@ -118,6 +129,7 @@ export default function Minutes() {
     setEditData({
       minutes: currentMinute.minutes,
       deadline: formattedDate, // Date with one day added
+      person: currentMinute.handler,
     });
 
     setIsEditing(id);
@@ -125,6 +137,7 @@ export default function Minutes() {
   };
 
   const handleSave = async () => {
+    setLoadingId(isEditing); // Set loading for the current item
     try {
       const res = await fetch(api + "/updatesaveminutes", {
         method: "PUT",
@@ -136,6 +149,7 @@ export default function Minutes() {
           id: isEditing,
           minutes: editData.minutes,
           deadline: editData.deadline,
+          handler: editData.person,
         }),
       });
       if (res.ok) {
@@ -148,6 +162,7 @@ export default function Minutes() {
 
     setDialogOpen(false); // Close the dialog after saving
     setIsEditing(null);
+    setLoadingId(null); // Reset loadingId after saving
   };
 
   const handleInputChange = (e) => {
@@ -167,16 +182,26 @@ export default function Minutes() {
 
   const handleCommentSave = () => {
     if (comment.trim()) {
-      updateStatus(isEditing, "Impossible", comment); // Pass comment while updating status
+      updateStatus(isEditing, "Requested", comment); // Pass comment while updating status
     } else {
       alert("Please enter a comment before submitting.");
     }
   };
 
   const handleaddminutes = async () => {
+
+    // console.log(handler);
     setAddloading(true);
-    if(minutes === "" && deadline === ""){
-      setError("Please enter minutes and deadline before submitting.");
+    if (minutes === "") {
+      setError("Please enter minutes before submitting.");
+      return;
+    }
+    else if(deadline === ""){
+      setError("Please select the date before Submitting");
+      return;
+    }
+    else if(handler === ""){
+      setError("Please select the person for the Minute")
       return;
     }
     try {
@@ -186,13 +211,14 @@ export default function Minutes() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ selectedPersonId, username, minutes, deadline }),
+        body: JSON.stringify({ selectedPersonId, username, minutes, deadline, handler }),
       });
       if (res.ok) {
         setAddloading(false);
         fetchMinutes();
         setMinutes("");
         setDeadline("");
+        setHandler("")
         setError("");
         setAddopen(false);
       }
@@ -202,17 +228,39 @@ export default function Minutes() {
     }
   };
 
+
+  const sortedMinutesList = minutesList.sort((a, b) => {
+    const statusOrder = {
+      pending: 1,
+      Completed: 2,
+      Impossible: 3,
+    };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });  
+
   return (
     <>
-    {loading?(
-      <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: "35vh"}}>
-        <BeatLoader loading={loading} color="#2867B2" size={15} />
-      </div>
-    ):(
-      <div className="minutes-container">
-      <button onClick={() => setAddopen(true)}>Add</button>
+      {loading ? (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "35vh",
+    }}
+  >
+    <BeatLoader loading={loading} color="#2867B2" size={15} />
+  </div>
+) : (
+  <div className="minutes-container">
+    <div style={{ display: "flex", justifyContent: "end", marginRight: "20px" }}>
+      <Button onClick={() => setAddopen(true)} className="add-button-minutes">
+        Add
+      </Button>
+    </div>
+    {minutesList.length > 0 ? (
       <ul className="minutes-list">
-        {minutesList.map((item) => (
+        {sortedMinutesList.map((item) => (
           <li
             key={item.id}
             className={`minutes-item ${item.status.toLowerCase()}`}
@@ -226,142 +274,156 @@ export default function Minutes() {
                 <AiOutlineCalendar />{" "}
                 {new Date(item.deadline).toLocaleDateString("en-GB")}
               </span>
-              <strong className="minutes-status">{item.status}</strong>
+              <strong className="minutes-status">
+                {loadingId === item.id ? (
+                  <BeatLoader
+                    loading={true}
+                    color="#2867B2"
+                    size={5}
+                    className="beatloader"
+                  />
+                ) : (
+                  <p>{item.status}</p>
+                )}
+              </strong>
             </div>
-            {item.status === "pending" ? (
+            {item.status === "pending" && (
               <div className="button-group">
-                <button
-                  className="status-button complete-button"
-                  onClick={() => updateStatus(item.id, "Completed")}
-                  disabled={item.status !== "pending"} // Disable if status is not "pending"
-                >
-                  Mark as Completed
-                </button>
-                <button
-                  className="status-button impossible-button"
-                  onClick={() => handleImpossibleClick(item.id)} // Open comment dialog
-                  disabled={item.status !== "pending"} // Disable if status is not "pending"
-                >
-                  Impossible
-                </button>
-                <button
-                  className="status-button edit-button"
-                  onClick={() => handleEdit(item.id)}
-                  disabled={item.status !== "pending"} // Disable if status is not "pending"
-                >
-                  <FiEdit /> Edit
-                </button>
+                <>
+                  <button
+                    className="status-button complete-button"
+                    onClick={() => updateStatus(item.id, "Requested")}
+                    disabled={item.status !== "pending"}
+                  >
+                    Mark as Completed
+                  </button>
+                  <button
+                    className="status-button impossible-button"
+                    onClick={() => handleImpossibleClick(item.id)}
+                    disabled={item.status !== "pending"}
+                  >
+                    Mark as Impossible
+                  </button>
+                  <button className="edit-button" onClick={() => handleEdit(item.id)}>
+                    <FiEdit />
+                  </button>
+                </>
               </div>
-            ) : (
-              ""
             )}
           </li>
         ))}
       </ul>
+    ) : (
+      <div className="empty-error">
+                <div>
+                  <i className="fa-solid fa-circle-info"></i>
+                  <p>No Minutes Found</p>
+                </div>
+              </div>
+    )}
+  </div>
+)}
 
-      {/* MUI Dialog for Editing */}
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        maxWidth="sm"
-      >
-        <DialogTitle>Edit Meeting Minute</DialogTitle>
+      {/* Add minutes dialog */}
+      <Dialog open={addopen} onClose={() => setAddopen(false)}>
+        <DialogTitle>Add Minutes</DialogTitle>
+        <DialogContent>
+
+          <TextField
+            margin="dense"
+            label="Minutes"
+            fullWidth
+            value={minutes}
+            autoComplete="off"
+            onChange={(e) => setMinutes(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Deadline"
+            autoComplete="off"
+            type="date"
+            required
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+          />
+          <MinutesDropdown handleChange={handleChange} />
+          
+        </DialogContent>
+        <p style={{textAlign: "center", fontWeight: "500", color: "red"}}>{error}</p>
+        <DialogActions>
+          <Button onClick={() => setAddopen(false)}>Cancel</Button>
+          <Button onClick={handleaddminutes}>Submit</Button>
+        </DialogActions>
+        
+      </Dialog>
+
+      {/* Edit minutes dialog */}
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle>Edit Minutes</DialogTitle>
         <DialogContent>
           <TextField
-            label="Meeting Minutes"
-            variant="outlined"
+            margin="dense"
+            label="Minutes"
             fullWidth
-            margin="normal"
+            autoComplete="off"
             name="minutes"
             value={editData.minutes}
             onChange={handleInputChange}
           />
           <TextField
+            margin="dense"
             label="Deadline"
             type="date"
-            variant="outlined"
             fullWidth
-            margin="normal"
             name="deadline"
+            InputLabelProps={{
+              shrink: true,
+            }}
             value={editData.deadline}
             onChange={handleInputChange}
           />
-        </DialogContent>
-        <DialogActions className="buttons-minutes">
-          <Button onClick={handleSave} color="primary">
-            <FiSave /> Save
-          </Button>
-          <Button onClick={() => setDialogOpen(false)} color="secondary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={addopen} onClose={() => setAddopen(false)} maxWidth="sm">
-        <DialogTitle>Add Meeting Minute</DialogTitle>
-        <DialogContent>
           <TextField
-            label="Meeting Minutes"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            name="minutes"
-            value={minutes}
-            onChange={(e) => setMinutes(e.target.value)}
+            margin="dense"
+            label="Target Person"
+            name="person"
+            value={editData.person}
             autoComplete="off"
-          />
-          <TextField
-            // label="Deadline"
-            type="date"
-            variant="outlined"
             fullWidth
-            margin="normal"
-            name="deadline"
-            value={deadline}
-            onChange={(e) => setDeadline(e.target.value)}
+            onChange={handleInputChange}
           />
         </DialogContent>
-        <p style={{textAlign: "center", color: "red", fontWeight: "500"}}>{error}</p>
-        <DialogActions className="buttons-minutes">
-          <Button onClick={handleaddminutes} color="primary">
-            Add Minute
-          </Button>
-          <Button onClick={() => setDialogOpen(false)} color="secondary">
-            Cancel
-          </Button>
+        <DialogActions>
+          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleSave}>Save</Button>
         </DialogActions>
       </Dialog>
 
-      {/* Comment Dialog for Impossible */}
+      {/* Comment dialog for Impossible button */}
       <Dialog
         open={commentDialogOpen}
         onClose={() => setCommentDialogOpen(false)}
-        maxWidth="sm"
-      >
-        <DialogTitle>Provide a Comment for Impossible</DialogTitle>
+        maxWidth="lg"
+        >
+        <DialogTitle>Enter Comment</DialogTitle>
         <DialogContent>
           <TextField
+            margin="dense"
             label="Comment"
-            variant="outlined"
             fullWidth
-            margin="normal"
+            multiline
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            multiline
-            rows={4}
           />
         </DialogContent>
-        <DialogActions className="buttons-minutes">
-          <Button onClick={handleCommentSave} color="primary">
-            Save
-          </Button>
-          <Button onClick={() => setCommentDialogOpen(false)} color="secondary">
-            Cancel
-          </Button>
+        <DialogActions>
+          <Button onClick={() => setCommentDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleCommentSave}>Submit</Button>
         </DialogActions>
       </Dialog>
-    </div>
-    )}
     </>
   );
 }

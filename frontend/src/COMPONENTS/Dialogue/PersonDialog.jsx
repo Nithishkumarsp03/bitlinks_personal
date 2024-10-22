@@ -220,13 +220,15 @@ const PersonDialog = ({
           throw new Error(`HTTP error! status: ${personResponse.status}`);
         }
         const data = await personResponse.json();
-        console.log(data);
+        // console.log(data);
         setPersoninfo(data);
         setPerson_Progress(data.Completion);
+        // console.log(data.rank);
         // setIfperson(data.ifperson);
         setImagePreview(`${process.env.REACT_APP_API}${data.profile}`);
         // console.log("visitingcard:",data.visitingcard);
         setImagePreview2(`${process.env.REACT_APP_API}${data.visitingcard}`);
+        // console.log('Rank:', data.rank, 'Type:', typeof data.rank);
         if (data.visitingcard) {
           setCardAdded(true);
         }
@@ -376,7 +378,7 @@ const PersonDialog = ({
 
   const [showPopup, setShowPopup] = useState(false);
   const options = [
-    { label: "Higly Recommended", value: "Higly Recommended" },
+    { label: "Highly Recommended", value: "Highly Recommended" },
     { label: "Recommended", value: "Recommended" },
     { label: "Not Recommended", value: "Not Recommended" },
   ];
@@ -612,10 +614,10 @@ const PersonDialog = ({
           <div onClick={handleSwitchChange}>
             <CustomizedSwitches checked={checked} />
           </div>{" "}
-        </div> : personInfo.rank === 0 ? <div id="spoc-input">
+        </div> : personInfo.rank >= 0 ? <div id="spoc-input">
           Turn off to hold interactions with {personInfo.fullname}.   
           <div onClick={handleSwitchChange}>
-            <CustomizedSwitches checked={checked} />
+            <CustomizedSwitches checked={true} />
           </div>{" "}
         </div> :""}
         </div>

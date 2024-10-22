@@ -395,26 +395,37 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
     // console.log('clicked');
     e.preventDefault();
     
+    setCreatedDate(null);
+    setScheduledDate(null);
+    
     if (type === "") {
       setError("Please select the type of Conversation");
       return;
+    }
+    if (type === "Reschedule Call" || type === "Rescheduled Visit") {
+      if (scheduled_date === null) {
+        setError("Please provide a scheduled date for rescheduling");
+        return;
+      }
     }
     if (note === "") {
       setError("Fill the notes");
       return;
     }
-    if (imagePath1 === "" && imagePath2 === "") {
-      setError("Insert both the images");
+    if(purpose === ""){
+      setError("Select the Purpose");
       return;
     }
+    if(type === "Visited"){
+      if (imagePath1 === null || imagePath2 === null) {
+        setError("Insert both the images");
+        return;
+      }  
+    }
+
+    // if()
   
     // Clear form fields after validation
-    setNote("");
-    setCreatedDate(null);
-    setScheduledDate(null);
-    setType("");
-    setImagePath1(null);
-    setImagePath2(null);
   
     const data = {
       selectedPersonId,
@@ -428,7 +439,7 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
       // ? scheduled_date.tz("America/New_York").format() : "",
       imagePath1,
       imagePath2,
-      status: type === "Reschedule Call" || type === "Rescheduled Visit" ? 1 : 0,
+      status: type === "Reschedule Call" || type === "Rescheduled Visit" || type === "Visited" ? 1 : 0,
     };
   
     // console.log("Data being sent:", JSON.stringify(data));
@@ -460,6 +471,12 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
         fetchRescheduleDataNetworks();
         fetchPersonalInfo();
         fetchUserNetworks();
+        setNote("");
+        setCreatedDate(null);
+        setScheduledDate(null);
+        setType("");
+        setImagePath1(null);
+        setImagePath2(null);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -534,7 +551,7 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
   ];
 
   const shouldShowScheduledDate =
-    type === "Reschedule Call" || type === "Rescheduled Visit";
+    type === "Reschedule Call" || type === "Rescheduled Visit" ;
 
   const showvisitimage = type === "Visited";
 
@@ -586,23 +603,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
     "Incompleted Task": "#FEECEC",
   };
 
-  const options = [
-    {value: 'Guest Lecture/Seminar', label: 'Guest Lecture/Seminar'},
-    {value: 'Handson Workshop', label: 'Handson Workshop'},
-    {value: 'One Credit Course', label: 'One Credit Course'},
-    {value: 'Conference/Symposium Guest', label: 'Conference/Symposium Guest'},
-    {value: 'Industrial Advisor/Reviewer', label: 'Industrial Advisor/Reviewer'},
-    {value: 'Board of studies', label: 'Board of studies'},
-    {value: 'Alumni Interaction', label: 'Alumni Interaction'},
-    {value: 'Consultancy', label: 'Consultancy'},
-    {value: 'MoU', label: 'MoU'},
-    {value: 'Laboratory Establishment/Center of Excellence', label: 'Laboratory Establishment/Center of Excellence'},
-    {value: 'R&D', label: 'R&D'},
-    {value: 'Placement Drive', label: 'Placement Drive'},
-    {value: 'Internship Offer', label: 'Internship Offer'},
-    {value: 'General Visit', label: 'General Visit'},
-  ]
-
   const handleChange = (selectedOption) => {
     // `selectedOption` is an object, or `null` if no option is selected
     setPurpose(selectedOption ? selectedOption.value : null);
@@ -650,7 +650,7 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
                       <div className="call-title">{item.type}</div>
                       <div className="date" style={{ display: 'flex', width: '100%' }}>
                         {new Date(item.datetime).toLocaleString()}
-                        {(item.type === 'Reschedule Call' || item.type === 'Rescheduled Visit') && (
+                        {(item.type === 'Reschedule Call' || item.type === 'Rescheduled Visit' || item.type === 'Visited' ) && (
                           <div className="schedule-progress-container">
                             {item.status === 1 && (
                               <div
@@ -707,9 +707,9 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
                           <button className="visited-img" onClick={() => setImage2open(true)} style={{ marginLeft: '2%' }}>
                             Image 2
                           </button>
-                          <Dialog open={image1open} onClose={() => setImage1open(false)}>
+                          <Dialog open={image1open} onClose={() => setImage1open(false)} >
                             <div style={{width: "20vw"}} >
-                            <img style={{width: "100%",height: "100%"}}  src={`${api}${item.visited1}`} alt="" />
+                            <img style={{width: "100%",height: "100%"}}  src={`${api}${item.visited1}`}/>
                             </div>
                           </Dialog>
                           <Dialog open={image2open} onClose={() => setImage2open(false)}>
@@ -940,10 +940,9 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
 
       {selectedItem && (
         <Dialog
-          className="modal"
           open={modalIsOpen}
           onClose={closeModal}
-          PaperProps={{ style: { width: "400px" } }}>
+          PaperProps={{ style: { width: "500px" } }}>
           <div className="modal-content">
             <div style={{ display: "flex" }}>
               <p

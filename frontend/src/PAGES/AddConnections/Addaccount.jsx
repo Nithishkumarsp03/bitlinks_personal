@@ -67,7 +67,7 @@ const ShowAddAccount = () => {
     address: "",
     shortdescription: "",
     hashtags: "",
-    spoc: "",
+    spoc: "yes",
   });
 
   const [connectionInfo, setConnectionInfo] = useState({
@@ -103,7 +103,7 @@ const ShowAddAccount = () => {
   };
 
   useEffect(() => {
-    console.log("spoc updated:", personInfo.spoc);
+    // console.log("spoc updated:", personInfo.spoc);
   }, [personInfo.spoc]);
 
   const handleSwitchChange = () => {
@@ -116,7 +116,7 @@ const ShowAddAccount = () => {
         spoc: newChecked ? "yes" : "no", // Set "yes" for true, "no" for false
       }));
 
-      console.log("spoc will be:", newChecked ? "yes" : "no");
+      // console.log("spoc will be:", newChecked ? "yes" : "no");
 
       return newChecked;
     });
@@ -128,7 +128,6 @@ const ShowAddAccount = () => {
   // console.log('SubConnections:', subConnections);
 
   const handlePersonInput = () => {
-    console.log("inside");
     if (subConnections === 1) {
       setPerson_1(true);
     } else if (subConnections === 2) {
@@ -496,11 +495,11 @@ const ShowAddAccount = () => {
   };
 
   const yearDifference = getYearDifference(personInfo.dob);
-  console.log(`The difference in years is: ${yearDifference}`);
+  // console.log(`The difference in years is: ${yearDifference}`);
   personInfo.age = yearDifference;
 
   const options = [
-    { label: "Higly Recommended", value: "Higly Recommended" },
+    { label: "Highly Recommended", value: "Highly Recommended" },
     { label: "Recommended", value: "Recommended" },
     { label: "Not Recommended", value: "Not Recommended" },
   ];
@@ -805,12 +804,12 @@ const ShowAddAccount = () => {
               value={personInfo.hashtags}
               onChange={handleDetailsChange_1}
             />
-            <div id="spoc-input">
+            {/* <div id="spoc-input">
               Do you want to push this contact to rank 0{" "}
               <div onClick={handleSwitchChange}>
                 <CustomizedSwitches checked={checked} />
               </div>{" "}
-            </div>
+            </div> */}
           </div>
           <p style={{ color: "green" }}>{error}</p>
           <div id="buttonContainer-flowchart-person">

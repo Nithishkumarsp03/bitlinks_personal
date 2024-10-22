@@ -57,7 +57,7 @@ console.log("check connection");
  *                   example: Database error
  */
 router.post("/check-connection", authenticate, (req, res) => {
-  console.log("check connection");
+  // console.log("check connection");
   const { name } = req.body;
   const normalizedName = name.trim().toLowerCase(); 
 

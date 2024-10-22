@@ -15,7 +15,7 @@ router.post("/subconnections", authenticate, (req, res) => {
     Completion,
     TotalProgress,
   } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
 
   pool.getConnection((err, connection) => {
     if (err) {

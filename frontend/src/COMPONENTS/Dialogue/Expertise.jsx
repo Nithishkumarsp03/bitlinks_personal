@@ -22,7 +22,7 @@ const ExpertiseDialog = ({ open, onClose, ExpertiseInfo, handleDetailsChange4, e
   }, [ExpertiseInfo]);
 
   const handleDomainChange = (newDomain) => {
-    console.log("Selected domain from dropdown:", newDomain);
+    // console.log("Selected domain from dropdown:", newDomain);
     setExpertiseInfo(prev => {
       const updatedInfo = { ...prev, domain: newDomain };
       
@@ -92,13 +92,16 @@ const ExpertiseDialog = ({ open, onClose, ExpertiseInfo, handleDetailsChange4, e
           }}>
           Expertise
         </h3>
-        <div style={{ display: "flex", gap: "25px" }}>
+        <div style={{ display: "flex", flexDirection: "column",width: "100%" }}>
           <DomainDropdown
             value={expertiseInfo.domain} // Ensure correct value is passed
             onChange={handleDomainChange}
             onTextChange={handleTextChange}
           />
-          <Input
+          
+        </div>
+        <div>
+        <Input
             placeholder="Specialist Skills"
             onChange={(e) => {
               const { name, value } = e.target;
@@ -109,7 +112,7 @@ const ExpertiseDialog = ({ open, onClose, ExpertiseInfo, handleDetailsChange4, e
             name="specialistskills"
           />
         </div>
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "0px" }}>
           <SkillsetDropdown
             value={expertiseInfo.skillset || ""}
             onChange={handleSkillsetChange}

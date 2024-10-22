@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, Dialog } from '@mui/material';
-import { TextField } from '@mui/material';
+import { TextField, RadioGroup,FormControlLabel, Radio  } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import BeatLoader from './BeatLoader';
@@ -12,6 +12,7 @@ const SECRET_KEY = 'your-secret-key';
 
 export default function LoginData() {
   const api = process.env.REACT_APP_API
+  const [role, setRole] = useState('user');
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -110,16 +111,18 @@ const token = decrypt(Cookies.get("token"));
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           name,
           email,
+          role,
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Data saved successfully:', data);
+        // console.log('Data saved successfully:', data);
         setOpen(false);
         fetchData();
       }
@@ -196,24 +199,48 @@ const token = decrypt(Cookies.get("token"));
           )}
         </div>
         <Dialog open={open} onClose={() => setOpen(false)}>
-          <div style={{ padding: '20px', display: "flex",flexDirection: "column" }}>
-          <h2 style={{fontSize: "16px",fontWeight: "700"}}>Add New User</h2>
-            <TextField
-              placeholder="Enter username"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              style={{ marginTop: '10%', width: '100%' }}
-            />
-            <TextField
-              placeholder="Enter Email (as per Google norms)"
-              type='email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ margin: '4% 0% 20% 0%', width: '100%' }}
-            />
-            <Button onClick={handleSave} variant="contained" color="primary">Save</Button>
-          </div>
-        </Dialog>
+  <div style={{ padding: '20px', display: "flex", flexDirection: "column" }}>
+    <h2 style={{ fontSize: "16px", fontWeight: "700" }}>Add New User</h2>
+
+    <TextField
+      placeholder="Enter username"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+      style={{ marginTop: '10%', width: '100%' }}
+    />
+
+    <TextField
+      placeholder="Enter Email (as per Google norms)"
+      type='email'
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      style={{ margin: '4% 0% 20% 0%', width: '100%' }}
+    />
+
+    {/* Radio Buttons for Role Selection */}
+    <RadioGroup
+      aria-label="role"
+      name="role"
+      value={role}
+      onChange={(e) => setRole(e.target.value)}
+      style={{ marginBottom: '20px' }}
+    >
+      <FormControlLabel
+        value="user"
+        control={<Radio color="primary" />}
+        label="User"
+      />
+      <FormControlLabel
+        value="admin"
+        control={<Radio color="primary" />}
+        label="Admin"
+      />
+    </RadioGroup>
+
+    <Button onClick={handleSave} variant="contained" color="primary">Save</Button>
+  </div>
+</Dialog>
+
       </div>
     </div>
   );

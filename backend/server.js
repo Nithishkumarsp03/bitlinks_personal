@@ -168,7 +168,7 @@ app.post("/send-email", authenticate, (req, res) => {
     const mailOptions = {
       from: `"BITLINKS" <${process.env.EMAIL_USER}>`,
       to: toEmail,
-      subject: subject,
+      subject: subject, 
       text: message,
     };
 
@@ -177,7 +177,7 @@ app.post("/send-email", authenticate, (req, res) => {
         console.error("Error sending email:", error);
         return res.status(500).send("Error sending email");
       }
-      console.log("Email sent:", info.response);
+      // console.log("Email sent:", info.response);
       res.status(200).send("Email sent successfully");
     });
   });
@@ -316,7 +316,7 @@ Bannari Amman Institute of Technology.
 
           try {
             await transporter.sendMail(mailOptions);
-            console.log("Email sent successfully for birthday wishes");
+            // console.log("Email sent successfully for birthday wishes");
           } catch (error) {
             console.error("Error sending email:", error);
           }
@@ -384,7 +384,7 @@ IECC
           try {
             // Send email using the transporter
             await transporter.sendMail(mailOptions);
-            console.log("Email sent successfully for reminder");
+            // console.log("Email sent successfully for reminder");
 
             // Update records to set emailSent to TRUE
             const updateSql =
@@ -439,6 +439,7 @@ app.use(api,LoginDataRoutes);
 app.use(api,UpdateStatusLoginRoutes);
 app.use(api,LoginPostRoutes);
 app.use(api,InteractionsRoutes);
+// app.use(api,UpdateStatusInteractionsRoutes);
 
 app.post(api+"/history", authenticate, (req, res) => {
   const { selectedPersonId } = req.body;
