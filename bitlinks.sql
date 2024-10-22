@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 18, 2024 at 05:42 AM
+-- Generation Time: Oct 22, 2024 at 06:41 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -33,17 +33,6 @@ CREATE TABLE `address_table` (
   `status` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `address_table`
---
-
-INSERT INTO `address_table` (`id`, `address_column`, `status`) VALUES
-(1, 'Chennai', 0),
-(2, 'Delhi', 0),
-(3, 'Bangalore', 1),
-(4, 'Coimbatore', 1),
-(5, 'VELLORE', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -60,15 +49,6 @@ CREATE TABLE `alumni` (
   `companyaddress` varchar(255) DEFAULT NULL,
   `Alumni_Completion` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `alumni`
---
-
-INSERT INTO `alumni` (`alumni_id`, `person_id`, `name`, `batch`, `graduatedyear`, `phonenumber`, `companyaddress`, `Alumni_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -90,15 +70,6 @@ CREATE TABLE `company` (
   `Company_Completion` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `company`
---
-
-INSERT INTO `company` (`company_id`, `person_id`, `companyname`, `position`, `experience`, `role`, `companyaddress`, `websiteurl`, `scale`, `payscale`, `Company_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -110,25 +81,6 @@ CREATE TABLE `company_table` (
   `company_column` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `company_table`
---
-
-INSERT INTO `company_table` (`id`, `company_column`, `status`) VALUES
-(1, 'Microsoft', 1),
-(2, 'Google', 1),
-(3, 'Amazon', 0),
-(4, 'ZOHO', 0),
-(5, 'Cadence', 0),
-(7, 'TARNE TECHNOLOGIES', 1),
-(8, 'CAP Gemini', 1),
-(9, 'BIOZEEN', 1),
-(10, 'VVDN Technologies', 1),
-(11, 'Analog Devices', 1),
-(12, '3D Pheonix Sy', 1),
-(13, 'City Corp Service India, pvt ltd', 1),
-(14, 'TOPOU construction ', 1);
 
 -- --------------------------------------------------------
 
@@ -148,15 +100,6 @@ CREATE TABLE `consultancy` (
   `Consultancy_Completion` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `consultancy`
---
-
-INSERT INTO `consultancy` (`consultancy_id`, `person_id`, `ifconsultancy`, `role`, `domain`, `skillset`, `eligibility`, `projecttype`, `Consultancy_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -168,18 +111,6 @@ CREATE TABLE `domain_table` (
   `domain_column` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `domain_table`
---
-
-INSERT INTO `domain_table` (`id`, `domain_column`, `status`) VALUES
-(1, 'Both Software & Hardware', 1),
-(2, 'Software', 1),
-(3, 'ECE/EEE/EIE', 1),
-(4, 'MECH/MTRS', 1),
-(7, 'AGRI', 1),
-(8, 'BIOTECH', 1);
 
 -- --------------------------------------------------------
 
@@ -195,15 +126,6 @@ CREATE TABLE `expertise` (
   `skillset` varchar(255) DEFAULT NULL,
   `Expertise_Completion` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `expertise`
---
-
-INSERT INTO `expertise` (`expertise_id`, `person_id`, `domain`, `specialistskills`, `skillset`, `Expertise_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL),
-(4, 4, NULL, NULL, NULL, NULL),
-(5, 5, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -227,15 +149,6 @@ CREATE TABLE `history` (
   `status` tinyint(1) DEFAULT 0,
   `emailSent` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `history`
---
-
-INSERT INTO `history` (`history_id`, `person_id`, `agent`, `email`, `type`, `note`, `purpose`, `datetime`, `scheduleddate`, `visited1`, `visited2`, `points`, `status`, `emailSent`) VALUES
-(1, 1, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Reschedule Call', 'Get requirements about the next visit', 'Industrial Advisor/Reviewer', '2024-10-15 11:34:59', '2024-10-15 19:33:56', NULL, NULL, 0, 1, 1),
-(2, 1, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Reschedule Call', 'Get to know about the current revolution of industry', 'Handson Workshop', '2024-10-15 11:36:06', '2024-10-15 12:30:00', NULL, NULL, 0, 1, 1),
-(3, 1, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'Call', 'Spoke a call regarding the next visit', '', '2024-10-16 10:01:48', '2024-10-16 10:01:25', NULL, NULL, 3, 0, 0);
 
 --
 -- Triggers `history`
@@ -338,15 +251,6 @@ CREATE TABLE `internship` (
   `Internship_Completion` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `internship`
---
-
-INSERT INTO `internship` (`internship_id`, `person_id`, `ifinternship`, `role`, `domain`, `skillset`, `eligibility`, `projecttype`, `Internship_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -366,8 +270,25 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`ID`, `NAME`, `EMAIL`, `ROLE`, `STATUS`) VALUES
-(1, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'admin', 1),
-(2, 'THAYANITHI S', 'thayanithi.cs23@bitsathy.ac.in', 'user', 1);
+(1, 'NITHISH KUMAR S P', 'nithishkumar.cs23@bitsathy.ac.in', 'admin', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `minutes`
+--
+
+CREATE TABLE `minutes` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `person_id` varchar(255) NOT NULL,
+  `agent` varchar(255) NOT NULL,
+  `minutes` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'pending',
+  `handler` varchar(255) NOT NULL,
+  `date` date NOT NULL DEFAULT current_timestamp(),
+  `deadline` date NOT NULL,
+  `comments` varchar(255) DEFAULT 'NULL'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -396,15 +317,6 @@ CREATE TABLE `outcome` (
   `Outcome_Completion` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `outcome`
---
-
-INSERT INTO `outcome` (`outcome_id`, `person_id`, `eventname`, `date`, `description`, `Outcome_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL),
-(4, 4, NULL, NULL, NULL, NULL),
-(5, 5, NULL, NULL, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -414,7 +326,7 @@ INSERT INTO `outcome` (`outcome_id`, `person_id`, `eventname`, `date`, `descript
 CREATE TABLE `personalinfo` (
   `person_id` int(10) UNSIGNED NOT NULL,
   `useremail` varchar(255) NOT NULL,
-  `profile` varchar(255) DEFAULT '/uploads/1723435093639.jpg',
+  `profile` varchar(255) DEFAULT '/uploads/1729569842656.jpg',
   `fullname` varchar(255) NOT NULL,
   `phonenumber` varchar(255) NOT NULL,
   `age` varchar(50) DEFAULT NULL,
@@ -435,15 +347,6 @@ CREATE TABLE `personalinfo` (
   `status` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `personalinfo`
---
-
-INSERT INTO `personalinfo` (`person_id`, `useremail`, `profile`, `fullname`, `phonenumber`, `age`, `email`, `dob`, `rating`, `visitingcard`, `linkedinurl`, `address`, `shortdescription`, `hashtags`, `spoc`, `Completion`, `overall_completion`, `reason`, `timestamp`, `sub_id`, `status`) VALUES
-(1, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'NITHISH KUMAR S P', '8903342911', '19', 'nithishkumar.cs23@bitsathy.ac.in', '2005-11-02', 'Higly Recommended', NULL, 'www.linkedin.com/in/nithish-kumar-s-p-b5295828b', 'Mettupalayam, Coimbatore', 'Fouder of Product based development company, Fullstack developer, Tech enthusiast, Entreperenur', '#applicationengineer #startup #founder', 'no', 100, 100, NULL, '2024-10-15 11:33:49', 0, 1),
-(4, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'THAYANITHI S', '9025391287', '', 'thayanithi.cs23@bitsathy.ac.in', '1899-11-29', '', NULL, '', '', '', '', 'no', 40, 40, NULL, '2024-10-17 17:24:28', 1, 1),
-(5, 'nithishkumar.cs23@bitsathy.ac.in', '/uploads/1723435093639.jpg', 'DHANU SHRI V', '989034839', '', 'dhanushri.ec23@bitsathy.ac.in', '0000-00-00', '', NULL, '', '', '', '', 'no', 25, 7, NULL, '2024-10-17 17:25:16', 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -458,15 +361,6 @@ CREATE TABLE `person_points_summary` (
   `last_updated` datetime DEFAULT NULL,
   `reduction` decimal(10,2) DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `person_points_summary`
---
-
-INSERT INTO `person_points_summary` (`summary_id`, `person_id`, `total_points`, `rank`, `last_updated`, `reduction`) VALUES
-(1, 1, '13.00', 1, '2024-10-16 10:01:48', '0.00'),
-(3, 4, '10.00', -1, '2024-10-17 17:24:28', '0.00'),
-(4, 5, '10.00', 0, '2024-10-17 17:25:16', '0.00');
 
 --
 -- Triggers `person_points_summary`
@@ -505,15 +399,6 @@ CREATE TABLE `placement` (
   `Placement_Completion` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `placement`
---
-
-INSERT INTO `placement` (`placement_id`, `person_id`, `ifplacement`, `role`, `domain`, `skillset`, `eligibility`, `Placement_Completion`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, 5, NULL, NULL, NULL, NULL, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -524,22 +409,13 @@ CREATE TABLE `previousexperience` (
   `experience_id` int(10) UNSIGNED NOT NULL,
   `person_id` int(11) NOT NULL,
   `ifexperience` enum('yes','no') DEFAULT NULL,
-  `companyname` varchar(255) DEFAULT NULL,
+  `companyname` varchar(255) NOT NULL,
   `position` varchar(255) DEFAULT NULL,
   `experience` int(11) DEFAULT NULL,
   `role` varchar(255) DEFAULT NULL,
   `companyaddress` varchar(255) DEFAULT NULL,
   `Experience_Completion` int(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `previousexperience`
---
-
-INSERT INTO `previousexperience` (`experience_id`, `person_id`, `ifexperience`, `companyname`, `position`, `experience`, `role`, `companyaddress`, `Experience_Completion`) VALUES
-(1, 1, NULL, '', NULL, NULL, NULL, NULL, NULL),
-(4, 4, NULL, '', NULL, NULL, NULL, NULL, NULL),
-(5, 5, NULL, '', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -636,6 +512,12 @@ ALTER TABLE `login`
   ADD PRIMARY KEY (`ID`);
 
 --
+-- Indexes for table `minutes`
+--
+ALTER TABLE `minutes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `others`
 --
 ALTER TABLE `others`
@@ -691,49 +573,49 @@ ALTER TABLE `skillset_table`
 -- AUTO_INCREMENT for table `address_table`
 --
 ALTER TABLE `address_table`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `alumni`
 --
 ALTER TABLE `alumni`
-  MODIFY `alumni_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `alumni_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
-  MODIFY `company_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `company_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `company_table`
 --
 ALTER TABLE `company_table`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `consultancy`
 --
 ALTER TABLE `consultancy`
-  MODIFY `consultancy_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `consultancy_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `domain_table`
 --
 ALTER TABLE `domain_table`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `expertise`
 --
 ALTER TABLE `expertise`
-  MODIFY `expertise_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `expertise_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `history`
 --
 ALTER TABLE `history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `interactions`
@@ -745,13 +627,19 @@ ALTER TABLE `interactions`
 -- AUTO_INCREMENT for table `internship`
 --
 ALTER TABLE `internship`
-  MODIFY `internship_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `internship_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `minutes`
+--
+ALTER TABLE `minutes`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `others`
@@ -763,31 +651,31 @@ ALTER TABLE `others`
 -- AUTO_INCREMENT for table `outcome`
 --
 ALTER TABLE `outcome`
-  MODIFY `outcome_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `outcome_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `personalinfo`
 --
 ALTER TABLE `personalinfo`
-  MODIFY `person_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `person_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `person_points_summary`
 --
 ALTER TABLE `person_points_summary`
-  MODIFY `summary_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `summary_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `placement`
 --
 ALTER TABLE `placement`
-  MODIFY `placement_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `placement_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `previousexperience`
 --
 ALTER TABLE `previousexperience`
-  MODIFY `experience_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `experience_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `role_table`
