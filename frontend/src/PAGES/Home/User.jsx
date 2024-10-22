@@ -12,7 +12,7 @@ import Settings from '../Settings/Settings';
 import CryptoJS from 'crypto-js';
 import Swal from 'sweetalert2';
 
-const SECRET_KEY = 'your-secret-key';
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 export default function User() {
   const decrypt = (ciphertext) => {
     if (ciphertext) {

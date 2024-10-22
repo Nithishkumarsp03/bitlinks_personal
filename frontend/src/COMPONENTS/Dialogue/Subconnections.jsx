@@ -10,7 +10,7 @@ import CryptoJS from "crypto-js";
 import CustomizedSwitches from '../../utils/Switch';
 import { usePerson } from '../Context';
 
-const SECRET_KEY = "your-secret-key";
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 const Subconnections = ({
   open,

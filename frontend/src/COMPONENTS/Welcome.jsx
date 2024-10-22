@@ -7,7 +7,7 @@ import BeatLoader from './BeatLoader';
 const Welcome = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const SECRET_KEY = 'your-secret-key';
+  const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
   const loading = true;
 
   const encrypt = (text) => {

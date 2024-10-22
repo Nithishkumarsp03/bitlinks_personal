@@ -12,7 +12,7 @@ import Cancel from "../../../Assets/cancel.png";
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 
-const SECRET_KEY = 'your-secret-key';
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 export default function MainFlow({ subPersonId ,fetchPersonalInfo, fetchUserNetworks, handlecancelflows, fetchRescheduleData, fetchRescheduleDataNetworks}) {
   const [activeFlow, setActiveFlow] = useState("history"); // Default to "graph"

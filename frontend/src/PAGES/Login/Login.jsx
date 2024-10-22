@@ -11,7 +11,7 @@ import axios from "axios";
 import PreLoader from "../../COMPONENTS/PreLoader";
 import CryptoJS from "crypto-js";
 
-const SECRET_KEY = "your-secret-key";
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 export default function Login({ onLogin }) {
 

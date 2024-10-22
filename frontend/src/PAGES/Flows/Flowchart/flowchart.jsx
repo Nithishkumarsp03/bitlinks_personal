@@ -27,7 +27,7 @@ import InternshipDialog from "../../../COMPONENTS/Dialogue/Internship";
 import ExpertiseDialog from "../../../COMPONENTS/Dialogue/Expertise";
 import CryptoJS from 'crypto-js';
 
-const SECRET_KEY = 'your-secret-key';
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 const ChangingProgressProvider = ({ value, children }) => {
   return children(value);

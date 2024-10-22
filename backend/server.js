@@ -425,10 +425,10 @@ IECC
 
 //------------------------------Mails--------------------------------------------
 // Schedule the task to run every minute
-cron.schedule("* * * * *", () => {
-  // console.log('Checking for upcoming events...');
-  checkAndSendEmails();
-});
+// cron.schedule("* * * * *", () => {
+//   // console.log('Checking for upcoming events...');
+//   checkAndSendEmails();
+// });
 
 // cron.schedule("0 9 * * *", () => {
 //   checkAndSendWishes();

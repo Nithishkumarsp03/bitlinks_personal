@@ -16,7 +16,7 @@ import MinutesDropdown from "../../../Dropdown/MinutesDropdown";
 import "./Minutes.css";
 import "../MainFlow/Flows.css";
 
-const SECRET_KEY = "your-secret-key";
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 export default function Minutes() {
   const [minutesList, setMinutesList] = useState([]);

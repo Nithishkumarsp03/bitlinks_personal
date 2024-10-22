@@ -10,7 +10,7 @@ import CryptoJS from "crypto-js";
 import Profile from "../../Assets/Profile.png";
 import CustomizedSwitches from "../../utils/Switch";
 
-const SECRET_KEY = "your-secret-key";
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 const PersonDialog = ({
   open,

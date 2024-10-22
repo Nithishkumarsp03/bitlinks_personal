@@ -40,7 +40,7 @@ import Details from "../Details/Details";
 import Table from "../Table/Table";
 import CryptoJS from 'crypto-js';
 
-const SECRET_KEY = 'your-secret-key';
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 export default function Default(subPersonId) {
   const decrypt = (ciphertext) => {

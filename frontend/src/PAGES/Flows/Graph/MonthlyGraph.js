@@ -5,7 +5,7 @@ import { usePerson } from '../../../COMPONENTS/Context';
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
 
-const SECRET_KEY = 'your-secret-key';
+const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 export default function ApexChartMonthlyGraph() {
   const [seriesData, setSeriesData] = useState([]);
