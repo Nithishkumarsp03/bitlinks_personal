@@ -10,7 +10,7 @@ export const encrypt = (text) => {
   return '';
 };
 
-export const decrypt = (ciphertext) => {
+ export const decrypt = (ciphertext) => {
   if (ciphertext) {
     const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
     return bytes.toString(CryptoJS.enc.Utf8);

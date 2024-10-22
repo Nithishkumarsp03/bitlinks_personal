@@ -39,17 +39,19 @@ import BeatLoader from "../../COMPONENTS/BeatLoader";
 import Details from "../Details/Details";
 import Table from "../Table/Table";
 import CryptoJS from 'crypto-js';
+import { decrypt } from "../../COMPONENTS/cookieUtils";
 
 const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 export default function Default(subPersonId) {
-  const decrypt = (ciphertext) => {
-    if (ciphertext) {
-      const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
-      return bytes.toString(CryptoJS.enc.Utf8);
-    }
-    return '';
-  };
+  // const decrypt = (ciphertext) => {
+  //   if (ciphertext) {
+  //     const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+  //     return bytes.toString(CryptoJS.enc.Utf8);
+  //   }
+  //   return '';
+  // };
+  
   const FilterIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
