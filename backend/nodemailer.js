@@ -33,7 +33,7 @@ const sendEmailNotification = (toEmail, subject, message) => {
 };
 
 // Example Usage: Sending an email
-const receiverEmail = 'vikashini.fd23@bitsathy.ac.in'; // Replace with the receiver's email address
+// const receiverEmail = 'vikashini.fd23@bitsathy.ac.in'; // Replace with the receiver's email address
 const emailSubject = 'Congratulations on Completing the python level 1 on P-Skill';
 const emailMessage = `Dear VIKASHINI M,
 
