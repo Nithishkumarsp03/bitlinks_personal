@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
 const authenticate = require("../Authenticate.js"); 
+
 router.post( "/person", authenticate, (req, res) => {
   const {
     personInfo,
@@ -211,3 +212,100 @@ router.post( "/person", authenticate, (req, res) => {
   });
 });
 module.exports = router; 
+
+
+/**
+ * @swagger
+ * /person:
+ *   post:
+ *     summary: Enters user data from new connection form
+ *     description: Inserts user data into the personalinfo table and related tables for a new connection.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               personInfo:
+ *                 type: object
+ *                 properties:
+ *                   spoc:
+ *                     type: string
+ *                     example: "yes"
+ *                   fullname:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   phonenumber:
+ *                     type: string
+ *                     example: "1234567890"
+ *                   age:
+ *                     type: integer
+ *                     example: 25
+ *                   email:
+ *                     type: string
+ *                     example: "john.doe@example.com"
+ *                   dob:
+ *                     type: string
+ *                     format: date
+ *                     example: "1998-01-01"
+ *                   rating:
+ *                     type: number
+ *                     format: float
+ *                     example: 4.5
+ *                   linkedinurl:
+ *                     type: string
+ *                     example: "https://www.linkedin.com/in/johndoe"
+ *                   address:
+ *                     type: string
+ *                     example: "123 Main St, Anytown, USA"
+ *                   shortdescription:
+ *                     type: string
+ *                     example: "Software Developer with a passion for coding."
+ *                   hashtags:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       example: ["JavaScript", "Node.js", "React"]
+ *               imagePath1:
+ *                 type: string
+ *                 example: "/path/to/image1.jpg"
+ *               imagePath2:
+ *                 type: string
+ *                 example: "/path/to/image2.jpg"
+ *               email:
+ *                 type: string
+ *                 example: "john.doe@example.com"
+ *               Completion:
+ *                 type: integer
+ *                 example: 80
+ *               TotalProgress:
+ *                 type: integer
+ *                 example: 90
+ *     responses:
+ *       200:
+ *         description: Person info inserted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Profile saved successfully"
+ * 
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

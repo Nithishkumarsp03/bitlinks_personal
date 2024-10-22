@@ -24,3 +24,46 @@ router.post("/addresspost", authenticate, (req, res) => {
   });
 });
 module.exports = router; 
+
+/**
+ * @swagger
+ * /addresspost:
+ *   post:
+ *     summary: Add a new address
+ *     description: Inserts a new address entry into the address table.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               location:
+ *                 type: string
+ *                 example: "456 Another St, Anytown, CA 12345"
+ *     responses:
+ *       200:
+ *         description: Address added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Address added successfully
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error updating status.
+ */

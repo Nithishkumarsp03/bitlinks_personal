@@ -21,3 +21,56 @@ router.get("/logindata", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+
+/**
+ * @swagger
+ * /logindata:
+ *   get:
+ *     summary: Fetch login data
+ *     description: Retrieves all records from the login table.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Login data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   email:
+ *                     type: string
+ *                     example: "john.doe@example.com"
+ *                   status:
+ *                     type: integer
+ *                     example: 1
+ *                   created_at:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-01-01T00:00:00Z"
+ *                   updated_at:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-01-01T00:00:00Z"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

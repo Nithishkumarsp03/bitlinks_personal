@@ -59,3 +59,69 @@ router.post("/history-status", authenticate, (req, res) => {
 
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /history-status:
+ *   post:
+ *     summary: Updates the status of a history record
+ *     description: Updates the status of a history record identified by its ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               history_id:
+ *                 type: integer
+ *                 example: 101
+ *               status:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: History status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: History status updated successfully
+ *       400:
+ *         description: Missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Missing required fields history_id and status
+ *       404:
+ *         description: No history record found with the given ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No history record found with the given ID
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Failed to update history status
+ */

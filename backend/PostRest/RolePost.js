@@ -30,3 +30,49 @@ router.post("/rolepost", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /rolepost:
+ *   post:
+ *     summary: Insert a role
+ *     description: Inserts a new role into the role table in the database.
+ *     tags:
+ *       - Role
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 example: "Admin"
+ *     responses:
+ *       200:
+ *         description: Role inserted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Role inserted successfully."
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error inserting role."
+ */

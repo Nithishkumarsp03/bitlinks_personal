@@ -42,3 +42,59 @@ router.post( "/addminutes", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /addminutes:
+ *   post:
+ *     summary: Inserts minutes data for a person
+ *     description: Adds a new minutes record in the database for a specific person using their ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *               username:
+ *                 type: string
+ *                 example: "john_doe"
+ *               minutes:
+ *                 type: integer
+ *                 example: 30
+ *               deadline:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-12-31 23:59:59"
+ *     responses:
+ *       200:
+ *         description: Record inserted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Record inserted successfully
+ *                 newRecord:
+ *                   type: integer
+ *                   example: 101
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to insert record.
+ */

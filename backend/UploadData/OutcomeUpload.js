@@ -53,3 +53,73 @@ router.put("/outcomeupload", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+
+/**
+ * @swagger
+ * /outcomeupload:
+ *   put:
+ *     summary: Uploads Outcome Data
+ *     description: Updates outcome information in the database based on person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *               Outcomeinfo:
+ *                 type: object
+ *                 properties:
+ *                   eventname:
+ *                     type: string
+ *                     example: "Annual Gala"
+ *                   date:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-10-15T00:00:00Z"
+ *                   description:
+ *                     type: string
+ *                     example: "A celebration of the year's achievements."
+ *               Outcome_Completion:
+ *                 type: string
+ *                 example: "Completed"
+ *     responses:
+ *       200:
+ *         description: Updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Updated successfully!"
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Date is required."
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

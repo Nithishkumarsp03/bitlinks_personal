@@ -55,3 +55,63 @@ router.put("/expertiseupload", authenticate, (req, res) => {
 
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /expertiseupload:
+ *   put:
+ *     summary: Uploads Expertise Data
+ *     description: Updates expertise information in the database based on person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *               ExpertiseInfo:
+ *                 type: object
+ *                 properties:
+ *                   domain:
+ *                     type: string
+ *                     example: "Software Development"
+ *                   specialistskills:
+ *                     type: string
+ *                     example: "JavaScript, React, Node.js"
+ *                   skillset:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["JavaScript", "React", "Node.js"]
+ *               Expertise_Completion:
+ *                 type: string
+ *                 example: "Completed"
+ *     responses:
+ *       200:
+ *         description: Uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Updated successfully!"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

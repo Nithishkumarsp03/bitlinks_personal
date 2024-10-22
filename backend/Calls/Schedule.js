@@ -29,3 +29,74 @@ router.post("/schedule", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /schedule:
+ *   post:
+ *     summary: Fetches schedules by user email
+ *     description: Retrieves scheduled history records based on the user's email.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Schedules fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   history_id:
+ *                     type: integer
+ *                     example: 101
+ *                   person_id:
+ *                     type: integer
+ *                     example: 1
+ *                   fullname:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   profile:
+ *                     type: string
+ *                     example: "path/to/profile.jpg"
+ *                   status:
+ *                     type: integer
+ *                     example: 1
+ *                   other_properties:
+ *                     type: string
+ *                     example: "other values"
+ *       400:
+ *         description: Email is required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Email is required
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Server error
+ */

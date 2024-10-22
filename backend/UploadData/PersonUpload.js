@@ -77,3 +77,106 @@ router.put("/personupload", authenticate, (req, res) => {
 
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /personupload:
+ *   put:
+ *     summary: Uploads Person Info Data
+ *     description: Updates personal information in the database based on person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *               personInfo:
+ *                 type: object
+ *                 properties:
+ *                   fullname:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   phonenumber:
+ *                     type: string
+ *                     example: "1234567890"
+ *                   age:
+ *                     type: integer
+ *                     example: 30
+ *                   email:
+ *                     type: string
+ *                     example: "john.doe@example.com"
+ *                   dob:
+ *                     type: string
+ *                     format: date
+ *                     example: "1993-01-01"
+ *                   rating:
+ *                     type: number
+ *                     format: float
+ *                     example: 4.5
+ *                   linkedinurl:
+ *                     type: string
+ *                     example: "https://www.linkedin.com/in/johndoe"
+ *                   address:
+ *                     type: string
+ *                     example: "123 Elm St, Springfield, USA"
+ *                   shortdescription:
+ *                     type: string
+ *                     example: "Passionate software engineer."
+ *                   hashtags:
+ *                     type: string
+ *                     example: "#software #developer"
+ *                   rank:
+ *                     type: integer
+ *                     example: 1
+ *               imagePath1:
+ *                 type: string
+ *                 example: "path/to/image1.jpg"
+ *               imagePath2:
+ *                 type: string
+ *                 example: "path/to/image2.jpg"
+ *               Completion:
+ *                 type: string
+ *                 example: "Completed"
+ *               TotalProgress:
+ *                 type: string
+ *                 example: "75%"
+ *     responses:
+ *       200:
+ *         description: Updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Updated successfully!"
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid input data."
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

@@ -79,7 +79,12 @@ const LoginDataRoutes = require('./TableData/LoginData.js');
 const UpdateStatusLoginRoutes = require('./PostRest/UpdateStatusLogin.js');
 const LoginPostRoutes = require('./PostRest/LoginPost.js');
 const InteractionsRoutes = require('./PostRest/Interactions.js');
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpecial = require("./swaggerConfig.js");
 // Middleware function example
+
+
+
 const myMiddleware = (req, res, next) => {
   next(); // Pass control to the next middleware function
 };
@@ -101,6 +106,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecial));
 
 app.use(api, auth);
 
@@ -511,4 +517,6 @@ app.post(api+"/history", authenticate, (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`API Docs available at http://localhost:${PORT}/api-docs`);
+
 });

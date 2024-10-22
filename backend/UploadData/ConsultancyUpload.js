@@ -57,3 +57,72 @@ router.put("/consultancyupload", authenticate, (req, res) => {
   });
 });
 module.exports = router;
+
+/**
+ * @swagger
+ * /consultancyupload:
+ *   put:
+ *     summary: Uploads Consultancy Data
+ *     description: Updates consultancy information in the database based on person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *               Ifconsultancy:
+ *                 type: string
+ *                 example: "Yes"
+ *               Consultancyinfo:
+ *                 type: object
+ *                 properties:
+ *                   role:
+ *                     type: string
+ *                     example: "Consultant"
+ *                   domain:
+ *                     type: string
+ *                     example: "IT"
+ *                   skillset:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["JavaScript", "Node.js"]
+ *                   eligibility:
+ *                     type: string
+ *                     example: "Graduates"
+ *                   projecttype:
+ *                     type: string
+ *                     example: "Full-time"
+ *               Consultancy_Completion:
+ *                 type: string
+ *                 example: "Completed"
+ *     responses:
+ *       200:
+ *         description: Uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Updated successfully!"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

@@ -34,3 +34,49 @@ router.post("/userranks", authenticate,(req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /userranks:
+ *   post:
+ *     summary: Fetch user ranks data based on email
+ *     description: Retrieves the count of user ranks (3, 2, 1, 0, -1) for a specific user identified by their email.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: User ranks data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count_rank_3:
+ *                   type: integer
+ *                   example: 5
+ *                 count_rank_2:
+ *                   type: integer
+ *                   example: 3
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to fetch user ranks counts."
+ */

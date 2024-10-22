@@ -19,3 +19,52 @@ router.post("/personstatus", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /personstatus:
+ *   post:
+ *     summary: Updates a person's status
+ *     description: Updates the status and reason for a person identified by their ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               person:
+ *                 type: string
+ *                 example: "12345"  
+ *               reason:
+ *                 type: string
+ *                 example: "User requested account deactivation"
+ *               status:
+ *                 type: string
+ *                 example: "inactive"
+ *     responses:
+ *       200:
+ *         description: Person status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Person status updated successfully"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

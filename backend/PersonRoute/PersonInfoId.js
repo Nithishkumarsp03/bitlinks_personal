@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
 const authenticate = require("../Authenticate.js"); 
+
 router.get("/personalinfo/main/:personId", authenticate, (req, res) => {
   const { personId } = req.params;
 
@@ -40,3 +41,87 @@ router.get(
 );
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /personalinfo/main/{personId}:
+ *   get:
+ *     summary: Fetch connections of a person based on ID
+ *     description: Fetch personal connections of a person using their ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: personId
+ *         required: true
+ *         description: ID of the person to fetch connections for.
+ *         schema:
+ *           type: string
+ *           example: "12345"
+ *     responses:
+ *       200:
+ *         description: Personal connections fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Personal connections fetched successfully
+ *                 data:
+ *                   type: object
+ *                   additionalProperties: true
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ */
+
+/**
+ * @swagger
+ * /personalinfo/subconnections/{personId}:
+ *   get:
+ *     summary: Fetch sub-connections of a person based on ID
+ *     description: Fetch sub-connections for a specific person using their ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: personId
+ *         required: true
+ *         description: ID of the person to fetch sub-connections for.
+ *         schema:
+ *           type: string
+ *           example: "12345"
+ *     responses:
+ *       200:
+ *         description: Sub-connections fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 additionalProperties: true
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ */

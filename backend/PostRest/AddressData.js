@@ -25,3 +25,53 @@ router.get("/addressdata", authenticate, (req, res) => {
 
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /addressdata:
+ *   get:
+ *     summary: Fetch Address data
+ *     description: Retrieves all address entries from the address table.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Address data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   street:
+ *                     type: string
+ *                     example: "123 Main St"
+ *                   city:
+ *                     type: string
+ *                     example: "Anytown"
+ *                   state:
+ *                     type: string
+ *                     example: "CA"
+ *                   zip_code:
+ *                     type: string
+ *                     example: "12345"
+ *                   country:
+ *                     type: string
+ *                     example: "USA"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ */

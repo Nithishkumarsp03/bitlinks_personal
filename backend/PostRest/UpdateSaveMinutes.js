@@ -30,3 +30,73 @@ router.put( "/updatesaveminutes", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /updatesaveminutes:
+ *   put:
+ *     summary: Update minutes and deadline of a specific record
+ *     description: Updates the minutes and deadline for a specific record in the minutes table based on its ID.
+ *     tags:
+ *       - Minutes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *               minutes:
+ *                 type: string
+ *                 example: "This meeting discussed project updates."
+ *               deadline:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-12-31T23:59:59Z"
+ *     responses:
+ *       200:
+ *         description: Status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Status updated successfully."
+ *       400:
+ *         description: Missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error."
+ *       404:
+ *         description: Record not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Address not found."
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error updating status."
+ */
