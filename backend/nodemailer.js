@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
 // Function to send email
 const sendEmailNotification = (toEmail, subject, message) => {
   const mailOptions = {
-    from: `"Personalized skill" <nithishkumar.cs23@bitsathy.ac.in>`, // Sets "No-Reply" as the sender name
+    from: `"Personalized skill" <>`, // Sets "No-Reply" as the sender name
     to: toEmail, // Receiver's email address
     subject: subject, // Email subject
     text: message, // Email message in plain text
@@ -49,4 +49,4 @@ Personalized Skill
 
 `;
 
-sendEmailNotification(receiverEmail, emailSubject, emailMessage);
+// sendEmailNotification(receiverEmail, emailSubject, emailMessage);
