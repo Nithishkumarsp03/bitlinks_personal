@@ -395,18 +395,35 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
     // console.log('clicked');
     e.preventDefault();
     
+    setCreatedDate(null);
+    setScheduledDate(null);
+    
     if (type === "") {
       setError("Please select the type of Conversation");
       return;
+    }
+    if (type === "Reschedule Call" || type === "Rescheduled Visit") {
+      if (scheduled_date === null) {
+        setError("Please provide a scheduled date for rescheduling");
+        return;
+      }
     }
     if (note === "") {
       setError("Fill the notes");
       return;
     }
-    if (imagePath1 === "" && imagePath2 === "") {
-      setError("Insert both the images");
+    if(purpose === ""){
+      setError("Select the Purpose");
       return;
     }
+    if(type === "Visited"){
+      if (imagePath1 === null || imagePath2 === null) {
+        setError("Insert both the images");
+        return;
+      }  
+    }
+
+    // if()
   
     // Clear form fields after validation
   
@@ -690,9 +707,9 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
                           <button className="visited-img" onClick={() => setImage2open(true)} style={{ marginLeft: '2%' }}>
                             Image 2
                           </button>
-                          <Dialog open={image1open} onClose={() => setImage1open(false)}>
+                          <Dialog open={image1open} onClose={() => setImage1open(false)} >
                             <div style={{width: "20vw"}} >
-                            <img style={{width: "100%",height: "100%"}}  src={`${api}${item.visited1}`} alt="" />
+                            <img style={{width: "100%",height: "100%"}}  src={`${api}${item.visited1}`}/>
                             </div>
                           </Dialog>
                           <Dialog open={image2open} onClose={() => setImage2open(false)}>

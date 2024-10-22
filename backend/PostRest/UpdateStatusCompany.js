@@ -3,8 +3,7 @@ const router = express.Router();
 const pool = require("../config.js"); 
 const authenticate = require("../Authenticate.js"); 
 
-
-router.put("/updatestatuscompany", authenticate, (req, res) => {
+router.put( "/updatestatuscompany", authenticate, (req, res) => {
   const { id, status } = req.body;
   const query = "UPDATE company_table SET status = ? WHERE id = ?";
 
@@ -21,7 +20,7 @@ router.put("/updatestatuscompany", authenticate, (req, res) => {
         return res.status(500).json({ message: "Error updating status." });
       }
       if (results.affectedRows === 0) {
-        return res.status(404).json({ message: "Address not found." });
+        return res.status(404).json({ message: "Company not found." });
       } else {
         res.json({ message: "Status updated successfully." });
       }

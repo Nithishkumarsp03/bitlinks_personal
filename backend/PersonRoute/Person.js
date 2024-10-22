@@ -11,7 +11,7 @@ router.post( "/person", authenticate, (req, res) => {
     Completion,
     TotalProgress,
   } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   if (!personInfo.spoc || personInfo.spoc === "") {
     personInfo.spoc = "no"; 
   }

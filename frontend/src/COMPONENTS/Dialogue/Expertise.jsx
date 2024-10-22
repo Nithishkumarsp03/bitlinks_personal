@@ -22,7 +22,7 @@ const ExpertiseDialog = ({ open, onClose, ExpertiseInfo, handleDetailsChange4, e
   }, [ExpertiseInfo]);
 
   const handleDomainChange = (newDomain) => {
-    console.log("Selected domain from dropdown:", newDomain);
+    // console.log("Selected domain from dropdown:", newDomain);
     setExpertiseInfo(prev => {
       const updatedInfo = { ...prev, domain: newDomain };
       

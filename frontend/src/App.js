@@ -27,7 +27,7 @@ function Protected({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       const decryptedRole = decrypt(Cookies.get("role"));
-      console.log('Decrypted Role:', decryptedRole);
+      // console.log('Decrypted Role:', decryptedRole);
       if (decryptedRole) {
         setAuth(true);
         setRole(decryptedRole);

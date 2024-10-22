@@ -12,12 +12,12 @@ import MainFlow from "../Flows/MainFlow/Flows";
     const [viewconnection, setviewconnection] = useState(false);
   
     // Log the value of cancelflows to check if it's coming through
-    console.log("cancelflows prop in Spoc component:", cancelflows);
+    // console.log("cancelflows prop in Spoc component:", cancelflows);
   
     useEffect(() => {
-      console.log("useEffect triggered: cancelflows =", cancelflows);
+      // console.log("useEffect triggered: cancelflows =", cancelflows);
       if (cancelflows==true) {
-        console.log("Cancelflows is true, resetting view and viewconnection");
+        // console.log("Cancelflows is true, resetting view and viewconnection");
         setview(false);
         setviewconnection(false);
       }

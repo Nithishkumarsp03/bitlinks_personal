@@ -190,7 +190,7 @@ export default function Minutes() {
 
   const handleaddminutes = async () => {
 
-    console.log(handler);
+    // console.log(handler);
     setAddloading(true);
     if (minutes === "") {
       setError("Please enter minutes before submitting.");
@@ -241,78 +241,88 @@ export default function Minutes() {
   return (
     <>
       {loading ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "35vh",
-          }}>
-          <BeatLoader loading={loading} color="#2867B2" size={15} />
-        </div>
-      ) : (
-        <div className="minutes-container">
-          <div style={{display: "flex", justifyContent: "end", marginRight: "20px"}}>
-            <Button onClick={() => setAddopen(true)} className="add-button-minutes">Add</Button>
-          </div>
-          <ul className="minutes-list">
-            {sortedMinutesList.map((item) => (
-              <li
-                key={item.id}
-                className={`minutes-item ${item.status.toLowerCase()}`}>
-                <div className="minutes-details">
-                  <span className="minutes-text">{item.minutes}</span>
-                  <span className="minutes-date">
-                    <AiOutlineCalendar />{" "}
-                    {new Date(item.date).toLocaleDateString("en-GB")}{" "}
-                    <span style={{ fontSize: "15px", color: "black" }}>-</span>{" "}
-                    <AiOutlineCalendar />{" "}
-                    {new Date(item.deadline).toLocaleDateString("en-GB")}
-                  </span>
-                  <strong className="minutes-status">
-                    {loadingId === item.id ? (
-                      <BeatLoader
-                        loading={true}
-                        color="#2867B2"
-                        size={5}
-                        className="beatloader"
-                      />
-                    ) : (
-                      <p>{item.status}</p>
-                    )}
-                  </strong>
-                </div>
-
-                {item.status === "pending" && (
-                  <div className="button-group">
-                    <>
-                      <button
-                        className="status-button complete-button"
-                        onClick={() => updateStatus(item.id, "Requested")}
-                        disabled={item.status !== "pending"} // Disable if status is not "pending"
-                      >
-                        Mark as Completed
-                      </button>
-                      <button
-                        className="status-button impossible-button"
-                        onClick={() => handleImpossibleClick(item.id)}
-                        disabled={item.status !== "pending"} // Disable if status is not "pending"
-                      >
-                        Mark as Impossible
-                      </button>
-                      <button
-                        className="edit-button"
-                        onClick={() => handleEdit(item.id)}>
-                        <FiEdit />
-                      </button>
-                    </>
-                  </div>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "35vh",
+    }}
+  >
+    <BeatLoader loading={loading} color="#2867B2" size={15} />
+  </div>
+) : (
+  <div className="minutes-container">
+    <div style={{ display: "flex", justifyContent: "end", marginRight: "20px" }}>
+      <Button onClick={() => setAddopen(true)} className="add-button-minutes">
+        Add
+      </Button>
+    </div>
+    {minutesList.length > 0 ? (
+      <ul className="minutes-list">
+        {sortedMinutesList.map((item) => (
+          <li
+            key={item.id}
+            className={`minutes-item ${item.status.toLowerCase()}`}
+          >
+            <div className="minutes-details">
+              <span className="minutes-text">{item.minutes}</span>
+              <span className="minutes-date">
+                <AiOutlineCalendar />{" "}
+                {new Date(item.date).toLocaleDateString("en-GB")}{" "}
+                <span style={{ fontSize: "15px", color: "black" }}>-</span>{" "}
+                <AiOutlineCalendar />{" "}
+                {new Date(item.deadline).toLocaleDateString("en-GB")}
+              </span>
+              <strong className="minutes-status">
+                {loadingId === item.id ? (
+                  <BeatLoader
+                    loading={true}
+                    color="#2867B2"
+                    size={5}
+                    className="beatloader"
+                  />
+                ) : (
+                  <p>{item.status}</p>
                 )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+              </strong>
+            </div>
+            {item.status === "pending" && (
+              <div className="button-group">
+                <>
+                  <button
+                    className="status-button complete-button"
+                    onClick={() => updateStatus(item.id, "Requested")}
+                    disabled={item.status !== "pending"}
+                  >
+                    Mark as Completed
+                  </button>
+                  <button
+                    className="status-button impossible-button"
+                    onClick={() => handleImpossibleClick(item.id)}
+                    disabled={item.status !== "pending"}
+                  >
+                    Mark as Impossible
+                  </button>
+                  <button className="edit-button" onClick={() => handleEdit(item.id)}>
+                    <FiEdit />
+                  </button>
+                </>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div className="empty-error">
+                <div>
+                  <i className="fa-solid fa-circle-info"></i>
+                  <p>No Minutes Found</p>
+                </div>
+              </div>
+    )}
+  </div>
+)}
 
       {/* Add minutes dialog */}
       <Dialog open={addopen} onClose={() => setAddopen(false)}>

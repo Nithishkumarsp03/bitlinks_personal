@@ -5,7 +5,7 @@ const authenticate = require("../Authenticate.js");
 
 router.put("/companyupload", authenticate, (req, res) => {
   const { selectedPersonId, CompanyInfo, Company_Completion } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
 
   pool.getConnection((err, connection) => {
     if (err) {

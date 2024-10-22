@@ -139,7 +139,7 @@ const Subconnections = ({
         rank: newChecked ? 0 : -1, // Set "yes" for true, "no" for false
       }));
   
-      console.log("rank will be:", newChecked ? 0 : -1);
+      // console.log("rank will be:", newChecked ? 0 : -1);
   
       return newChecked;
     });

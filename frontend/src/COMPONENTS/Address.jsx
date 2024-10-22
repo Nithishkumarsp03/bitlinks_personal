@@ -105,15 +105,17 @@ export default function Address() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ location: location }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Data saved successfully:', data);
+        // console.log('Data saved successfully:', data);
         setError('Saved Successfully! You may now close this Dialog');
         fetchData(); // Refresh the table data
+        setOpen(false);
       } else {
         console.error('Failed to save data');
         setError('Failed to save data.');

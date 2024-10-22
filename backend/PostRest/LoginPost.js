@@ -4,7 +4,7 @@ const pool = require("../config.js");
 const authenticate = require("../Authenticate.js"); 
 
 router.post("/loginpost", authenticate, (req, res) => {
-  const { name, email } = req.body;
+  const { name, email, role } = req.body;
 
   pool.getConnection((err, connection) => {
     if (err) {
@@ -12,8 +12,8 @@ router.post("/loginpost", authenticate, (req, res) => {
       return res.status(500).json({ message: "Database error" });
     }
 
-    const query = "INSERT INTO login (NAME, EMAIL) VALUES (?, ?)";
-    connection.query(query, [name, email], (err, results) => {
+    const query = "INSERT INTO login (NAME, EMAIL, ROLE) VALUES (?, ?, ?)";
+    connection.query(query, [name, email, role], (err, results) => {
       connection.release();
 
       if (err) {

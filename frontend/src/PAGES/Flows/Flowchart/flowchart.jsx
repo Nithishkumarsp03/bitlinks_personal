@@ -298,9 +298,9 @@ const Flowchart = () => {
     setCompletion(Completion);
     setPerson_Progress(Completion);
     
-    console.log("filledFields : ",filledFields);
-    console.log("totalFields : ",totalFields);
-    console.log("Completion : ",Completion);
+    // console.log("filledFields : ",filledFields);
+    // console.log("totalFields : ",totalFields);
+    // console.log("Completion : ",Completion);
     // console.log("Completion : ",Completion);
   };
 

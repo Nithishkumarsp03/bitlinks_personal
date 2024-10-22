@@ -30,12 +30,12 @@ const InternshipDialog = ({
   };
 
   const handleRoleChange = (newRole) => {
-    console.log('Role changed to:', newRole); // Debug log
+    // console.log('Role changed to:', newRole); // Debug log
     handleDetailsChange10({ target: { name: 'role', value: newRole } });
   };
 
   const handleRoleTextChange = (newText) => {
-    console.log('Role text changed to:', newText); // Debug log
+    // console.log('Role text changed to:', newText);
     handleDetailsChange10({ target: { name: 'role', value: newText } });
   };
 
