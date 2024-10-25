@@ -44,3 +44,54 @@ router.get("/expertisedata/domains", authenticate, (req, res) => {
   });
 });
 module.exports = router; 
+
+/**
+ * @swagger
+ * /expertisedata/domains:
+ *   get:
+ *     summary: Fetches expertise domain counts
+ *     description: Retrieves counts of expertise domains (Hardware, Software, Others).
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Expertise domain counts fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 hardwareCount:
+ *                   type: integer
+ *                   example: 10
+ *                 softwareCount:
+ *                   type: integer
+ *                   example: 15
+ *                 othersCount:
+ *                   type: integer
+ *                   example: 5
+ *
+ *       404:
+ *         description: No data found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "No expertise data found."
+ * 
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

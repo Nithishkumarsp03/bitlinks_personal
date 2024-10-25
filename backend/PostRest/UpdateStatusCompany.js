@@ -29,3 +29,69 @@ router.put( "/updatestatuscompany", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /updatestatuscompany:
+ *   put:
+ *     summary: Update status of a specific company record
+ *     description: Updates the status of a specific record in the company_table based on its ID.
+ *     tags:
+ *       - Company
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 1
+ *               status:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Status updated successfully."
+ *       400:
+ *         description: Missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error."
+ *       404:
+ *         description: Company not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Company not found."
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error updating status."
+ */

@@ -29,3 +29,49 @@ router.post("/networkranks", authenticate, (req, res) => {
   });
 });
 module.exports = router; 
+
+/**
+ * @swagger
+ * /networkranks:
+ *   post:
+ *     summary: Fetch network ranks of users
+ *     description: Retrieves the counts of users by their ranks in the network.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: NetworkRanks
+ *     responses:
+ *       200:
+ *         description: Network ranks fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count_rank_3:
+ *                   type: integer
+ *                   example: 5
+ *                 count_rank_2:
+ *                   type: integer
+ *                   example: 10
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ */

@@ -48,3 +48,77 @@ router.put("/companyupload", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+
+/**
+ * @swagger
+ * /companyupload:
+ *   put:
+ *     summary: Uploads Company Data
+ *     description: Updates company information in the database based on person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *               CompanyInfo:
+ *                 type: object
+ *                 properties:
+ *                   companyname:
+ *                     type: string
+ *                     example: "Tech Innovations"
+ *                   position:
+ *                     type: string
+ *                     example: "Software Engineer"
+ *                   experience:
+ *                     type: string
+ *                     example: "2 years"
+ *                   role:
+ *                     type: string
+ *                     example: "Full Stack Developer"
+ *                   companyaddress:
+ *                     type: string
+ *                     example: "123 Tech St, Silicon Valley, CA"
+ *                   websiteurl:
+ *                     type: string
+ *                     example: "https://www.techinnovations.com"
+ *                   scale:
+ *                     type: string
+ *                     example: "Mid-size"
+ *                   payscale:
+ *                     type: string
+ *                     example: "$80,000 - $100,000"
+ *               Company_Completion:
+ *                 type: string
+ *                 example: "Completed"
+ *     responses:
+ *       200:
+ *         description: Uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Updated successfully!"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

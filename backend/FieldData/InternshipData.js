@@ -42,3 +42,67 @@ router.post("/internshipdata", authenticate, (req, res) => {
 
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /internshipdata:
+ *   post:
+ *     summary: Fetches internship data by person ID
+ *     description: Retrieves internship data associated with a specific person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               person_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Internship data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 internship_id:
+ *                   type: integer
+ *                   example: 101
+ *                 company_name:
+ *                   type: string
+ *                   example: "Tech Solutions"
+ *                 role:
+ *                   type: string
+ *                   example: "Software Intern"
+ *                 duration:
+ *                   type: string
+ *                   example: "3 months"
+ *
+ *       404:
+ *         description: Person ID not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Person not found."
+ * 
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

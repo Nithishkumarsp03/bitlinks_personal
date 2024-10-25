@@ -21,3 +21,47 @@ router.get("/companydata", authenticate, (req, res) => {
   });
 });
 module.exports = router; 
+
+/**
+ * @swagger
+ * /companydata:
+ *   get:
+ *     summary: Fetch Company data
+ *     description: Retrieves all company entries from the company table.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Company data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   company_id:
+ *                     type: integer
+ *                     example: 1
+ *                   company_name:
+ *                     type: string
+ *                     example: "Tech Solutions"
+ *                   location:
+ *                     type: string
+ *                     example: "123 Tech Lane, Silicon Valley, CA"
+ *                   contact_number:
+ *                     type: string
+ *                     example: "+1-234-567-8901"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ */

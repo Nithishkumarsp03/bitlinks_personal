@@ -59,3 +59,80 @@ router.post("/history", authenticate, (req, res) => {
 });
 
 module.exports = router;
+
+/**
+ * @swagger
+ * /history:
+ *   post:
+ *     summary: Fetches history data for a specific person
+ *     description: Retrieves history records for a given person ID and counts the total records.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Records fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       history_id:
+ *                         type: integer
+ *                         example: 101
+ *                       person_id:
+ *                         type: integer
+ *                         example: 1
+ *                       agent:
+ *                         type: string
+ *                         example: "john_doe"
+ *                       note:
+ *                         type: string
+ *                         example: "Sample note"
+ *                       scheduleddate:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2024-12-31T15:30:00Z"
+ *                       status:
+ *                         type: integer
+ *                         example: 1
+ *                 totalCount:
+ *                   type: integer
+ *                   example: 5
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: selectedPersonId is required
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ */

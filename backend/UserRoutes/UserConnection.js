@@ -78,3 +78,154 @@ ORDER BY p1.person_id DESC;
   });
 });
 module.exports = router; 
+
+
+/**
+ * @swagger
+ * /userConnections:
+ *   post:
+ *     summary: Fetch user connection data based on email
+ *     description: Fetches user connection data for the given email, including personal information, company details, and expertise.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: User connection data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   person_id:
+ *                     type: integer
+ *                     example: 1
+ *                   useremail:
+ *                     type: string
+ *                     example: "user@example.com"
+ *                   profile:
+ *                     type: string
+ *                     example: "/uploads/profile.jpg"
+ *                   fullname:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   phonenumber:
+ *                     type: string
+ *                     example: "+1234567890"
+ *                   age:
+ *                     type: integer
+ *                     example: 30
+ *                   linkedinurl:
+ *                     type: string
+ *                     example: "https://www.linkedin.com/in/johndoe"
+ *                   address:
+ *                     type: string
+ *                     example: "123 Main St, City, Country"
+ *                   shortdescription:
+ *                     type: string
+ *                     example: "Software Developer"
+ *                   hashtags:
+ *                     type: string
+ *                     example: "#developer #software"
+ *                   Completion:
+ *                     type: integer
+ *                     example: 80
+ *                   overall_completion:
+ *                     type: integer
+ *                     example: 90
+ *                   reason:
+ *                     type: string
+ *                     example: "Active"
+ *                   timestamp:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-01-01T00:00:00Z"
+ *                   sub_id:
+ *                     type: integer
+ *                     example: 2
+ *                   status:
+ *                     type: string
+ *                     example: "Connected"
+ *                   sub_name:
+ *                     type: string
+ *                     example: "Jane Doe"
+ *                   company_id:
+ *                     type: integer
+ *                     example: 1
+ *                   companyname:
+ *                     type: string
+ *                     example: "Tech Solutions Inc."
+ *                   position:
+ *                     type: string
+ *                     example: "Senior Developer"
+ *                   experience:
+ *                     type: integer
+ *                     example: 5
+ *                   role:
+ *                     type: string
+ *                     example: "Full Stack Developer"
+ *                   companyaddress:
+ *                     type: string
+ *                     example: "456 Company St, City, Country"
+ *                   Company_Completion:
+ *                     type: integer
+ *                     example: 75
+ *                   domain:
+ *                     type: string
+ *                     example: "Software Development"
+ *                   specialistskills:
+ *                     type: string
+ *                     example: "Java, React"
+ *                   skillset:
+ *                     type: string
+ *                     example: "JavaScript, HTML, CSS"
+ *                   summary_id:
+ *                     type: integer
+ *                     example: 1
+ *                   total_points:
+ *                     type: integer
+ *                     example: 100
+ *                   rank:
+ *                     type: integer
+ *                     example: 1
+ *                   last_updated:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-01-01T00:00:00Z"
+ *                   reduction:
+ *                     type: integer
+ *                     example: 0
+ *       400:
+ *         description: Bad request, email is required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Email is required"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

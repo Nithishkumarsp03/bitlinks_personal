@@ -42,3 +42,69 @@ router.post("/companydata", authenticate, (req, res) => {
 
 module.exports = router; 
 
+/**
+ * @swagger
+ * /companydata:
+ *   post:
+ *     summary: Fetches Company Data by person ID
+ *     description: Retrieves company data based on the provided person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               person_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Company Data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 person_id:
+ *                   type: integer
+ *                   example: 1
+ *                 company_name:
+ *                   type: string
+ *                   example: "Tech Innovations Ltd"
+ *                 position:
+ *                   type: string
+ *                   example: "Software Engineer"
+ *                 years_active:
+ *                   type: integer
+ *                   example: 3
+ *                 other_properties:
+ *                   type: string
+ *                   example: "other values"
+ *
+ *       404:
+ *         description: Person not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Person not found."
+ *
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

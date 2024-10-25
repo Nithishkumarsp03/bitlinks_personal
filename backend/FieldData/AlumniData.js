@@ -42,3 +42,76 @@ router.post("/alumnidata", authenticate, (req, res) => {
 
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /alumnidata:
+ *   post:
+ *     summary: Fetches Alumni Data by person ID
+ *     description: Retrieves alumni data based on the provided person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               person_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Alumni Data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 person_id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "John Doe"
+ *                 batch:
+ *                   type: string
+ *                   example: "2020"
+ *                 graduatedyear:
+ *                   type: string
+ *                   example: "2020"
+ *                 phonenumber:
+ *                   type: string
+ *                   example: "123-456-7890"
+ *                 companyaddress:
+ *                   type: string
+ *                   example: "123 Main St, City, Country"
+ *                 other_properties:
+ *                   type: string
+ *                   example: "other values"
+ * 
+ *       404:
+ *         description: Person not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Person not found."
+ * 
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

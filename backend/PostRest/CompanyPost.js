@@ -21,3 +21,46 @@ router.post("/companypost", authenticate, (req, res) => {
   });
 });
 module.exports = router; 
+
+/**
+ * @swagger
+ * /companypost:
+ *   post:
+ *     summary: Add Company data
+ *     description: Inserts a new company entry into the company table.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               company:
+ *                 type: string
+ *                 example: "Tech Solutions"
+ *     responses:
+ *       200:
+ *         description: Company added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Company added successfully"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

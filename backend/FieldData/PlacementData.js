@@ -42,3 +42,68 @@ router.get( "/placementdata/:id", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /placementdata/{id}:
+ *   get:
+ *     summary: Fetches placement data by person ID
+ *     description: Retrieves placement information for a specified person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The ID of the person whose placement data is to be fetched.
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Placement data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 person_id:
+ *                   type: integer
+ *                   example: 1
+ *                 company_name:
+ *                   type: string
+ *                   example: "Tech Corp"
+ *                 position:
+ *                   type: string
+ *                   example: "Software Engineer"
+ *                 status:
+ *                   type: string
+ *                   example: "Placed"
+ *                 message:
+ *                   type: string
+ *                   example: "Placement data fetched successfully"
+ *
+ *       404:
+ *         description: Person ID not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Person not found."
+ * 
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

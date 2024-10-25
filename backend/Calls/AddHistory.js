@@ -78,3 +78,80 @@ router.post( "/addhistory", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /addhistory:
+ *   post:
+ *     summary: Inserts a history record for a person
+ *     description: Adds a new history record in the database for a specific person using their ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *               username:
+ *                 type: string
+ *                 example: "john_doe"
+ *               email:
+ *                 type: string
+ *                 example: "john.doe@example.com"
+ *               type:
+ *                 type: string
+ *                 example: "type_example"
+ *               note:
+ *                 type: string
+ *                 example: "This is a sample note"
+ *               purpose:
+ *                 type: string
+ *                 example: "meeting"
+ *               points:
+ *                 type: integer
+ *                 example: 10
+ *               scheduled_date:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2024-12-31 15:30:00"
+ *               imagePath1:
+ *                 type: string
+ *                 example: "/uploads/image1.jpg"
+ *               imagePath2:
+ *                 type: string
+ *                 example: "/uploads/image2.jpg"
+ *               status:
+ *                 type: string
+ *                 example: "completed"
+ *     responses:
+ *       200:
+ *         description: Record inserted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Record inserted successfully
+ *                 newRecord:
+ *                   type: integer
+ *                   example: 101
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Failed to insert record.
+ */

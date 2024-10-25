@@ -25,3 +25,46 @@ router.post("/domainpost", authenticate, (req, res) => {
 
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /domainpost:
+ *   post:
+ *     summary: Add Domain data
+ *     description: Inserts a new domain entry into the domain table.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               domain:
+ *                 type: string
+ *                 example: "example.com"
+ *     responses:
+ *       200:
+ *         description: Domain added successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Domain added successfully"
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error updating status."
+ */

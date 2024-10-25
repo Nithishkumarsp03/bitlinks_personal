@@ -41,3 +41,64 @@ router.post("/outcomedata", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /outcomedata:
+ *   post:
+ *     summary: Fetches outcome data by person ID
+ *     description: Retrieves outcome data associated with a specific person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               person_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Outcome data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 outcome_id:
+ *                   type: integer
+ *                   example: 201
+ *                 description:
+ *                   type: string
+ *                   example: "Completed internship with Tech Solutions."
+ *                 status:
+ *                   type: string
+ *                   example: "Achieved"
+ *
+ *       404:
+ *         description: Person ID not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Person not found."
+ * 
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

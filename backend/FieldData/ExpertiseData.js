@@ -42,3 +42,65 @@ router.get("/expertisedata/:id", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /expertisedata/{id}:
+ *   get:
+ *     summary: Fetches Expertise data by person ID
+ *     description: Retrieves expertise data based on the provided person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the person whose expertise data is to be fetched.
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Expertise data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 person_id:
+ *                   type: integer
+ *                   example: 1
+ *                 expertise_area:
+ *                   type: string
+ *                   example: "Software Development"
+ *                 experience_years:
+ *                   type: integer
+ *                   example: 5
+ *                 description:
+ *                   type: string
+ *                   example: "Expert in building scalable web applications."
+ *
+ *       404:
+ *         description: Person ID not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Person not found."
+ * 
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

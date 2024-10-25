@@ -50,3 +50,80 @@ router.put("/placementupload", authenticate, (req, res) => {
 
 
 module.exports = router; 
+
+
+/**
+ * @swagger
+ * /placementupload:
+ *   put:
+ *     summary: Uploads Placement Data
+ *     description: Updates placement information in the database based on person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedPersonId:
+ *                 type: integer
+ *                 example: 1
+ *               Ifplacement:
+ *                 type: boolean
+ *                 example: true
+ *               Placementinfo:
+ *                 type: object
+ *                 properties:
+ *                   role:
+ *                     type: string
+ *                     example: "Software Engineer"
+ *                   domain:
+ *                     type: string
+ *                     example: "Information Technology"
+ *                   skillset:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["Java", "JavaScript", "Node.js"]
+ *                   eligibility:
+ *                     type: string
+ *                     example: "Eligible for placement"
+ *               Placement_Completion:
+ *                 type: string
+ *                 example: "Completed"
+ *     responses:
+ *       200:
+ *         description: Updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Updated successfully!"
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid input data."
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

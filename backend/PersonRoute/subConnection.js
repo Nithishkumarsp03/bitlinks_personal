@@ -3,6 +3,8 @@ const router = express.Router();
 const pool = require("../config.js"); 
 const authenticate = require("../Authenticate.js"); 
 
+
+
 router.post("/subconnections", authenticate, (req, res) => {
   const {
     subemail,
@@ -213,3 +215,95 @@ router.post("/subconnections", authenticate, (req, res) => {
 });
 
 module.exports = router; 
+
+/**
+ * @swagger
+ * /subconnections:
+ *   post:
+ *     summary: Enters subconnections of a person 
+ *     description: Inserts a new subconnections entry for a person, including relevant details such as email and connection information.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               subemail:
+ *                 type: string
+ *                 example: "subemail@example.com"
+ *               selectedPersonId:
+ *                 type: string
+ *                 example: "12345"
+ *               connectionInfo:
+ *                 type: object
+ *                 properties:
+ *                   fullname:
+ *                     type: string
+ *                     example: "John Doe"
+ *                   phonenumber:
+ *                     type: string
+ *                     example: "+1234567890"
+ *                   age:
+ *                     type: integer
+ *                     example: 25
+ *                   email:
+ *                     type: string
+ *                     example: "john.doe@example.com"
+ *                   dob:
+ *                     type: string
+ *                     format: date
+ *                     example: "1999-01-01"
+ *                   rating:
+ *                     type: integer
+ *                     example: 5
+ *                   linkedinurl:
+ *                     type: string
+ *                     example: "https://linkedin.com/in/johndoe"
+ *                   address:
+ *                     type: string
+ *                     example: "123 Main St, Anytown, USA"
+ *                   shortdescription:
+ *                     type: string
+ *                     example: "Software Developer"
+ *                   hashtags:
+ *                     type: string
+ *                     example: "#developer #programming"
+ *               imagePath1:
+ *                 type: string
+ *                 example: "/path/to/image1.jpg"
+ *               imagePath2:
+ *                 type: string
+ *                 example: "/path/to/image2.jpg"
+ *               Completion:
+ *                 type: string
+ *                 example: "50%"
+ *               TotalProgress:
+ *                 type: string
+ *                 example: "100%"
+ *     responses:
+ *       200:
+ *         description: Profile saved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Profile saved successfully
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ */

@@ -3,6 +3,59 @@ const router = express.Router();
 const pool = require("../config.js"); 
 const authenticate = require("../Authenticate.js"); 
 
+console.log("check connection");
+/**
+ * @swagger
+ * /check-connection:
+ *   post:
+ *     summary: Check the connection status of a person
+ *     description: Check if a person's name exists in the database by full name.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *     responses:
+ *       200:
+ *         description: Person found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: found
+ *       401:
+ *         description: Person not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: notfound
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ */
 router.post("/check-connection", authenticate, (req, res) => {
   // console.log("check connection");
   const { name } = req.body;

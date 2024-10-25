@@ -42,3 +42,69 @@ router.post( "/experiencedata", authenticate, (req, res) => {
 
 module.exports = router; 
 
+/**
+ * @swagger
+ * /experiencedata:
+ *   post:
+ *     summary: Fetches Experience data by person ID
+ *     description: Retrieves experience data based on the provided person ID.
+ *     tags:
+ *       - Connection
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               person_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Experience data fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 person_id:
+ *                   type: integer
+ *                   example: 1
+ *                 company_name:
+ *                   type: string
+ *                   example: "ABC Corp"
+ *                 position:
+ *                   type: string
+ *                   example: "Software Engineer"
+ *                 duration:
+ *                   type: string
+ *                   example: "2 years"
+ *                 responsibilities:
+ *                   type: string
+ *                   example: "Developed web applications"
+ * 
+ *       404:
+ *         description: Experience data not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Experience data not found."
+ * 
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Database error"
+ */

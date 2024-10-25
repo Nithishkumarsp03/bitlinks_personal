@@ -79,8 +79,12 @@ const LoginDataRoutes = require('./TableData/LoginData.js');
 const UpdateStatusLoginRoutes = require('./PostRest/UpdateStatusLogin.js');
 const LoginPostRoutes = require('./PostRest/LoginPost.js');
 const InteractionsRoutes = require('./PostRest/Interactions.js');
-const Spoc = require('./UserRoutes/Spoc.js')
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpecial = require("./swaggerConfig.js");
 // Middleware function example
+
+
+
 const myMiddleware = (req, res, next) => {
   next(); // Pass control to the next middleware function
 };
@@ -102,6 +106,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecial));
 
 app.use(api, auth);
 
@@ -487,8 +492,85 @@ app.use(api,LoginDataRoutes);
 app.use(api,UpdateStatusLoginRoutes);
 app.use(api,LoginPostRoutes);
 app.use(api,InteractionsRoutes);
-app.use(api,Spoc);
+// app.use(api,UpdateStatusInteractionsRoutes);
+
+app.post(api+"/history", authenticate, (req, res) => {
+  const { selectedPersonId } = req.body;
+
+  // Get the token from the Authorization header
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Extract token from 'Bearer <token>'
+
+  // Log for debugging
+  // console.log("Authorization Header:", authHeader);
+  // console.log("Token:", token);
+
+  if (!token) {
+    return res.status(401).json({ message: "Authorization token is required" });
+  }
+
+  // Verify the token
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      console.error("Token verification error:", err.message);
+      return res.status(403).json({ message: "Invalid token" });
+    }
+
+    // Proceed with the rest of the logic if token is valid
+    if (!selectedPersonId) {
+      return res.status(400).json({ message: "selectedPersonId is required" });
+    }
+
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.error("Error getting database connection:", err);
+        return res.status(500).json({ message: "Database error" });
+      }
+
+      // Fetch the history records
+      const sql =
+        "SELECT * FROM history WHERE person_id = ? ORDER BY history_id DESC";
+      connection.query(sql, [selectedPersonId], async (err, results) => {
+        if (err) {
+          connection.release();
+          console.error("Error executing database query:", err);
+          return res.status(500).json({ message: "Database error" });
+        }
+
+        // If no records found, respond with a 404 status
+        // if (results.length === 0) {
+        //   connection.release();
+        //   return res.status(404).json({ message: "No data found for the given person_id" });
+        // }
+
+        // Count the total number of records
+        const countSql =
+          "SELECT COUNT(*) AS totalCount FROM history WHERE person_id = ?";
+        connection.query(
+          countSql,
+          [selectedPersonId],
+          async (err, countResult) => {
+            connection.release();
+
+            if (err) {
+              console.error("Error executing count query:", err);
+              return res.status(500).json({ message: "Database error" });
+            }
+
+            const totalCount = countResult[0].totalCount;
+
+            // Send the records and the count in the response
+            res.json({ data: results, totalCount });
+            // console.log("Fetched Data:", results);
+          }
+        );
+      });
+    });
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  console.log(`API Docs available at http://localhost:${PORT}/api-docs`);
+
 });
