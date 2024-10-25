@@ -208,6 +208,35 @@ app.post(api + "/google", (req, res) => {
   });
 });
 
+app.post(api+"/login", (req,res) => {
+  const { email, name } = req.body;
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.error("Error getting database connection:", err);
+      return res.status(500).json({ message: "Database error" });
+    }
+    connection.query(
+      "SELECT ROLE FROM login WHERE EMAIL = ? AND NAME = ? AND STATUS = 1",
+      [email, name],
+      (err, results) => {
+        connection.release();
+
+        if (err) {
+          console.error("Error executing database query:", err);
+          return res.status(500).json({ message: "Database error" });
+        }
+
+        if (results.length > 0) {
+          const role = results[0].ROLE; // Extract the role from the result
+          res.status(200).json({ message: "Login successful", role: role });
+        } else {
+          res.status(401).json({ message: "Invalid username or password" });
+        }
+      }
+    );
+  }); 
+});
+
 app.use(api, checkConnectionRoute);
 app.use(api, uploadRoutes);
 

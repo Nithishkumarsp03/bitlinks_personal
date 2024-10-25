@@ -53,12 +53,20 @@ export default function Home() {
     );
 
       const username = decrypt(Cookies.get('name'));
+      const name = decrypt(Cookies.get('name'));
       const navigate = useNavigate();
+
+      // useEffect(() => {
+      //   const email = decrypt(Cookies.get('email'));
+      //   const token = decrypt(Cookies.get('token'));
+      //   if (!email && !token) {
+      //     navigate('/bitcontacts');
+      //   }
+      // }, [navigate]);
 
       useEffect(() => {
         const email = decrypt(Cookies.get('email'));
-        const token = decrypt(Cookies.get('token'));
-        if (!email && !token) {
+        if (!email && !name) {
           navigate('/bitcontacts');
         }
       }, [navigate]);

@@ -15,6 +15,13 @@ const SECRET_KEY = process.env.REACT_APP_SECRET_KEY;
 
 export default function Login({ onLogin }) {
 
+  const encrypt = (text) => {
+    if (text) {
+      return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+    }
+    return '';
+  };
+
   const decrypt = (ciphertext) => {
     try {
       if (ciphertext) {
@@ -27,24 +34,73 @@ export default function Login({ onLogin }) {
       return "";
     }
   };
+
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const token = decrypt(Cookies.get("token"));
   const role = decrypt(Cookies.get("role"));
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // State for preloader
+  const [rights, setRights] = useState("");
+
+  // useEffect(()=>{
+  //   if(token && role === 'admin'){
+  //     navigate('/bitcontacts/dashboard/admin');
+  //   }
+  //   else if(token && role === 'user'){
+  //     navigate('/bitcontacts/dashboard');
+  //   }
+  // })
 
   useEffect(()=>{
-    if(token && role === 'admin'){
+    if(email && role === 'admin'){
       navigate('/bitcontacts/dashboard/admin');
     }
-    else if(token && role === 'user'){
+    else if(email && role === 'user'){
       navigate('/bitcontacts/dashboard');
     }
   })
 
   const login = () => {
     window.location.href = `${process.env.REACT_APP_API}/google`;
+  }
+
+  const credentialLogin = async() =>{
+    try{
+      const res = await fetch(`${process.env.REACT_APP_API}/login`,{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, name }),
+      });
+
+      const data = await res.json();
+      setRights(data.role);
+      if (data.message === "Login successful"){
+        Cookies.set("name", encrypt(name));
+        Cookies.set("role", encrypt(data.role));
+        Cookies.set("email", encrypt(email));
+        // Cookies.set("picture", encrypt(PROFILE_PICTURE));
+        if( data.role === 'admin'){
+          navigate('/bitcontacts/dashboard/admin');
+        }
+        else if( data.role === 'user'){
+          navigate('/bitcontacts/dashboard');
+        }
+        setEmail("");
+        setName("");
+      }
+      else{
+        setError(data.message);
+        setShowErrorPopup(true);
+      }
+    }
+    catch(error){
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -124,6 +180,8 @@ export default function Login({ onLogin }) {
                   className="login_input"
                   placeholder="mail@abc.com"
                   name="fullname"
+                  onChange={(e)=>setEmail(e.target.value)}
+                  value={email}
                 />
                 <div className="index_text" style={{ marginTop: "5%" }}>Password</div>
                 <Input
@@ -131,6 +189,8 @@ export default function Login({ onLogin }) {
                   type="password"
                   className="login_input"
                   placeholder=".........."
+                  onChange={(e)=>setName(e.target.value)}
+                  value={name}
                 />
                 <div className="below-password">
                   <div className="checkbox">
@@ -143,7 +203,7 @@ export default function Login({ onLogin }) {
                     </h4>
                   </div>
                 </div>
-                <button className="login_button">Login</button>
+                <button className="login_button" onClick={credentialLogin}>Login</button>
                 <div className="account_bottom">
                   <p style={{ color: "grey", width: "80%", fontSize: "80%", fontWeight: "500", marginLeft: "20%" }}>
                     Not Registered yet?
