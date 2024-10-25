@@ -34,7 +34,6 @@ const DomainDropdown = ({ value, onChange, onTextChange = () => {} }) => {
                 const response = await fetch(api + '/domaindata', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });

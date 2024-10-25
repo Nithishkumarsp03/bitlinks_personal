@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
 
-router.put("/outcomeupload", authenticate, (req, res) => {
+router.put("/outcomeupload", (req, res) => {
   const { selectedPersonId, Outcomeinfo, Outcome_Completion } = req.body;
 
   pool.getConnection((err, connection) => {

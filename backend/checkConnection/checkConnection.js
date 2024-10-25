@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
 console.log("check connection");
 /**
@@ -56,7 +55,7 @@ console.log("check connection");
  *                   type: string
  *                   example: Database error
  */
-router.post("/check-connection", authenticate, (req, res) => {
+router.post("/check-connection", (req, res) => {
   // console.log("check connection");
   const { name } = req.body;
   const normalizedName = name.trim().toLowerCase(); 

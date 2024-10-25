@@ -81,6 +81,7 @@ const LoginPostRoutes = require('./PostRest/LoginPost.js');
 const InteractionsRoutes = require('./PostRest/Interactions.js');
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpecial = require("./swaggerConfig.js");
+const Spoc = require('./UserRoutes/Spoc.js')
 // Middleware function example
 
 
@@ -142,7 +143,7 @@ if (!fs.existsSync(uploadsDir)) {
 app.use(api + "/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Email sending endpoint
-app.post("/send-email", authenticate, (req, res) => {
+app.post("/send-email", (req, res) => {
   const { toEmail, subject, message } = req.body;
 
   // Get the token from the Authorization header
@@ -290,6 +291,8 @@ app.use(api,Minutes);
 app.use(api,AddMinutes);
 app.use(api,UpdateMinutes);
 app.use(api,UpdateSaveMinutes);
+app.use(api, Spoc);
+
 //-------------------------------------Wishes-------------------------------------------
 const checkAndSendWishes = () => {
   pool.getConnection((err, connection) => {
@@ -494,7 +497,7 @@ app.use(api,LoginPostRoutes);
 app.use(api,InteractionsRoutes);
 // app.use(api,UpdateStatusInteractionsRoutes);
 
-app.post(api+"/history", authenticate, (req, res) => {
+app.post(api+"/history", (req, res) => {
   const { selectedPersonId } = req.body;
 
   // Get the token from the Authorization header

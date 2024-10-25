@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.get("/personalinfo/main/:personId", authenticate, (req, res) => {
+router.get("/personalinfo/main/:personId", (req, res) => {
   const { personId } = req.params;
 
   const query = "SELECT * FROM personalinfo WHERE person_id = ?";
@@ -20,7 +19,6 @@ router.get("/personalinfo/main/:personId", authenticate, (req, res) => {
 // API to fetch sub-connections (entries where sub_id = selectedPersonId)
 router.get(
    "/personalinfo/subconnections/:personId",
-  authenticate,
   (req, res) => {
     const { personId } = req.params;
 

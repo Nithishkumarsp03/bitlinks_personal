@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.put("/expertiseupload", authenticate, (req, res) => {
+router.put("/expertiseupload", (req, res) => {
   const { selectedPersonId, ExpertiseInfo, Expertise_Completion } = req.body;
   // console.log(req.body);
 

@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
-router.post("/networkranks", authenticate, (req, res) => {
+router.post("/networkranks",(req, res) => {
   const query = `
     SELECT
       COUNT(CASE WHEN pps.rank = 3 THEN 1 END) AS count_rank_3,

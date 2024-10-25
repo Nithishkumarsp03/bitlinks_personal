@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
+const pool = require("../config.js");  
 
 /**
  * @swagger
@@ -67,7 +66,7 @@ const authenticate = require("../Authenticate.js");
  *                   example: Database error
  */
 
-router.put("/alumniupload", authenticate, (req, res) => {
+router.put("/alumniupload", (req, res) => {
   const { selectedPersonId, Alumniinfo, Alumni_Completion } = req.body;
 
   pool.getConnection((err, connection) => {

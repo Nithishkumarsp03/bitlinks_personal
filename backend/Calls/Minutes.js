@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js");
-const authenticate = require("../Authenticate.js");
 
-router.post("/minutes",authenticate, (req, res) => {
+router.post("/minutes",(req, res) => {
   const { selectedPersonId } = req.body;
   const query = `SELECT * from minutes WHERE person_id = ? ORDER BY id DESC`;
 

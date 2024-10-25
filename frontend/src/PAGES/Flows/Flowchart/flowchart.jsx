@@ -690,7 +690,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `Bearer ${token}`
             },
           }
         );
@@ -719,7 +718,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ person_id: selectedPersonId }),
           }
@@ -751,7 +749,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,
@@ -781,7 +778,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ person_id: selectedPersonId }),
         });
@@ -809,7 +805,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
         });
         if (!personResponse.ok) {
@@ -839,7 +834,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
         });
         if (!personResponse.ok) {
@@ -872,7 +866,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ person_id: selectedPersonId }),
           }
@@ -909,7 +902,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ person_id: selectedPersonId }),
           }
@@ -943,7 +935,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ person_id: selectedPersonId }),
         });
@@ -970,7 +961,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ person_id: selectedPersonId }),
         });
@@ -1038,7 +1028,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(requestBody),
       });
@@ -1094,7 +1083,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           selectedPersonId,
@@ -1127,7 +1115,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,
@@ -1159,7 +1146,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           selectedPersonId,
@@ -1189,7 +1175,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           selectedPersonId,
@@ -1221,7 +1206,7 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
+            
           },
           body: JSON.stringify({
             selectedPersonId,
@@ -1255,7 +1240,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,
@@ -1289,7 +1273,6 @@ const {role, domain, skillset, eligibility, projecttype} = Consultancyinfo;
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             selectedPersonId,

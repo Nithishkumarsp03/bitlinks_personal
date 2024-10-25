@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
+import User from '../../Assets/user.jpg'
 import Logo from '../../Assets/bitlinks logo.svg'
 import settings from '../../Assets/settings.svg'
 import Cookies from "js-cookie";
@@ -238,7 +239,7 @@ export default function Home() {
         <hr className="separator"/>
         <div className="end-container">
             <div className="profile">
-                <img src={picture} alt="" />
+                <img src={picture || User} alt="" />
             </div>
             <div style={{display: "flex", flexDirection: "column", textAlign: "center", gap:"2px"}}>
                 <p style={{marginRight: "50px", maxWidth: "500px", fontWeight: "500"}}>{username}</p>

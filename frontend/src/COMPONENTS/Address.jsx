@@ -40,7 +40,6 @@ export default function Address() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ id: params.row.id, status: newStatus }),
       });
@@ -79,7 +78,6 @@ export default function Address() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
       }); // Replace with your backend endpoint
       const data = await response.json();
@@ -105,7 +103,6 @@ export default function Address() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ location: location }),
       });

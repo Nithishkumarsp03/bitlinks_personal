@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.get("/fetch-scheduled", authenticate, (req, res) => {
+router.get("/fetch-scheduled", (req, res) => {
   const query = `SELECT h.*, p.*
                 FROM history h
                 JOIN personalinfo p ON h.person_id = p.person_id

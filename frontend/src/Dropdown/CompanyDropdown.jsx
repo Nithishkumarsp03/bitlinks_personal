@@ -33,7 +33,6 @@ const CompanyDropdown = ({ value, onChange, onTextChange = () => {} }) => {
         const response = await fetch(process.env.REACT_APP_API + '/companydata', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });

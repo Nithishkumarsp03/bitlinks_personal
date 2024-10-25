@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
+const pool = require("../config.js");  
 
-router.post("/rolepost", authenticate, (req, res) => {
+router.post("/rolepost", (req, res) => {
   const { role } = req.body;
 
   pool.getConnection((err, connection) => {

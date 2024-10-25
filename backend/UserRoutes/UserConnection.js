@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
-router.post("/userConnections", authenticate, (req, res) => {
+const pool = require("../config.js");  
+router.post("/userConnections",(req, res) => {
   const { email } = req.body;
 
   if (!email) {

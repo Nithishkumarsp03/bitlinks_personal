@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
-router.post("/personstatus", authenticate, (req, res) => {
+router.post("/personstatus", (req, res) => {
   const { person, reason, status } = req.body;
   // console.log(req.body);
   const query = `UPDATE personalinfo

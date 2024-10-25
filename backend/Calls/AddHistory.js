@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
+const pool = require("../config.js");
 
 const moment = require("moment-timezone");
 
 // Example timezone you want to use, e.g., 'Asia/Kolkata'
 const timezone = "Asia/Kolkata";
 
-router.post( "/addhistory", authenticate, (req, res) => {
+router.post( "/addhistory", (req, res) => {
   const {
     selectedPersonId,
     username,

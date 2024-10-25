@@ -45,7 +45,7 @@ const Subconnections = ({
     address: "",
     shortdescription: "",
     hashtags: "",
-    rank: "",
+    rank: "-1",
   });
   const email = decrypt(Cookies.get("email"));
   const token = decrypt(Cookies.get("token"));
@@ -298,10 +298,14 @@ const Subconnections = ({
 
 
   const options = [
-    { label: "Higly Recommended", value: "Higly Recommended" },
+    { label: "Highly Recommended", value: "Highly Recommended" },
     { label: "Recommended", value: "Recommended" },
     { label: "Not Recommended", value: "Not Recommended" },
   ];
+
+  useEffect(()=>{
+
+  },[connectionInfo.rank])
 
   return (
     <Dialog open={open} onClose={onClose} onKeyDown={handleKeyPress}>

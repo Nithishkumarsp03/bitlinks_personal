@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.post("/history-status", authenticate, (req, res) => {
+router.post("/history-status", (req, res) => {
   const { history_id, status } = req.body;
 
   if (!history_id || typeof status === "undefined") {
@@ -30,7 +29,7 @@ router.post("/history-status", authenticate, (req, res) => {
   });
 });
 
-router.post("/history-status", authenticate, (req, res) => {
+router.post("/history-status", (req, res) => {
   const { history_id, status } = req.body;
 
   if (!history_id || typeof status === "undefined") {

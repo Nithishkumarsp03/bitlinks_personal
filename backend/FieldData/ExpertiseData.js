@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
 
-router.get("/expertisedata/:id", authenticate, (req, res) => {
+router.get("/expertisedata/:id", (req, res) => {
   const person_id = req.params.id;
   // console.log("This is id:", person_id);
 

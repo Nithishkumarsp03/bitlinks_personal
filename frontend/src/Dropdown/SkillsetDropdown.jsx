@@ -33,7 +33,6 @@ const SkillsetDropdown = ({ value = [], onChange, onTextChange = () => {} }) => 
                 const response = await fetch(api + '/skilldata', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Include token in the headers
                         'Content-Type': 'application/json'
                     }
                 });

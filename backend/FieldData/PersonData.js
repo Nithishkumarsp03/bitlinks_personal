@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.get("/persondata/:id", authenticate, (req, res) => {
+router.get("/persondata/:id", (req, res) => {
   const person_id = req.params.id;
 
   pool.getConnection((err, connection) => {

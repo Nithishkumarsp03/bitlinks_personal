@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.put("/companyupload", authenticate, (req, res) => {
+router.put("/companyupload", (req, res) => {
   const { selectedPersonId, CompanyInfo, Company_Completion } = req.body;
   // console.log(req.body);
 

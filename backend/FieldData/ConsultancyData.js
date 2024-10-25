@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
 
-router.post("/consultancydata", authenticate, (req, res) => {
+router.post("/consultancydata", (req, res) => {
   const { person_id } = req.body;
   // console.log("This is id:", person_id);
 

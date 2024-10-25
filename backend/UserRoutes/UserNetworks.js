@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
-router.get("/userNetworks", authenticate, (req, res) => {
+router.get("/userNetworks",  (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.error("Error getting database connection:", err);

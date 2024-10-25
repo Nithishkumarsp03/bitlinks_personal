@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
 
-router.post( "/addminutes", authenticate, (req, res) => {
+router.post( "/addminutes", (req, res) => {
   const {selectedPersonId, username, minutes, deadline, handler} = req.body;
 
 //   console.log('Original data received:', req.body);

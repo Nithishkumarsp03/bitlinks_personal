@@ -34,7 +34,6 @@ const RoleDropdown = ({ value, onChange, onTextChange = () => {} }) => {
                 const response = await fetch(api + '/roledata', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`, // Include token in the headers
                         'Content-Type': 'application/json'
                     }
                 });

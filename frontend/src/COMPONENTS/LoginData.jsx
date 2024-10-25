@@ -42,7 +42,6 @@ const token = decrypt(Cookies.get("token"));
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ id: params.row.id, status: newStatus }),
       });
@@ -83,7 +82,6 @@ const token = decrypt(Cookies.get("token"));
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
       });
       const data = await response.json();
@@ -111,7 +109,6 @@ const token = decrypt(Cookies.get("token"));
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           name,

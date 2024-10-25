@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.post("/userranks", authenticate,(req, res) => {
+router.post("/userranks", (req, res) => {
   const { email } = req.body; // Assuming email is passed as a query parameter
 
   const query = `

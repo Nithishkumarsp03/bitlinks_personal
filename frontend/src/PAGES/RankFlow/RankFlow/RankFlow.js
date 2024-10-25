@@ -43,7 +43,6 @@ export default function RankFlow({ viewConnectionIndex, handlecancelviewconnecti
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
         }
       );
@@ -167,7 +166,6 @@ function SubConnections({ personId }) {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
         }
       );

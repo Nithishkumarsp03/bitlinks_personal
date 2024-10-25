@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
-router.post("/domainpost", authenticate, (req, res) => {
+router.post("/domainpost", (req, res) => {
   const { domain } = req.body;
   // console.log(req.body);
 

@@ -2,8 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
-router.post("/companydata", authenticate, (req, res) => {
+router.post("/companydata",(req, res) => {
   const { person_id } = req.body;
   // console.log("This is id:", person_id);
 

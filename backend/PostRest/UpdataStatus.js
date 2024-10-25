@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
 
-router.post("/update-status", authenticate, (req, res) => {
+router.post("/update-status", (req, res) => {
   const { history_id } = req.body; // Get the history_id from the request body
 
   if (!history_id) {
@@ -22,7 +21,7 @@ router.post("/update-status", authenticate, (req, res) => {
     res.status(200).json({ message: "Status updated successfully" });
   });
 });
-router.post("/update-status", authenticate, (req, res) => {
+router.post("/update-status", (req, res) => {
   const { history_id, status } = req.body;
 
   if (!history_id || status === undefined) {

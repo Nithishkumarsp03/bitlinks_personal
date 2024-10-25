@@ -37,7 +37,6 @@ export default function ApexChartMonthlyGraph() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` // Send the token in the Authorization header
           },
           body: JSON.stringify({ selectedPersonId }),
         });

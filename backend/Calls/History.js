@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js");
 
-router.post("/history", authenticate, (req, res) => {
+router.post("/history",(req, res) => {
   const { selectedPersonId } = req.body;
 
   // Proceed with the rest of the logic without token verification

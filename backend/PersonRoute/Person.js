@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.post( "/person", authenticate, (req, res) => {
+router.post( "/person", (req, res) => {
   const {
     personInfo,
     imagePath1,

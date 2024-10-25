@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
 
 
-router.post("/subconnections", authenticate, (req, res) => {
+router.post("/subconnections", (req, res) => {
   const {
     subemail,
     selectedPersonId,
@@ -15,7 +14,7 @@ router.post("/subconnections", authenticate, (req, res) => {
     Completion,
     TotalProgress,
   } = req.body;
-  // console.log(req.body);
+  console.log(req.body);
 
   pool.getConnection((err, connection) => {
     if (err) {

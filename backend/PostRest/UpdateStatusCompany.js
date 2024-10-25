@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
 
-router.put( "/updatestatuscompany", authenticate, (req, res) => {
+router.put( "/updatestatuscompany", (req, res) => {
   const { id, status } = req.body;
   const query = "UPDATE company_table SET status = ? WHERE id = ?";
 

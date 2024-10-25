@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
+const pool = require("../config.js");  
 
-router.put("/experienceupload", authenticate, (req, res) => {
+router.put("/experienceupload", (req, res) => {
   const {
     selectedPersonId,
     Ifexperience,

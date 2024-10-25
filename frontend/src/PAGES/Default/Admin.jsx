@@ -282,7 +282,6 @@ export default function Default(subPersonId) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ name: inputValue }),
       });
@@ -325,7 +324,6 @@ export default function Default(subPersonId) {
         const response = await fetch(api + "/userNetworks", {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
@@ -353,7 +351,6 @@ export default function Default(subPersonId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ email, picture }), // Send email as JSON
         });
@@ -458,7 +455,6 @@ export default function Default(subPersonId) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ person, reason, status }),
       });
@@ -701,7 +697,6 @@ export default function Default(subPersonId) {
         const response = await fetch(api + "/fetch-scheduled", {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
@@ -859,7 +854,6 @@ export default function Default(subPersonId) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ email }),
       });
@@ -906,7 +900,6 @@ export default function Default(subPersonId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ email }),
         });
@@ -928,7 +921,6 @@ export default function Default(subPersonId) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
           },
         });
 

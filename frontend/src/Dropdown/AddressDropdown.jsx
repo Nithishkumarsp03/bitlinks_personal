@@ -33,7 +33,6 @@ const AddressDropdown = ({ value, onChange, onTextChange = () => {} }) => {
                 const response = await fetch(process.env.REACT_APP_API + '/addressdata', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });

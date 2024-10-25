@@ -338,7 +338,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(updateData),
     })
@@ -412,10 +411,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
       setError("Fill the notes");
       return;
     }
-    if(purpose === ""){
-      setError("Select the Purpose");
-      return;
-    }
     if(type === "Visited"){
       if (imagePath1 === null || imagePath2 === null) {
         setError("Insert both the images");
@@ -449,7 +444,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(data),
     })
@@ -491,7 +485,6 @@ export default function History({fetchPersonalInfo, fetchUserNetworks, fetchResc
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ selectedPersonId }),
       });

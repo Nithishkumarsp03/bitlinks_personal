@@ -2,8 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config.js"); 
-const authenticate = require("../Authenticate.js"); 
-router.post( "/experiencedata", authenticate, (req, res) => {
+router.post( "/experiencedata", (req, res) => {
   const { person_id } = req.body;
   // console.log("Fetching experience data for ID:", person_id);
 
