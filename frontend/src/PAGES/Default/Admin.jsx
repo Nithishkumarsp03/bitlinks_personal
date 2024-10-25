@@ -400,7 +400,7 @@ export default function Default(subPersonId) {
     });
     // console.log("DEFAULT = ", SubConnectionsvalue);
     setAddConnections(true);
-    setTableOpen(false);
+    setTableOpen(false)
     setConnections(false);
     setNetworks(false);
     setSpoc(false);
