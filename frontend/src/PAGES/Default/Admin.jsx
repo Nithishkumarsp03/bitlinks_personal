@@ -395,7 +395,7 @@ export default function Default(subPersonId) {
   const handleContinue = () => {
     // console.log('clicked');
     const SubConnectionsvalue = SubConnections; // Set your desired value
-    navigate("../bitcontacts/dashboard/admin", {
+    navigate("../dashboard/admin", {
       state: { subConnections: SubConnectionsvalue },
     });
     // console.log("DEFAULT = ", SubConnectionsvalue);

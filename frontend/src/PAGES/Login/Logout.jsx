@@ -9,7 +9,7 @@ function Logout() {
     localStorage.removeItem("isAuthenticated");
 
     // Redirect to the login page
-    navigate('/bitcontact');
+    navigate('/');
   };
 
   return (

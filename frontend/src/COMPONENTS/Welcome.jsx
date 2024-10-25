@@ -58,13 +58,13 @@ const Welcome = () => {
 
         // console.log("Saved JSON data:", savedData);
         if(!savedData.email){
-          navigate("/bitcontacts");
+          navigate("/");
         }
 
         if (savedData.role === 'admin') {
-          navigate("/bitcontacts/dashboard/admin");
+          navigate("/dashboard/admin");
         } else {
-          navigate('/bitcontacts/dashboard');
+          navigate('/dashboard');
         }
       } catch (error) {
         console.error("Error processing data:", error);

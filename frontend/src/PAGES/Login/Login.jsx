@@ -56,10 +56,10 @@ export default function Login({ onLogin }) {
 
   useEffect(()=>{
     if(email && role === 'admin'){
-      navigate('/bitcontacts/dashboard/admin');
+      navigate('/dashboard/admin');
     }
     else if(email && role === 'user'){
-      navigate('/bitcontacts/dashboard');
+      navigate('/dashboard');
     }
   })
 
@@ -85,10 +85,10 @@ export default function Login({ onLogin }) {
         Cookies.set("email", encrypt(email));
         // Cookies.set("picture", encrypt(PROFILE_PICTURE));
         if( data.role === 'admin'){
-          navigate('/bitcontacts/dashboard/admin');
+          navigate('/dashboard/admin');
         }
         else if( data.role === 'user'){
-          navigate('/bitcontacts/dashboard');
+          navigate('/dashboard');
         }
         setEmail("");
         setName("");

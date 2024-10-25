@@ -64,7 +64,7 @@ export default function User() {
         const email = decrypt(Cookies.get('email'));
         const token = decrypt(Cookies.get('token'));
         if (!email && !token) {
-          navigate('/bitcontacts');
+          navigate('/');
         }
       }, [navigate]);
 
@@ -184,7 +184,7 @@ export default function User() {
         });
   
         // Redirect to login page
-        navigate('/bitcontacts');
+        navigate('/');
   
         // Show success message
         Swal.fire({

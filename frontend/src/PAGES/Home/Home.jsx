@@ -68,7 +68,7 @@ export default function Home() {
       useEffect(() => {
         const email = decrypt(Cookies.get('email'));
         if (!email && !name) {
-          navigate('/bitcontacts');
+          navigate('/');
         }
       }, [navigate]);
 
@@ -190,7 +190,7 @@ export default function Home() {
         });
   
         // Redirect to login page
-        navigate('/bitcontacts');
+        navigate('/');
   
         // Show success message
         Swal.fire({

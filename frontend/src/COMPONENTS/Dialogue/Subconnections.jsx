@@ -254,7 +254,7 @@ const Subconnections = ({
 
       // Navigate to /dashboard after 3 seconds using window.location
       setTimeout(() => {
-        window.location.href = "/bitcontacts/dashboard/admin";
+        window.location.href = "/dashboard/admin";
       }, 2000);
     } catch (error) {
       console.error("Error:", error);

@@ -32,7 +32,7 @@ function Protected({ children }) {
         setAuth(true);
         setRole(decryptedRole);
       } else {
-        navigate("/bitcontacts");
+        navigate("/");
       }
     };
 
@@ -63,13 +63,13 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="*" element={<ErrorPage />} />
-          <Route path="/bitcontacts" element={<Login />} />
-          <Route path="/bitcontacts/settings" element={<Settings />} />
-          <Route path="/bitcontacts/welcome" element={<Welcome />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/welcome" element={<Welcome />} />
           <Route path="/404" element={<ErrorPage />} />
-          <Route path="/bitcontacts/switch" element={<MinutesDropdown />} />
+          <Route path="/switch" element={<MinutesDropdown />} />
           <Route
-            path="/bitcontacts/dashboard/admin"
+            path="/dashboard/admin"
             element={
               <PersonProvider>
                 <Home />
@@ -77,7 +77,7 @@ export default function App() {
             }
           />
           <Route
-            path="/bitcontacts/dashboard"
+            path="/dashboard"
             element={
               <PersonProvider>
                 <User />
