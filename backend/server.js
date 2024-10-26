@@ -95,6 +95,7 @@ app.use(myMiddleware);
 // app.use(authenticate);
 
 app.use(cors());
+app.use(cors({ origin: 'http://10.30.10.21', origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(

@@ -182,21 +182,18 @@ router.post("/subconnections", (req, res) => {
       );
 
       const pointsSummary = `
-        INSERT INTO person_points_summary (person_id, rank, last_updated)
-        VALUES (?,?, NOW())
+        INSERT INTO person_points_summary (person_id, \`rank\`, last_updated)
+        VALUES (?, ?, NOW())
       `;
-      insertions.push(
-        new Promise((resolve, reject) => {
-          connection.query(
-            pointsSummary,
-            [personId, connectionInfo.rank],
-            (err) => {
-              if (err) reject(err);
-              resolve();
-            }
-          );
-        })
-      );
+insertions.push(
+  new Promise((resolve, reject) => {
+    connection.query(pointsSummary, [personId, connectionInfo.rank], (err) => {
+      if (err) reject(err);
+      resolve();
+    });
+  })
+);
+
 
       // Execute all insertions
       Promise.all(insertions)

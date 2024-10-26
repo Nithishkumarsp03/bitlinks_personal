@@ -203,7 +203,7 @@ export default function Login({ onLogin }) {
                     </h4>
                   </div>
                 </div>
-                <button className="login_button" onClick={credentialLogin}>Click to Login</button>
+                <button className="login_button" onClick={credentialLogin}>Login</button>
                 <div className="account_bottom">
                   <p style={{ color: "grey", width: "80%", fontSize: "80%", fontWeight: "500", marginLeft: "20%" }}>
                     Not Registered yet?

@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.f25adffb.css",
-    "main.js": "/static/js/main.3775da69.js",
+    "main.css": "/static/css/main.b8ea4aae.css",
+    "main.js": "/static/js/main.00a12e64.js",
     "static/js/453.864433a8.chunk.js": "/static/js/453.864433a8.chunk.js",
     "static/media/Login_bg_11zon.png": "/static/media/Login_bg_11zon.d8999fb914f2ae48444e.png",
     "static/media/tharun.jpeg": "/static/media/tharun.fad8e04a619dfd9dc448.jpeg",
@@ -46,12 +46,12 @@
     "static/media/Rank-1.svg": "/static/media/Rank-1.ba5d897dfdd1f0e1bccaf6fc61eafdf1.svg",
     "static/media/Rankof-1.svg": "/static/media/Rankof-1.6cbd0bd7e525a5db27aa633dfca28150.svg",
     "static/media/Start.svg": "/static/media/Start.f32838f15e2e33a348a14008c5ced25b.svg",
-    "main.f25adffb.css.map": "/static/css/main.f25adffb.css.map",
-    "main.3775da69.js.map": "/static/js/main.3775da69.js.map",
+    "main.b8ea4aae.css.map": "/static/css/main.b8ea4aae.css.map",
+    "main.00a12e64.js.map": "/static/js/main.00a12e64.js.map",
     "453.864433a8.chunk.js.map": "/static/js/453.864433a8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f25adffb.css",
-    "static/js/main.3775da69.js"
+    "static/css/main.b8ea4aae.css",
+    "static/js/main.00a12e64.js"
   ]
 }
